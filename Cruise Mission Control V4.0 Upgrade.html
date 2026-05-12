@@ -325,7 +325,7 @@
                 </div>
 
                 <!-- Sober Stats Dashboard (V4.2 with Vaporized Funds) -->
-                <div class="mt-2 grid grid-cols-2 md:grid-cols-4 gap-2 text-center border-t border-gray-800 pt-4 relative z-10">
+                <div class="mt-2 grid grid-cols-2 md:grid-cols-5 gap-2 text-center border-t border-gray-800 pt-4 relative z-10">
                     <div class="bg-black/60 p-2 border border-missionOrange/30 shadow-[inset_0_0_10px_rgba(255,159,0,0.1)] flex flex-col justify-center">
                         <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold">SOBER STREAK</div>
                         <div id="stat-sober-streak" class="text-lg md:text-xl font-black text-missionOrange font-mono">0 DAYS</div>
@@ -337,6 +337,10 @@
                     <div class="bg-red-950/20 p-2 border border-red-900/50 shadow-[inset_0_0_10px_rgba(255,0,0,0.1)] flex flex-col justify-center">
                         <div class="text-[8px] md:text-[9px] text-red-500 uppercase font-bold">FUNDS VAPORIZED</div>
                         <div id="stat-funds-vaporized" class="text-lg md:text-xl font-black text-red-500 font-mono">$0</div>
+                    </div>
+                    <div class="bg-black/80 p-2 border border-gray-700 shadow-[inset_0_0_10px_rgba(255,255,255,0.05)] flex flex-col justify-center">
+                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold">NET IMPACT</div>
+                        <div id="stat-net-funds" class="text-lg md:text-xl font-black text-gray-500 font-mono">$0</div>
                     </div>
                     <div class="bg-black/60 p-2 border border-missionPurple/30 shadow-[inset_0_0_10px_rgba(176,38,255,0.1)] flex flex-col justify-center">
                         <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold">CRAVINGS BEATEN</div>
@@ -495,9 +499,14 @@
                             </div>
                         </div>
 
-                        <button type="button" onclick="logCravingDefeat()" class="w-full btn-sci bg-missionPurple/20 text-missionPurple border border-missionPurple/50 py-2 text-[10px] font-bold flex justify-center items-center gap-2 hover:bg-missionPurple/40 transition-colors mt-4">
-                            <i data-lucide="shield-alert" class="w-4 h-4"></i> DEFEAT CRAVING <span id="craving-count" class="font-mono bg-black px-1 rounded">(0)</span>
-                        </button>
+                        <div class="flex items-stretch gap-2 mt-4">
+                            <button type="button" onclick="adjustCraving(-1)" class="btn-sci bg-black text-gray-500 border border-gray-800 w-12 flex justify-center items-center hover:bg-gray-900 transition-colors" title="Subtract Craving">
+                                <i data-lucide="minus" class="w-4 h-4"></i>
+                            </button>
+                            <button type="button" onclick="adjustCraving(1)" class="flex-grow btn-sci bg-missionPurple/20 text-missionPurple border border-missionPurple/50 py-2 text-[10px] font-bold flex justify-center items-center gap-2 hover:bg-missionPurple/40 transition-colors">
+                                <i data-lucide="shield-alert" class="w-4 h-4"></i> DEFEAT CRAVING <span id="craving-count" class="font-mono bg-black px-1 rounded">(0)</span>
+                            </button>
+                        </div>
 
                         <!-- Workout -->
                         <div class="bg-gray-900/50 p-3 border border-gray-800 rounded-sm space-y-3">
@@ -1364,11 +1373,18 @@
         }
         function toggleHabit(k) { appState.currentEntry[k] = !appState.currentEntry[k]; AudioEngine.playChirp(); saveEntry(); renderChecklist(); }
         
-        function logCravingDefeat() {
-            appState.currentEntry.cravingsDefeated = (appState.currentEntry.cravingsDefeated || 0) + 1;
-            document.getElementById('craving-count').innerText = `(${appState.currentEntry.cravingsDefeated})`;
-            AudioEngine.playTriumph();
+        function adjustCraving(amount) {
+            let current = appState.currentEntry.cravingsDefeated || 0;
+            current += amount;
+            if (current < 0) current = 0;
+            appState.currentEntry.cravingsDefeated = current;
+            document.getElementById('craving-count').innerText = `(${current})`;
+            if (amount > 0) AudioEngine.playTriumph(); else AudioEngine.playDown();
             saveEntry();
+        }
+
+        function logCravingDefeat() {
+            adjustCraving(1);
         }
 
         function toggleMuscle(btn, m) {
@@ -1581,9 +1597,25 @@
                 }
             });
 
+            const totalSaved = Math.round(activeStreak * (m.boozeDailySpend || 0));
+            const netFunds = totalSaved - totalVaporized;
+
             document.getElementById('stat-sober-streak').innerText = `${activeStreak} DAYS`;
-            document.getElementById('stat-funds-saved').innerText = `$${Math.round(activeStreak * (m.boozeDailySpend || 0))}`;
+            document.getElementById('stat-funds-saved').innerText = `$${totalSaved}`;
             document.getElementById('stat-funds-vaporized').innerText = `-$${totalVaporized}`;
+            
+            const netEl = document.getElementById('stat-net-funds');
+            if (netFunds > 0) {
+                netEl.innerText = `+$${netFunds}`;
+                netEl.className = "text-lg md:text-xl font-black text-missionGreen font-mono";
+            } else if (netFunds < 0) {
+                netEl.innerText = `-$${Math.abs(netFunds)}`;
+                netEl.className = "text-lg md:text-xl font-black text-red-500 font-mono";
+            } else {
+                netEl.innerText = `$0`;
+                netEl.className = "text-lg md:text-xl font-black text-gray-500 font-mono";
+            }
+
             document.getElementById('stat-cravings-total').innerText = totalCravings;
 
             // Render Biological Unlocks
