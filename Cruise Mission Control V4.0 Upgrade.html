@@ -231,7 +231,7 @@
                             <div class="grid grid-cols-3 gap-4">
                                 <div><label class="text-[10px] text-gray-500 font-bold block mb-1">AGE</label><input type="number" id="editAge" class="mission-input" placeholder="59"></div>
                                 <div><label class="text-[10px] text-gray-500 font-bold block mb-1">HEIGHT (CM)</label><input type="number" id="editHeight" class="mission-input" placeholder="178"></div>
-                                <div><label class="text-[10px] text-gray-500 font-bold block mb-1">DAILY BOOZE SPEND ($)</label><input type="number" id="editBoozeSpend" class="mission-input text-missionPurple" placeholder="15"></div>
+                                <div><label class="text-[10px] text-gray-500 font-bold block mb-1">DAILY BOOZE SPEND ($)</label><input type="number" id="editBoozeSpend" class="mission-input text-missionPurple" placeholder="20"></div>
                             </div>
                         </div>
 
@@ -1008,7 +1008,7 @@
             {d: 90, t: "NEURAL PATHWAYS REWIRED", i: "zap"}
         ];
 
-        const DEFAULT_MISSION = { id: 1, name: "CRUISE PREP", start: "2025-11-21", end: "2026-02-01", startW: 201.6, goalW: 175.0, age: 59, height: 178, boozeDailySpend: 15 };
+        const DEFAULT_MISSION = { id: 1, name: "CRUISE PREP", start: "2025-11-21", end: "2026-02-01", startW: 201.6, goalW: 175.0, age: 59, height: 178, boozeDailySpend: 20 };
 
         // --- STATE ---
         let appState = { entries: [], missions: [], activeMissionId: null, filter: {start:null, end:null}, currentEntry: {}, imgIndex: 0, calendarDate: new Date(), lastPct: 0 };
@@ -1104,11 +1104,11 @@
         function loadMissionToEditor(id) {
             const m = appState.missions.find(x => x.id === id); if(!m) return;
             document.getElementById('editId').value = m.id; document.getElementById('editName').value = m.name; document.getElementById('editStart').value = m.start; document.getElementById('editEnd').value = m.end; document.getElementById('editStartW').value = m.startW; document.getElementById('editGoalW').value = m.goalW; 
-            document.getElementById('editAge').value = m.age || 59; document.getElementById('editHeight').value = m.height || 178; document.getElementById('editBoozeSpend').value = m.boozeDailySpend || 15;
+            document.getElementById('editAge').value = m.age || 59; document.getElementById('editHeight').value = m.height || 178; document.getElementById('editBoozeSpend').value = m.boozeDailySpend || 20;
             document.getElementById('editorTitle').innerText = "EDIT: " + m.name; renderMissionList();
         }
         function prepareCreateNew() {
-            document.getElementById('editId').value = "NEW"; document.getElementById('editName').value = ""; document.getElementById('editStart').value = new Date().toISOString().split('T')[0]; document.getElementById('editEnd').value = ""; document.getElementById('editStartW').value = ""; document.getElementById('editGoalW').value = ""; document.getElementById('editAge').value = ""; document.getElementById('editHeight').value = ""; document.getElementById('editBoozeSpend').value = "15";
+            document.getElementById('editId').value = "NEW"; document.getElementById('editName').value = ""; document.getElementById('editStart').value = new Date().toISOString().split('T')[0]; document.getElementById('editEnd').value = ""; document.getElementById('editStartW').value = ""; document.getElementById('editGoalW').value = ""; document.getElementById('editAge').value = ""; document.getElementById('editHeight').value = ""; document.getElementById('editBoozeSpend').value = "20";
             document.getElementById('editorTitle').innerText = "NEW MISSION"; renderMissionList();
         }
         function saveMissionFromEditor() {
