@@ -793,12 +793,15 @@
         </div>
 
         <!-- System Controls -->
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mt-8">
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mt-8">
             <button type="button" onclick="syncGoogle()" onmouseenter="AudioEngine.playHover()" class="md:col-span-2 btn-sci bg-blue-900/50 text-blue-200 border border-blue-800 py-4 text-[10px] md:text-xs font-bold tracking-wider">SYNC CALENDAR</button>
             <button type="button" onclick="exportFullICS()" onmouseenter="AudioEngine.playHover()" class="btn-sci bg-gray-800 text-gray-300 border border-gray-600 py-4 text-[10px] md:text-xs font-bold tracking-wider">EXPORT ICS</button>
             <button type="button" onclick="exportJSON()" onmouseenter="AudioEngine.playHover()" class="btn-sci bg-gray-800 text-missionGreen border border-missionGreen/50 py-4 text-[10px] md:text-xs font-bold tracking-wider">BACKUP JSON</button>
+            <label class="btn-sci bg-gray-800 text-missionTeal border border-missionTeal/50 py-4 text-[10px] md:text-xs font-bold flex justify-center items-center cursor-pointer hover:bg-gray-700 tracking-wider">
+                MERGE LOG <input type="file" onchange="mergeJSON(this)" accept=".json" class="hidden">
+            </label>
             <label class="btn-sci bg-gray-800 text-gray-300 border border-gray-600 py-4 text-[10px] md:text-xs font-bold flex justify-center items-center cursor-pointer hover:bg-gray-700 tracking-wider">
-                RESTORE <input type="file" onchange="importJSON(this)" class="hidden">
+                RESTORE <input type="file" onchange="importJSON(this)" accept=".json" class="hidden">
             </label>
         </div>
     </div>
@@ -1455,6 +1458,32 @@
 
         function exportJSON() { const b = new Blob([JSON.stringify(appState)], {type:'application/json'}); const a = document.createElement('a'); a.href=URL.createObjectURL(b); a.download="data.json"; a.click(); localStorage.setItem('cruiseMissionLastBackup', new Date().toISOString()); document.getElementById('backup-warning').classList.add('hidden'); }
         function importJSON(inp) { const r = new FileReader(); r.onload = e => { try { const d = JSON.parse(e.target.result); if(d.entries) appState = d; saveData(true); location.reload(); } catch(e) { sysAlert("Error parsing JSON file."); } }; r.readAsText(inp.files[0]); }
+        
+        function mergeJSON(inp) { 
+            const r = new FileReader(); 
+            r.onload = e => { 
+                try { 
+                    const newEntry = JSON.parse(e.target.result); 
+                    if(!newEntry.date) { sysAlert("INVALID FILE: Missing 'date' field."); return; }
+                    
+                    const existingIdx = appState.entries.findIndex(x => x.date === newEntry.date);
+                    if(existingIdx > -1) {
+                        appState.entries[existingIdx] = { ...appState.entries[existingIdx], ...newEntry };
+                    } else {
+                        const baseEntry = { carnivore: false, alcohol: true, mood: 5, sleep: 5, steps: 0, intensity: 0, muscles: [], cals: 0, water: 0, fasting: 16, protein: 0, fat: 0, cravingsDefeated: 0, breachDrinks: 0, breachLoc: 'home', breachTammy: 'solo' };
+                        appState.entries.push({ ...baseEntry, ...newEntry });
+                    }
+                    
+                    appState.entries.sort((a,b)=>new Date(a.date)-new Date(b.date));
+                    saveData(true);
+                    if(document.getElementById('inpDate').value === newEntry.date) loadEntryForDate(newEntry.date);
+                    refreshUI(); renderCalendar();
+                    sysAlert("DAILY LOG MERGED SUCCESSFULLY.");
+                } catch(err) { sysAlert("Error parsing JSON file."); } 
+            }; 
+            r.readAsText(inp.files[0]); 
+            inp.value = ""; // Reset input
+        }
     </script>
 </body>
 </html>
