@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUISE MISSION CONTROL V4.2 (PROCEDURAL UPGRADE)</title>
+    <title>CRUISE MISSION CONTROL V4.3 (WEALTH & COMBAT UPGRADE)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -217,7 +217,7 @@
                     <i data-lucide="ship" class="w-8 h-8 text-missionTeal"></i>
                 </div>
                 <div class="flex-grow">
-                    <div class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em] mb-1">ACTIVE PROTOCOL (V4.2)</div>
+                    <div class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em] mb-1">ACTIVE PROTOCOL (V4.3)</div>
                     <select id="missionSelector" onchange="switchMission()" onmouseenter="AudioEngine.playHover()" class="bg-transparent font-black text-xl md:text-3xl text-white uppercase tracking-widest outline-none cursor-pointer hover:text-missionOrange transition w-full">
                     </select>
                 </div>
@@ -324,27 +324,31 @@
                     </div>
                 </div>
 
-                <!-- Sober Stats Dashboard (V4.2 with Vaporized Funds) -->
-                <div class="mt-2 grid grid-cols-2 md:grid-cols-5 gap-2 text-center border-t border-gray-800 pt-4 relative z-10">
+                <!-- Sober Stats Dashboard (V4.3 - The Wealth Dashboard) -->
+                <div class="mt-2 grid grid-cols-2 md:grid-cols-6 gap-2 text-center border-t border-gray-800 pt-4 relative z-10">
                     <div class="bg-black/60 p-2 border border-missionOrange/30 shadow-[inset_0_0_10px_rgba(255,159,0,0.1)] flex flex-col justify-center">
-                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold">SOBER STREAK</div>
-                        <div id="stat-sober-streak" class="text-lg md:text-xl font-black text-missionOrange font-mono">0 DAYS</div>
-                    </div>
-                    <div class="bg-black/60 p-2 border border-missionGreen/30 shadow-[inset_0_0_10px_rgba(0,255,0,0.1)] flex flex-col justify-center">
-                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold">FUNDS SECURED</div>
-                        <div id="stat-funds-saved" class="text-lg md:text-xl font-black text-missionGreen font-mono">$0</div>
-                    </div>
-                    <div class="bg-red-950/20 p-2 border border-red-900/50 shadow-[inset_0_0_10px_rgba(255,0,0,0.1)] flex flex-col justify-center">
-                        <div class="text-[8px] md:text-[9px] text-red-500 uppercase font-bold">FUNDS VAPORIZED</div>
-                        <div id="stat-funds-vaporized" class="text-lg md:text-xl font-black text-red-500 font-mono">$0</div>
-                    </div>
-                    <div class="bg-black/80 p-2 border border-gray-700 shadow-[inset_0_0_10px_rgba(255,255,255,0.05)] flex flex-col justify-center">
-                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold">NET IMPACT</div>
-                        <div id="stat-net-funds" class="text-lg md:text-xl font-black text-gray-500 font-mono">$0</div>
+                        <div class="text-[7px] md:text-[8px] text-gray-500 uppercase font-bold tracking-widest">SOBER STREAK</div>
+                        <div id="stat-sober-streak" class="text-base md:text-lg font-black text-missionOrange font-mono mt-1">0 DAYS</div>
                     </div>
                     <div class="bg-black/60 p-2 border border-missionPurple/30 shadow-[inset_0_0_10px_rgba(176,38,255,0.1)] flex flex-col justify-center">
-                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold">CRAVINGS BEATEN</div>
-                        <div id="stat-cravings-total" class="text-lg md:text-xl font-black text-missionPurple font-mono">0</div>
+                        <div class="text-[7px] md:text-[8px] text-gray-500 uppercase font-bold tracking-widest">CRAVINGS DEFEATED</div>
+                        <div id="stat-cravings-total" class="text-base md:text-lg font-black text-missionPurple font-mono mt-1">0</div>
+                    </div>
+                    <div class="bg-black/60 p-2 border border-missionGreen/30 flex flex-col justify-center opacity-70">
+                        <div class="text-[7px] md:text-[8px] text-gray-500 uppercase font-bold tracking-widest">PAST HABIT AVERTED</div>
+                        <div id="stat-habit-averted" class="text-base md:text-lg font-black text-gray-400 font-mono mt-1">$0</div>
+                    </div>
+                    <div class="bg-red-950/20 p-2 border border-red-900/50 flex flex-col justify-center opacity-70">
+                        <div class="text-[7px] md:text-[8px] text-red-500 uppercase font-bold tracking-widest">ACTUAL CASH BLEED</div>
+                        <div id="stat-cash-bleed" class="text-base md:text-lg font-black text-red-500 font-mono mt-1">$0</div>
+                    </div>
+                    <div class="bg-black/80 p-2 border border-missionTeal shadow-[0_0_15px_rgba(0,255,255,0.1)] flex flex-col justify-center transform scale-105 z-10">
+                        <div class="text-[8px] md:text-[9px] text-missionTeal uppercase font-black tracking-widest">BANK ACCT UP</div>
+                        <div id="stat-bank-up" class="text-xl md:text-2xl font-black text-missionTeal font-mono mt-1">$0</div>
+                    </div>
+                    <div class="bg-black/60 p-2 border border-gray-700 flex flex-col justify-center">
+                        <div class="text-[7px] md:text-[8px] text-gray-500 uppercase font-bold tracking-widest">1-YEAR PROJECTION</div>
+                        <div id="stat-yearly-proj" class="text-base md:text-lg font-black text-white font-mono mt-1">+$0</div>
                     </div>
                 </div>
 
@@ -368,10 +372,10 @@
             <!-- Left Column: Daily Log & Core Stats -->
             <div class="lg:col-span-5 space-y-8">
                 
-                <!-- DAILY LOG V4.2 -->
+                <!-- DAILY LOG V4.3 -->
                 <div class="glass-panel">
                     <div class="bg-missionTeal/10 p-3 flex justify-between items-center px-5 border-b border-missionTeal/20">
-                        <span class="text-xs font-bold text-missionTeal uppercase tracking-widest">DAILY LOG V4.2</span>
+                        <span class="text-xs font-bold text-missionTeal uppercase tracking-widest">DAILY LOG V4.3</span>
                         <i data-lucide="database" class="w-4 h-4 text-missionTeal"></i>
                     </div>
                     <div class="p-5 space-y-5">
@@ -733,6 +737,12 @@
                         <canvas id="workoutChart"></canvas>
                     </div>
 
+                    <!-- THE NEW WEALTH TRAJECTORY CHART -->
+                    <div class="glass-panel p-3 h-[250px] md:h-[300px] relative border-l-4 border-missionTeal mb-8">
+                        <div class="absolute top-0 right-0 p-2 text-[8px] md:text-[9px] font-bold text-missionTeal uppercase tracking-widest bg-black/50">WEALTH ACCUMULATION TRAJECTORY</div>
+                        <canvas id="financeChart"></canvas>
+                    </div>
+
                     <!-- Field Ops Stats -->
                     <div class="glass-panel p-5 border-l-2 border-blue-500 bg-black/20">
                         <div class="flex justify-between items-center mb-4">
@@ -853,234 +863,46 @@
 
         // --- PROCEDURAL MOTIVATION ENGINE (V4.2) ---
         const POS_HOOKS = [
-            "By executing protocol flawlessly today",
-            "Every single morning you wake up sober",
-            "By crushing the 4 PM witching hour",
-            "Staying locked into this mission means",
-            "When you string together days of absolute discipline",
-            "Drinking 32oz of water instead of caving",
-            "The sheer willpower you are showing right now means",
-            "Every time you say no to the toxin",
-            "Fasting, sweating, and staying sober means",
-            "When you respect your own boundaries",
-            "Waking up without a drop of ethanol in your system",
-            "Your relentless commitment to this journey means",
-            "Refusing to negotiate with weakness ensures",
-            "This unbreakable streak of yours means",
-            "By protecting your liver and your bank account",
-            "Choosing pure, unfiltered reality over a buzz",
-            "Pushing through the fatigue with pure grit means",
-            "When you treat your body like a multi-million dollar asset",
-            "Guarding your biological repair processes ensures",
-            "By making the hard choice in the moment",
-            "Every dollar saved and every calorie burned means",
-            "Standing tall against your old triggers ensures",
-            "The absolute mastery of your own habits means",
-            "Taking total ownership of your metabolism",
-            "When your actions perfectly align with your goals"
+            "By executing protocol flawlessly today", "Every single morning you wake up sober", "By crushing the 4 PM witching hour", "Staying locked into this mission means", "When you string together days of absolute discipline", "Drinking 32oz of water instead of caving", "The sheer willpower you are showing right now means", "Every time you say no to the toxin", "Fasting, sweating, and staying sober means", "When you respect your own boundaries", "Waking up without a drop of ethanol in your system", "Your relentless commitment to this journey means", "Refusing to negotiate with weakness ensures", "This unbreakable streak of yours means", "By protecting your liver and your bank account", "Choosing pure, unfiltered reality over a buzz", "Pushing through the fatigue with pure grit means", "When you treat your body like a multi-million dollar asset", "Guarding your biological repair processes ensures", "By making the hard choice in the moment", "Every dollar saved and every calorie burned means", "Standing tall against your old triggers ensures", "The absolute mastery of your own habits means", "Taking total ownership of your metabolism", "When your actions perfectly align with your goals"
         ];
-
         const POS_WINS = [
-            "you forge a physique that commands immediate respect in any room,",
-            "you build the sheer, undeniable confidence that effortlessly closes massive real estate deals,",
-            "your skin tightens, your eyes clear up, and you radiate elite energy,",
-            "you are torching visceral fat and carving out the abs you deserve to show off,",
-            "you step onto that cruise ship as a legend, ready to take your shirt off with total pride,",
-            "your dopamine resets, making you naturally happier, sharper, and deeply motivated,",
-            "you sleep like a rock, waking up with a razor-sharp mind ready to dominate the market,",
-            "you become a beacon of inspiration for Tammy and everyone around you,",
-            "your liver heals, your cellular age reverses, and your longevity skyrockets,",
-            "you strip away the bloating to reveal the athletic, powerful frame underneath,",
-            "you literally rewire your brain to crave success, wealth, and health,",
-            "you accumulate massive momentum that bleeds into every single aspect of your empire,",
-            "you transform anxiety and lethargy into pure, unadulterated ambition,",
-            "you prove that your mind is a fortress that no temporary craving can breach,",
-            "you feel the visceral thrill of looking in the mirror and seeing actual, undeniable greatness,",
-            "you ensure that every step on the treadmill is actually moving you forward, not just breaking even,",
-            "you harness the swagger of a man who makes promises to himself and keeps them,",
-            "you stockpile cash and direct your wealth toward building the ultimate life,",
-            "you operate at a frequency that your competition simply cannot comprehend,",
-            "you shed the shame of the past and build an identity of pure steel,",
-            "your metabolism becomes a hyper-efficient, fat-incinerating machine,",
-            "you unlock the physical freedom to attack summer without a single second of hesitation,",
-            "you cultivate an intimidating level of self-control that translates directly into cash flow,",
-            "you look incredibly sharp in a dinner jacket, and even better without it,",
-            "you realize that you are an absolute force of nature when you operate at 100% capacity,"
+            "you forge a physique that commands immediate respect in any room,", "you build the sheer, undeniable confidence that effortlessly closes massive real estate deals,", "your skin tightens, your eyes clear up, and you radiate elite energy,", "you are torching visceral fat and carving out the abs you deserve to show off,", "you step onto that cruise ship as a legend, ready to take your shirt off with total pride,", "your dopamine resets, making you naturally happier, sharper, and deeply motivated,", "you sleep like a rock, waking up with a razor-sharp mind ready to dominate the market,", "you become a beacon of inspiration for Tammy and everyone around you,", "your liver heals, your cellular age reverses, and your longevity skyrockets,", "you strip away the bloating to reveal the athletic, powerful frame underneath,", "you literally rewire your brain to crave success, wealth, and health,", "you accumulate massive momentum that bleeds into every single aspect of your empire,", "you transform anxiety and lethargy into pure, unadulterated ambition,", "you prove that your mind is a fortress that no temporary craving can breach,", "you feel the visceral thrill of looking in the mirror and seeing actual, undeniable greatness,", "you ensure that every step on the treadmill is actually moving you forward, not just breaking even,", "you harness the swagger of a man who makes promises to himself and keeps them,", "you stockpile cash and direct your wealth toward building the ultimate life,", "you operate at a frequency that your competition simply cannot comprehend,", "you shed the shame of the past and build an identity of pure steel,", "your metabolism becomes a hyper-efficient, fat-incinerating machine,", "you unlock the physical freedom to attack summer without a single second of hesitation,", "you cultivate an intimidating level of self-control that translates directly into cash flow,", "you look incredibly sharp in a dinner jacket, and even better without it,", "you realize that you are an absolute force of nature when you operate at 100% capacity,"
         ];
-
         const POS_STINGERS = [
-            "Maintain velocity. The peak is never passed.",
-            "This is the good fight. Keep fighting it.",
-            "You are a weapon. Stay lethal.",
-            "The ship is waiting. Let's conquer it.",
-            "Abs are made in these exact moments.",
-            "The real estate market bows to this level of confidence.",
-            "Keep banking those wins. The math is on your side.",
-            "You are building a masterpiece. Don't drop the chisel.",
-            "One little victory at a time.",
-            "Enjoy the absolute thrill of discipline.",
-            "Legendary status is imminent.",
-            "This is what absolute victory feels like.",
-            "Don't let up. Your empire is expanding.",
-            "The mirror is about to become your best friend.",
-            "Summer is yours to dominate.",
-            "Hold on to the dream. It's becoming reality.",
-            "Pure pride. Zero regrets.",
-            "You are the commander, and the ship is on course.",
-            "Nothing can stop this momentum.",
-            "This is the mindset of a multi-millionaire.",
-            "Keep writing your own legend.",
-            "Enjoy the sleep of the victorious tonight.",
-            "You are crushing the math.",
-            "Confidence is your ultimate currency.",
-            "Stay sober, stay shredded, stay successful."
+            "Maintain velocity. The peak is never passed.", "This is the good fight. Keep fighting it.", "You are a weapon. Stay lethal.", "The ship is waiting. Let's conquer it.", "Abs are made in these exact moments.", "The real estate market bows to this level of confidence.", "Keep banking those wins. The math is on your side.", "You are building a masterpiece. Don't drop the chisel.", "One little victory at a time.", "Enjoy the absolute thrill of discipline.", "Legendary status is imminent.", "This is what absolute victory feels like.", "Don't let up. Your empire is expanding.", "The mirror is about to become your best friend.", "Summer is yours to dominate.", "Hold on to the dream. It's becoming reality.", "Pure pride. Zero regrets.", "You are the commander, and the ship is on course.", "Nothing can stop this momentum.", "This is the mindset of a multi-millionaire.", "Keep writing your own legend.", "Enjoy the sleep of the victorious tonight.", "You are crushing the math.", "Confidence is your ultimate currency.", "Stay sober, stay shredded, stay successful."
         ];
-
-        // COGNITIVE OVERRIDE QUOTES (FOR THE 5-MINUTE PANIC PROTOCOL)
         const PANIC_QUOTES = [
-            "Drop and give me 50 pushups. Change your physical state, change your destiny.",
-            "You are the absolute author of your own destiny. Write a chapter of unbreakable discipline right now.",
-            "Hold your fire. Keep it burning bright. (Rush)",
-            "The temporary burn of 50 pushups is absolutely nothing compared to the permanent sting of regret.",
-            "From first to last, the peak is never passed. Maintain your elevation. (Rush)",
-            "Drink the water. Fill the stomach. Starve the habit. You are entirely in control.",
-            "Think about tomorrow morning. Waking up lean, rested, and violently proud of your self-control.",
-            "Don't trade the cruise ship shredded physique for a 20-minute buzz. Hold the line.",
-            "One little victory. The greatest act can be one little victory. (Rush)",
-            "Your future self is watching you fight this battle right now. Make him legendary.",
-            "Alcohol is a central nervous system depressant. It will not cure your fatigue; it will steal tomorrow's energy.",
-            "You know exactly how this story ends if you drink. Break the loop. Force a new ending.",
-            "You are rewiring your neurological pathways right this second. It feels hard because you are upgrading.",
-            "Pain is weakness leaving the body. Craving is the habit dying. Let it die.",
-            "Breathe. You have survived every single craving you've ever beaten. This one is no different.",
-            "A goal is a dream with a deadline. The ship is waiting. Let's conquer it.",
-            "You are a force of nature. Do not let a temporary feeling dictate your permanent reality.",
-            "Pushups flush the body with adrenaline and kill the dopamine hunt. Get down and execute.",
-            "The point of the journey is not to arrive, it's to forge the iron will along the way. (Rush)",
-            "Look in the mirror. Are you building an empire or are you negotiating with weakness?"
+            "Drop and give me 50 pushups. Change your physical state, change your destiny.", "You are the absolute author of your own destiny. Write a chapter of unbreakable discipline right now.", "Hold your fire. Keep it burning bright. (Rush)", "The temporary burn of 50 pushups is absolutely nothing compared to the permanent sting of regret.", "From first to last, the peak is never passed. Maintain your elevation. (Rush)", "Drink the water. Fill the stomach. Starve the habit. You are entirely in control.", "Think about tomorrow morning. Waking up lean, rested, and violently proud of your self-control.", "Don't trade the cruise ship shredded physique for a 20-minute buzz. Hold the line.", "One little victory. The greatest act can be one little victory. (Rush)", "Your future self is watching you fight this battle right now. Make him legendary.", "Alcohol is a central nervous system depressant. It will not cure your fatigue; it will steal tomorrow's energy.", "You know exactly how this story ends if you drink. Break the loop. Force a new ending.", "You are rewiring your neurological pathways right this second. It feels hard because you are upgrading.", "Pain is weakness leaving the body. Craving is the habit dying. Let it die.", "Breathe. You have survived every single craving you've ever beaten. This one is no different.", "A goal is a dream with a deadline. The ship is waiting. Let's conquer it.", "You are a force of nature. Do not let a temporary feeling dictate your permanent reality.", "Pushups flush the body with adrenaline and kill the dopamine hunt. Get down and execute.", "The point of the journey is not to arrive, it's to forge the iron will along the way. (Rush)", "Look in the mirror. Are you building an empire or are you negotiating with weakness?"
         ];
-
         const NEG_HOOKS = [
-            "Every sip you take right now means",
-            "By actively breaking protocol today,",
-            "You are literally paying hard cash so",
-            "When you negotiate with this weakness,",
-            "This fleeting, momentary buzz guarantees",
-            "Caving to a 4 PM craving ensures",
-            "The second that toxin enters your bloodstream,",
-            "Taking the easy way out right now means",
-            "By pulling Tammy into this slip-up,",
-            "You are trading absolute excellence so",
-            "Rationalizing this drink means",
-            "The ethanol in that glass guarantees",
-            "By giving in to fatigue and habit,",
-            "Every ounce consumed right now means",
-            "Surrendering to the witching hour means",
-            "Choosing comfort over discipline means",
-            "Letting your guard down today means",
-            "Swallowing this poison means",
-            "Ignoring your own rules means",
-            "The moment you justify this drink,",
-            "By prioritizing a quick escape,",
-            "This exact lack of discipline is why",
-            "Letting the habit loop win means",
-            "When you pour that glass, remember",
-            "Every dollar spent on this toxin ensures"
+            "Every sip you take right now means", "By actively breaking protocol today,", "You are literally paying hard cash so", "When you negotiate with this weakness,", "This fleeting, momentary buzz guarantees", "Caving to a 4 PM craving ensures", "The second that toxin enters your bloodstream,", "Taking the easy way out right now means", "By pulling Tammy into this slip-up,", "You are trading absolute excellence so", "Rationalizing this drink means", "The ethanol in that glass guarantees", "By giving in to fatigue and habit,", "Every ounce consumed right now means", "Surrendering to the witching hour means", "Choosing comfort over discipline means", "Letting your guard down today means", "Swallowing this poison means", "Ignoring your own rules means", "The moment you justify this drink,", "By prioritizing a quick escape,", "This exact lack of discipline is why", "Letting the habit loop win means", "When you pour that glass, remember", "Every dollar spent on this toxin ensures"
         ];
-
         const NEG_DAMAGES = [
-            "you are actively packing thick, stubborn visceral fat directly over your abs.",
-            "you are sabotaging the sheer, magnetic confidence that makes your real estate business explode.",
-            "you are locking your liver into detox mode, completely shutting off the fat-burning furnace.",
-            "you ensure tomorrow's brain fog, ruined skin elasticity, and crushing low self-esteem.",
-            "you step backwards onto that frustrating treadmill of constantly trying to lose the same five pounds.",
-            "you are trading the pride of a shredded summer physique for a few hours of numbness.",
-            "you are chemically inducing poor sleep, anxiety, and an irritable mood for the next 48 hours.",
-            "you are compounding cellular damage and increasing biological risks like GI cancers.",
-            "you are letting the momentum you've built bleed out into shame and regret.",
-            "you are eroding the razor-sharp edge you need to dominate the boardroom and the beach.",
-            "you force your metabolism into hibernation, adding hundreds of empty calories to your ledger.",
-            "you are accepting mediocrity and accepting the embarrassment of hiding under a baggy shirt.",
-            "you are diluting your legendary aura and killing the respect you've earned from yourself.",
-            "you drastically spike your cortisol, guaranteeing that you'll wake up feeling defeated and tired.",
-            "you are wasting your hard-earned money to physically damage your own empire.",
-            "you suffocate the dopamine receptors required to feel naturally good, confident, and driven.",
-            "you are accelerating the aging process and ruining the vitality you need to lead.",
-            "you are wrapping your core in a layer of inflammatory fat that hides all your hard work.",
-            "you compromise the undeniable swagger that attracts massive wealth and success.",
-            "you are throwing away the chance to step onto that cruise ship as an absolute god.",
-            "you willingly accept the bloating, the facial puffiness, and the lethargy of a civilian.",
-            "you are literally drinking away the profits and the physique you promised yourself.",
-            "you signal to your subconscious that your goals are negotiable and your word is weak.",
-            "you let temporary fatigue dictate your permanent reality and future health.",
-            "you forfeit the ultimate high of looking in the mirror and knowing you are an absolute beast."
+            "you are actively packing thick, stubborn visceral fat directly over your abs.", "you are sabotaging the sheer, magnetic confidence that makes your real estate business explode.", "you are locking your liver into detox mode, completely shutting off the fat-burning furnace.", "you ensure tomorrow's brain fog, ruined skin elasticity, and crushing low self-esteem.", "you step backwards onto that frustrating treadmill of constantly trying to lose the same five pounds.", "you are trading the pride of a shredded summer physique for a few hours of numbness.", "you are chemically inducing poor sleep, anxiety, and an irritable mood for the next 48 hours.", "you are compounding cellular damage and increasing biological risks like GI cancers.", "you are letting the momentum you've built bleed out into shame and regret.", "you are eroding the razor-sharp edge you need to dominate the boardroom and the beach.", "you force your metabolism into hibernation, adding hundreds of empty calories to your ledger.", "you are accepting mediocrity and accepting the embarrassment of hiding under a baggy shirt.", "you are diluting your legendary aura and killing the respect you've earned from yourself.", "you drastically spike your cortisol, guaranteeing that you'll wake up feeling defeated and tired.", "you are wasting your hard-earned money to physically damage your own empire.", "you suffocate the dopamine receptors required to feel naturally good, confident, and driven.", "you are accelerating the aging process and ruining the vitality you need to lead.", "you are wrapping your core in a layer of inflammatory fat that hides all your hard work.", "you compromise the undeniable swagger that attracts massive wealth and success.", "you are throwing away the chance to step onto that cruise ship as an absolute god.", "you willingly accept the bloating, the facial puffiness, and the lethargy of a civilian.", "you are literally drinking away the profits and the physique you promised yourself.", "you signal to your subconscious that your goals are negotiable and your word is weak.", "you let temporary fatigue dictate your permanent reality and future health.", "you forfeit the ultimate high of looking in the mirror and knowing you are an absolute beast."
         ];
-
         const NEG_STINGERS = [
-            "Wake up and protect the empire.",
-            "Do you really want to hide in a shirt all summer?",
-            "Legend status requires sacrifice. Shut it down.",
-            "Put it down. The ship leaves with or without your abs.",
-            "You are a king in real estate; don't be a peasant in discipline.",
-            "Stop negotiating with weakness.",
-            "Your future self is staring at you with absolute disgust.",
-            "Embarrassment is a choice. Make a different one.",
-            "Pour it down the sink and reclaim your power.",
-            "Nothing tastes as good as being shredded feels.",
-            "Are you building a legacy, or a gut?",
-            "Read the room. But first, read yourself.",
-            "Don't trade an elite physique for a cheap buzz.",
-            "The math doesn't lie, and the mirror won't either.",
-            "Take control. You are the commander of this vessel.",
-            "A goal is a dream with a deadline. The clock is ticking.",
-            "Discipline equals financial and physical freedom.",
-            "Don't let the 4 PM fatigue ruin tomorrow's victory.",
-            "You know exactly how this ends. Break the loop.",
-            "Choose the pain of discipline over the pain of regret.",
-            "Your bank account and your waistline are begging you to stop.",
-            "Look at the data. This is a losing trade.",
-            "You are better than a reactive habit. Prove it.",
-            "Step away, drink 32oz of water, and survive the witching hour.",
-            "Own your actions, because you have to own the consequences."
+            "Wake up and protect the empire.", "Do you really want to hide in a shirt all summer?", "Legend status requires sacrifice. Shut it down.", "Put it down. The ship leaves with or without your abs.", "You are a king in real estate; don't be a peasant in discipline.", "Stop negotiating with weakness.", "Your future self is staring at you with absolute disgust.", "Embarrassment is a choice. Make a different one.", "Pour it down the sink and reclaim your power.", "Nothing tastes as good as being shredded feels.", "Are you building a legacy, or a gut?", "Read the room. But first, read yourself.", "Don't trade an elite physique for a cheap buzz.", "The math doesn't lie, and the mirror won't either.", "Take control. You are the commander of this vessel.", "A goal is a dream with a deadline. The clock is ticking.", "Discipline equals financial and physical freedom.", "Don't let the 4 PM fatigue ruin tomorrow's victory.", "You know exactly how this ends. Break the loop.", "Choose the pain of discipline over the pain of regret.", "Your bank account and your waistline are begging you to stop.", "Look at the data. This is a losing trade.", "You are better than a reactive habit. Prove it.", "Step away, drink 32oz of water, and survive the witching hour.", "Own your actions, because you have to own the consequences."
         ];
 
         function generateQuote(type) {
             if(type === 'positive') {
-                const h = POS_HOOKS[Math.floor(Math.random() * POS_HOOKS.length)];
-                const w = POS_WINS[Math.floor(Math.random() * POS_WINS.length)];
-                const s = POS_STINGERS[Math.floor(Math.random() * POS_STINGERS.length)];
+                const h = POS_HOOKS[Math.floor(Math.random() * POS_HOOKS.length)]; const w = POS_WINS[Math.floor(Math.random() * POS_WINS.length)]; const s = POS_STINGERS[Math.floor(Math.random() * POS_STINGERS.length)];
                 return `${h} ${w} ${s}`;
             } else {
-                const h = NEG_HOOKS[Math.floor(Math.random() * NEG_HOOKS.length)];
-                const d = NEG_DAMAGES[Math.floor(Math.random() * NEG_DAMAGES.length)];
-                const s = NEG_STINGERS[Math.floor(Math.random() * NEG_STINGERS.length)];
+                const h = NEG_HOOKS[Math.floor(Math.random() * NEG_HOOKS.length)]; const d = NEG_DAMAGES[Math.floor(Math.random() * NEG_DAMAGES.length)]; const s = NEG_STINGERS[Math.floor(Math.random() * NEG_STINGERS.length)];
                 return `${h} ${d} ${s}`;
             }
         }
 
         // --- CONSTANTS & DATA ---
         const IMAGE_LIB = [
-            "https://github.com/KenMorganRealEstate/Home/blob/main/111.png?raw=true",
-            "https://github.com/KenMorganRealEstate/Home/blob/main/222.png?raw=true",
-            "https://github.com/KenMorganRealEstate/Home/blob/main/333.png?raw=true",
-            "https://github.com/KenMorganRealEstate/Home/blob/main/444.png?raw=true",
-            "https://github.com/KenMorganRealEstate/Home/blob/main/555.png?raw=true"
+            "https://github.com/KenMorganRealEstate/Home/blob/main/111.png?raw=true", "https://github.com/KenMorganRealEstate/Home/blob/main/222.png?raw=true", "https://github.com/KenMorganRealEstate/Home/blob/main/333.png?raw=true", "https://github.com/KenMorganRealEstate/Home/blob/main/444.png?raw=true", "https://github.com/KenMorganRealEstate/Home/blob/main/555.png?raw=true"
         ];
-
         const UNLOCKS = [
-            {w: 195, t: "Supply Drop: CASUAL WEAR", i: "shirt"},
-            {w: 190, t: "Supply Drop: DINNER JACKET", i: "user-check"},
-            {w: 185, t: "Supply Drop: SWIMWEAR", i: "sun"},
-            {w: 180, t: "Supply Drop: SHORE EXCURSION", i: "anchor"},
-            {w: 175, t: "Supply Drop: LEGEND STATUS", i: "crown"}
+            {w: 195, t: "Supply Drop: CASUAL WEAR", i: "shirt"}, {w: 190, t: "Supply Drop: DINNER JACKET", i: "user-check"}, {w: 185, t: "Supply Drop: SWIMWEAR", i: "sun"}, {w: 180, t: "Supply Drop: SHORE EXCURSION", i: "anchor"}, {w: 175, t: "Supply Drop: LEGEND STATUS", i: "crown"}
         ];
-
         const BIO_UNLOCKS = [
-            {d: 3, t: "BLOOD STREAM CLEARED", i: "droplet"},
-            {d: 7, t: "REM SLEEP RESTORED", i: "moon"},
-            {d: 14, t: "DOPAMINE RECEPTORS RESET", i: "brain"},
-            {d: 30, t: "LIVER FAT REDUCED", i: "activity"},
-            {d: 90, t: "NEURAL PATHWAYS REWIRED", i: "zap"}
+            {d: 3, t: "BLOOD STREAM CLEARED", i: "droplet"}, {d: 7, t: "REM SLEEP RESTORED", i: "moon"}, {d: 14, t: "DOPAMINE RECEPTORS RESET", i: "brain"}, {d: 30, t: "LIVER FAT REDUCED", i: "activity"}, {d: 90, t: "NEURAL PATHWAYS REWIRED", i: "zap"}
         ];
 
         const DEFAULT_MISSION = { id: 1, name: "CRUISE PREP", start: "2025-11-21", end: "2026-02-01", startW: 201.6, goalW: 175.0, age: 59, height: 178, boozeDailySpend: 20 };
@@ -1088,14 +910,15 @@
         // --- STATE ---
         let appState = { entries: [], missions: [], activeMissionId: null, filter: {start:null, end:null}, currentEntry: {}, imgIndex: 0, calendarDate: new Date(), lastPct: 0 };
         let panicTimerInt; let panicQuoteInt;
+        let chart; let workoutChart; let financeChart;
 
+        // --- STREAMING_CHUNK: Bootstrapping App Flow ---
         // --- INIT ---
         window.onload = () => {
             lucide.createIcons(); initCharts(); loadData(); startCountdown(); cycleFearImage(); renderCalendar(); checkBriefing(); checkBackupStatus();
             
             // Start the Witching Hour Radar
-            checkWitchingHour();
-            setInterval(checkWitchingHour, 60000); // Check clock every 60 seconds
+            checkWitchingHour(); setInterval(checkWitchingHour, 60000); 
 
             setInterval(() => cycleFearImage(true), 5000);
             document.body.addEventListener('click', () => { if(!AudioEngine.ctx) AudioEngine.init(); }, {once:true});
@@ -1113,95 +936,54 @@
         function checkBackupStatus() {
             const lastBackup = localStorage.getItem('cruiseMissionLastBackup');
             const daysSinceBackup = lastBackup ? Math.floor((new Date() - new Date(lastBackup))/86400000) : 999;
-            if(daysSinceBackup > 7) {
-                document.getElementById('backup-warning').classList.remove('hidden');
-            }
+            if(daysSinceBackup > 7) document.getElementById('backup-warning').classList.remove('hidden');
         }
 
         // --- WITCHING HOUR AUTOMATION ---
         function checkWitchingHour() {
-            const now = new Date();
-            const timeVal = now.getHours() + (now.getMinutes() / 60);
+            const now = new Date(); const timeVal = now.getHours() + (now.getMinutes() / 60);
             const banner = document.getElementById('witching-hour-banner');
-            
-            // 15.0 = 3:00 PM, 17.5 = 5:30 PM
-            if (timeVal >= 15.0 && timeVal < 17.5) {
-                if (banner.classList.contains('hidden')) {
-                    banner.classList.remove('hidden');
-                    AudioEngine.playHover(); // Soft alert when it activates
-                }
-            } else {
-                banner.classList.add('hidden');
-            }
+            if (timeVal >= 15.0 && timeVal < 17.5) { if (banner.classList.contains('hidden')) { banner.classList.remove('hidden'); AudioEngine.playHover(); } } else { banner.classList.add('hidden'); }
         }
 
         function initiatePanicProtocol() {
-            AudioEngine.playStatic();
-            setTimeout(() => AudioEngine.playDown(), 200);
-            
+            AudioEngine.playStatic(); setTimeout(() => AudioEngine.playDown(), 200);
             document.getElementById('panicModal').classList.remove('hidden');
             document.getElementById('panic-close-btn').classList.add('hidden');
             
             let timeLeft = 300; // 5 minutes
-            const timerDisplay = document.getElementById('panic-timer');
-            const quoteDisplay = document.getElementById('panic-quote');
-            
-            timerDisplay.classList.replace('text-missionGreen', 'text-white');
-            timerDisplay.innerText = "05:00";
+            const timerDisplay = document.getElementById('panic-timer'); const quoteDisplay = document.getElementById('panic-quote');
+            timerDisplay.classList.replace('text-missionGreen', 'text-white'); timerDisplay.innerText = "05:00";
             quoteDisplay.innerText = `"${PANIC_QUOTES[Math.floor(Math.random() * PANIC_QUOTES.length)]}"`;
             
             clearInterval(panicTimerInt); clearInterval(panicQuoteInt);
-            
-            // Master Countdown Loop
             panicTimerInt = setInterval(() => {
-                timeLeft--;
-                const m = Math.floor(timeLeft / 60);
-                const s = timeLeft % 60;
+                timeLeft--; const m = Math.floor(timeLeft / 60); const s = timeLeft % 60;
                 timerDisplay.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-                
                 if (timeLeft <= 0) {
                     clearInterval(panicTimerInt); clearInterval(panicQuoteInt);
-                    timerDisplay.innerText = "00:00";
-                    timerDisplay.classList.replace('text-white', 'text-missionGreen');
+                    timerDisplay.innerText = "00:00"; timerDisplay.classList.replace('text-white', 'text-missionGreen');
                     document.getElementById('panic-close-btn').classList.remove('hidden');
-                    AudioEngine.playTriumph();
-                    quoteDisplay.innerText = "BIOLOGICAL CRAVING NEUTRALIZED. YOU ARE IN CONTROL.";
-                } else if (timeLeft % 60 === 0) {
-                     AudioEngine.playChirp(); // Ping at every minute mark
-                }
+                    AudioEngine.playTriumph(); quoteDisplay.innerText = "BIOLOGICAL CRAVING NEUTRALIZED. YOU ARE IN CONTROL.";
+                } else if (timeLeft % 60 === 0) { AudioEngine.playChirp(); }
             }, 1000);
             
-            // Dynamic Quote Rotation every 10 seconds
-            panicQuoteInt = setInterval(() => {
-                AudioEngine.playHover();
-                quoteDisplay.innerText = `"${PANIC_QUOTES[Math.floor(Math.random() * PANIC_QUOTES.length)]}"`;
-            }, 10000);
+            panicQuoteInt = setInterval(() => { AudioEngine.playHover(); quoteDisplay.innerText = `"${PANIC_QUOTES[Math.floor(Math.random() * PANIC_QUOTES.length)]}"`; }, 10000);
         }
 
         function closePanicProtocol() {
-            document.getElementById('panicModal').classList.add('hidden');
-            clearInterval(panicTimerInt); clearInterval(panicQuoteInt);
-            // Automatically log the victory
-            logCravingDefeat();
-            sysAlert("CRAVING DEFEATED. MISSION LOG UPDATED.");
+            document.getElementById('panicModal').classList.add('hidden'); clearInterval(panicTimerInt); clearInterval(panicQuoteInt); logCravingDefeat(); sysAlert("CRAVING DEFEATED. MISSION LOG UPDATED.");
         }
 
         // --- BRIEFING ---
         function checkBriefing() {
             const today = new Date().toISOString().split('T')[0];
             if(localStorage.getItem('briefingSeenDate') !== today) {
-                document.getElementById('briefingModal').classList.remove('hidden');
-                localStorage.setItem('briefingSeenDate', today);
-                const m = getActiveMission();
-                const generatedQuote = generateQuote('positive');
+                document.getElementById('briefingModal').classList.remove('hidden'); localStorage.setItem('briefingSeenDate', today);
+                const m = getActiveMission(); const generatedQuote = generateQuote('positive');
                 document.getElementById('briefing-days').innerText = Math.floor((new Date(m.end) - new Date())/86400000) + " DAYS";
-                document.getElementById('briefing-quote').innerText = `"${generatedQuote}"`;
-                document.getElementById('briefing-author').innerText = "CRUISE MISSION AI (V4.2)";
-                if(appState.entries.length > 0) {
-                    document.getElementById('briefing-status').innerText = `${appState.entries[appState.entries.length-1].weight} LBS`;
-                } else {
-                    document.getElementById('briefing-status').innerText = "AWAITING DATA";
-                }
+                document.getElementById('briefing-quote').innerText = `"${generatedQuote}"`; document.getElementById('briefing-author').innerText = "CRUISE MISSION AI (V4.3)";
+                if(appState.entries.length > 0) { document.getElementById('briefing-status').innerText = `${appState.entries[appState.entries.length-1].weight} LBS`; } else { document.getElementById('briefing-status').innerText = "AWAITING DATA"; }
             }
         }
         function closeBriefing() { document.getElementById('briefingModal').classList.add('hidden'); AudioEngine.playPowerUp(); }
@@ -1217,20 +999,14 @@
 
         // --- DATA ---
         function loadData() {
-            const savedE = localStorage.getItem('cruiseMissionData');
-            const savedM = localStorage.getItem('cruiseMissionGoals');
-            const savedId = localStorage.getItem('cruiseMissionActiveId');
-            appState.entries = savedE ? JSON.parse(savedE) : [];
-            appState.missions = savedM ? JSON.parse(savedM) : [JSON.parse(JSON.stringify(DEFAULT_MISSION))];
-            const found = appState.missions.find(m => m.id === parseInt(savedId));
-            appState.activeMissionId = found ? found.id : appState.missions[0].id;
+            const savedE = localStorage.getItem('cruiseMissionData'); const savedM = localStorage.getItem('cruiseMissionGoals'); const savedId = localStorage.getItem('cruiseMissionActiveId');
+            appState.entries = savedE ? JSON.parse(savedE) : []; appState.missions = savedM ? JSON.parse(savedM) : [JSON.parse(JSON.stringify(DEFAULT_MISSION))];
+            const found = appState.missions.find(m => m.id === parseInt(savedId)); appState.activeMissionId = found ? found.id : appState.missions[0].id;
             populateMissionSelector(); resetFilter();
         }
 
         function saveData(silent) {
-            localStorage.setItem('cruiseMissionData', JSON.stringify(appState.entries));
-            localStorage.setItem('cruiseMissionGoals', JSON.stringify(appState.missions));
-            localStorage.setItem('cruiseMissionActiveId', appState.activeMissionId);
+            localStorage.setItem('cruiseMissionData', JSON.stringify(appState.entries)); localStorage.setItem('cruiseMissionGoals', JSON.stringify(appState.missions)); localStorage.setItem('cruiseMissionActiveId', appState.activeMissionId);
             if(!silent) AudioEngine.playChirp();
         }
 
@@ -1238,17 +1014,13 @@
         function getActiveMission() { return appState.missions.find(m => m.id === appState.activeMissionId) || DEFAULT_MISSION; }
         function populateMissionSelector() {
             const sel = document.getElementById('missionSelector'); sel.innerHTML = '';
-            appState.missions.forEach(m => {
-                const opt = document.createElement('option'); opt.value = m.id; opt.innerText = m.name; opt.selected = m.id === appState.activeMissionId; opt.className = "bg-black text-white"; sel.appendChild(opt);
-            });
+            appState.missions.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.innerText = m.name; opt.selected = m.id === appState.activeMissionId; opt.className = "bg-black text-white"; sel.appendChild(opt); });
         }
         function switchMission() { appState.activeMissionId = parseInt(document.getElementById('missionSelector').value); saveData(true); resetFilter(); }
         function toggleMissionManager() { document.getElementById('missionManager').classList.toggle('hidden'); if(!document.getElementById('missionManager').classList.contains('hidden')) renderMissionList(); }
         function renderMissionList() {
             const c = document.getElementById('missionListContainer'); c.innerHTML = '';
-            appState.missions.forEach(m => {
-                const d = document.createElement('div'); d.className = `p-2 border cursor-pointer text-xs font-bold ${m.id == document.getElementById('editId').value ? 'border-missionTeal text-white' : 'border-gray-800 text-gray-500'}`; d.innerText = m.name; d.onclick = () => loadMissionToEditor(m.id); c.appendChild(d);
-            });
+            appState.missions.forEach(m => { const d = document.createElement('div'); d.className = `p-2 border cursor-pointer text-xs font-bold ${m.id == document.getElementById('editId').value ? 'border-missionTeal text-white' : 'border-gray-800 text-gray-500'}`; d.innerText = m.name; d.onclick = () => loadMissionToEditor(m.id); c.appendChild(d); });
         }
         function loadMissionToEditor(id) {
             const m = appState.missions.find(x => x.id === id); if(!m) return;
@@ -1263,8 +1035,7 @@
         function saveMissionFromEditor() {
             const id = document.getElementById('editId').value; const name = document.getElementById('editName').value; if(!name) return sysAlert("NAME REQUIRED");
             const cfg = { 
-                name: name.toUpperCase(), start: document.getElementById('editStart').value, end: document.getElementById('editEnd').value, 
-                startW: parseFloat(document.getElementById('editStartW').value), goalW: parseFloat(document.getElementById('editGoalW').value),
+                name: name.toUpperCase(), start: document.getElementById('editStart').value, end: document.getElementById('editEnd').value, startW: parseFloat(document.getElementById('editStartW').value), goalW: parseFloat(document.getElementById('editGoalW').value),
                 age: parseInt(document.getElementById('editAge').value)||59, height: parseInt(document.getElementById('editHeight').value)||178, boozeDailySpend: parseFloat(document.getElementById('editBoozeSpend').value)||0
             };
             if(id === "NEW") { const newId = Date.now(); appState.missions.push({id: newId, ...cfg}); appState.activeMissionId = newId; } else { const idx = appState.missions.findIndex(m => m.id == id); if(idx > -1) appState.missions[idx] = { ...appState.missions[idx], ...cfg }; }
@@ -1272,64 +1043,33 @@
         }
         function loadMissionFromEditor() { const idVal = document.getElementById('editId').value; if(idVal === "NEW") { sysAlert("Save first."); return; } appState.activeMissionId = parseInt(idVal); saveData(true); populateMissionSelector(); loadMissionParams(); resetFilter(); toggleMissionManager(); sysAlert("Mission Loaded!"); }
         function loadMissionParams() { const m = getActiveMission(); loadMissionToEditor(m.id); }
-        function deleteMissionFromEditor() {
-            const id = document.getElementById('editId').value; if(id === "NEW" || appState.missions.length <= 1) return;
-            sysConfirm("DELETE MISSION?", () => { appState.missions = appState.missions.filter(m => m.id != id); if(appState.activeMissionId == id) appState.activeMissionId = appState.missions[0].id; saveData(); populateMissionSelector(); renderMissionList(); resetFilter(); });
-        }
+        function deleteMissionFromEditor() { const id = document.getElementById('editId').value; if(id === "NEW" || appState.missions.length <= 1) return; sysConfirm("DELETE MISSION?", () => { appState.missions = appState.missions.filter(m => m.id != id); if(appState.activeMissionId == id) appState.activeMissionId = appState.missions[0].id; saveData(); populateMissionSelector(); renderMissionList(); resetFilter(); }); }
         function clearLogsOnly() { sysConfirm("♻️ RESTART MISSION DATA?\n\nThis will delete all daily logs.\nYour Mission Settings will be SAVED.\n\nAre you sure?", () => { appState.entries = []; saveData(); location.reload(); }); }
         function factoryReset() { sysConfirm("⚠️ FACTORY RESET WARNING\n\nThis will delete EVERYTHING.\n\nAre you sure?", () => { localStorage.clear(); location.reload(); }); }
 
+        // --- STREAMING_CHUNK: Handing Data Entry... ---
         // --- ENTRY LOGIC ---
         function loadEntryForDate(date) {
             const entry = appState.entries.find(e => e.date === date);
             if(entry) {
-                document.getElementById('inpWeight').value = entry.weight || "";
-                document.getElementById('inpNotes').value = entry.notes || "";
-                document.getElementById('inpMood').value = entry.mood || 5;
-                document.getElementById('mood-val-display').innerText = (entry.mood || 5);
-                document.getElementById('inpSleep').value = entry.sleep || 5;
-                document.getElementById('sleep-val-display').innerText = (entry.sleep || 5);
-                document.getElementById('inpSteps').value = entry.steps || "";
-                calcKm(entry.steps || 0);
-                document.getElementById('inpCals').value = entry.cals || "";
-                document.getElementById('inpIntensity').value = entry.intensity || 0;
-                
-                document.getElementById('inpWater').value = entry.water || "";
-                document.getElementById('inpFasting').value = entry.fasting || "";
-                document.getElementById('inpProtein').value = entry.protein || "";
-                document.getElementById('inpFat').value = entry.fat || "";
+                document.getElementById('inpWeight').value = entry.weight || ""; document.getElementById('inpNotes').value = entry.notes || "";
+                document.getElementById('inpMood').value = entry.mood || 5; document.getElementById('mood-val-display').innerText = (entry.mood || 5);
+                document.getElementById('inpSleep').value = entry.sleep || 5; document.getElementById('sleep-val-display').innerText = (entry.sleep || 5);
+                document.getElementById('inpSteps').value = entry.steps || ""; calcKm(entry.steps || 0);
+                document.getElementById('inpCals').value = entry.cals || ""; document.getElementById('inpIntensity').value = entry.intensity || 0;
+                document.getElementById('inpWater').value = entry.water || ""; document.getElementById('inpFasting').value = entry.fasting || "";
+                document.getElementById('inpProtein').value = entry.protein || ""; document.getElementById('inpFat').value = entry.fat || "";
                 document.getElementById('craving-count').innerText = `(${entry.cravingsDefeated || 0})`;
-
-                // Breach Data
-                document.getElementById('inpBreachDrinks').value = entry.breachDrinks || 1;
-                document.getElementById('inpBreachLoc').value = entry.breachLoc || 'home';
-                document.getElementById('inpBreachTammy').value = entry.breachTammy || 'solo';
-
-                renderStars(entry.intensity || 0);
-                appState.currentEntry = {...entry};
-                if(!appState.currentEntry.muscles) appState.currentEntry.muscles = [];
+                document.getElementById('inpBreachDrinks').value = entry.breachDrinks || 1; document.getElementById('inpBreachLoc').value = entry.breachLoc || 'home'; document.getElementById('inpBreachTammy').value = entry.breachTammy || 'solo';
+                renderStars(entry.intensity || 0); appState.currentEntry = {...entry}; if(!appState.currentEntry.muscles) appState.currentEntry.muscles = [];
             } else {
-                document.getElementById('inpWeight').value = "";
-                document.getElementById('inpNotes').value = "";
+                document.getElementById('inpWeight').value = ""; document.getElementById('inpNotes').value = "";
                 document.getElementById('inpMood').value = 5; document.getElementById('mood-val-display').innerText = "5";
                 document.getElementById('inpSleep').value = 5; document.getElementById('sleep-val-display').innerText = "5";
-                document.getElementById('inpSteps').value = ""; calcKm(0);
-                document.getElementById('inpCals').value = "";
-                document.getElementById('inpIntensity').value = 0;
-                
-                document.getElementById('inpWater').value = "";
-                document.getElementById('inpFasting').value = "16"; // Default Fast
-                document.getElementById('inpProtein').value = "";
-                document.getElementById('inpFat').value = "";
-                document.getElementById('craving-count').innerText = "(0)";
-
-                // Breach Data defaults
-                document.getElementById('inpBreachDrinks').value = 1;
-                document.getElementById('inpBreachLoc').value = 'home';
-                document.getElementById('inpBreachTammy').value = 'solo';
-
-                renderStars(0);
-                appState.currentEntry = {carnivore:false, alcohol:true, mood:5, sleep:5, steps:0, intensity:0, muscles:[], cals:0, water:0, fasting:16, protein:0, fat:0, cravingsDefeated:0, breachDrinks: 0, breachLoc: 'home', breachTammy: 'solo'};
+                document.getElementById('inpSteps').value = ""; calcKm(0); document.getElementById('inpCals').value = ""; document.getElementById('inpIntensity').value = 0;
+                document.getElementById('inpWater').value = ""; document.getElementById('inpFasting').value = "16"; document.getElementById('inpProtein').value = ""; document.getElementById('inpFat').value = "";
+                document.getElementById('craving-count').innerText = "(0)"; document.getElementById('inpBreachDrinks').value = 1; document.getElementById('inpBreachLoc').value = 'home'; document.getElementById('inpBreachTammy').value = 'solo';
+                renderStars(0); appState.currentEntry = {carnivore:false, alcohol:true, mood:5, sleep:5, steps:0, intensity:0, muscles:[], cals:0, water:0, fasting:16, protein:0, fat:0, cravingsDefeated:0, breachDrinks: 0, breachLoc: 'home', breachTammy: 'solo'};
             }
             renderChecklist(); renderMuscles(); calcMetabolics();
         }
@@ -1337,55 +1077,27 @@
         function saveEntry() {
             const date = document.getElementById('inpDate').value; if(!date) return;
             const weightVal = parseFloat(document.getElementById('inpWeight').value) || null;
-            const moodVal = document.getElementById('inpMood').value;
-            const sleepVal = document.getElementById('inpSleep').value;
-            const notesVal = document.getElementById('inpNotes').value;
-            const stepsVal = parseInt(document.getElementById('inpSteps').value) || 0;
-            const intVal = parseInt(document.getElementById('inpIntensity').value) || 0;
-            const calsVal = parseInt(document.getElementById('inpCals').value) || 0;
-            const waterVal = parseFloat(document.getElementById('inpWater').value) || 0;
-            const fastVal = parseFloat(document.getElementById('inpFasting').value) || 0;
-            const proVal = parseInt(document.getElementById('inpProtein').value) || 0;
-            const fatVal = parseInt(document.getElementById('inpFat').value) || 0;
-
-            // Breach Data
-            const bDrinks = parseInt(document.getElementById('inpBreachDrinks').value) || 1;
-            const bLoc = document.getElementById('inpBreachLoc').value;
-            const bTammy = document.getElementById('inpBreachTammy').value;
-
+            const bDrinks = parseInt(document.getElementById('inpBreachDrinks').value) || 1; const bLoc = document.getElementById('inpBreachLoc').value; const bTammy = document.getElementById('inpBreachTammy').value;
             const m = getActiveMission();
             UNLOCKS.forEach(u => { if(weightVal && weightVal <= u.w && (!appState.currentEntry.weight || appState.currentEntry.weight > u.w)) AudioEngine.playUnlock(); });
 
-            const entry = { ...appState.currentEntry, date: date, weight: weightVal, notes: notesVal, mood: moodVal, sleep: sleepVal, steps: stepsVal, intensity: intVal, cals: calsVal, water: waterVal, fasting: fastVal, protein: proVal, fat: fatVal, breachDrinks: bDrinks, breachLoc: bLoc, breachTammy: bTammy };
+            const entry = { ...appState.currentEntry, date: date, weight: weightVal, notes: document.getElementById('inpNotes').value, mood: document.getElementById('inpMood').value, sleep: document.getElementById('inpSleep').value, steps: parseInt(document.getElementById('inpSteps').value) || 0, intensity: parseInt(document.getElementById('inpIntensity').value) || 0, cals: parseInt(document.getElementById('inpCals').value) || 0, water: parseFloat(document.getElementById('inpWater').value) || 0, fasting: parseFloat(document.getElementById('inpFasting').value) || 0, protein: parseInt(document.getElementById('inpProtein').value) || 0, fat: parseInt(document.getElementById('inpFat').value) || 0, breachDrinks: bDrinks, breachLoc: bLoc, breachTammy: bTammy };
+            if(entry.alcohol === true) entry.breachDrinks = 0; // zero out if not breached
             
-            // If they didn't breach, zero out the drinks so it doesn't affect totals
-            if(entry.alcohol === true) entry.breachDrinks = 0;
-
-            appState.entries = appState.entries.filter(e => e.date !== date);
-            appState.entries.push(entry);
-            appState.entries.sort((a,b)=>new Date(a.date)-new Date(b.date));
+            appState.entries = appState.entries.filter(e => e.date !== date); appState.entries.push(entry); appState.entries.sort((a,b)=>new Date(a.date)-new Date(b.date));
             saveData(true); refreshUI(); renderCalendar();
         }
 
-        function calcKm(steps) {
-            const s = parseInt(steps) || 0; const km = s / 1250;
-            document.getElementById('calc-km-display').innerText = km.toFixed(2) + " km";
-        }
+        function calcKm(steps) { document.getElementById('calc-km-display').innerText = (parseInt(steps)||0 / 1250).toFixed(2) + " km"; }
         function toggleHabit(k) { appState.currentEntry[k] = !appState.currentEntry[k]; AudioEngine.playChirp(); saveEntry(); renderChecklist(); }
         
         function adjustCraving(amount) {
-            let current = appState.currentEntry.cravingsDefeated || 0;
-            current += amount;
-            if (current < 0) current = 0;
-            appState.currentEntry.cravingsDefeated = current;
-            document.getElementById('craving-count').innerText = `(${current})`;
+            let current = appState.currentEntry.cravingsDefeated || 0; current += amount; if (current < 0) current = 0;
+            appState.currentEntry.cravingsDefeated = current; document.getElementById('craving-count').innerText = `(${current})`;
             if (amount > 0) AudioEngine.playTriumph(); else AudioEngine.playDown();
             saveEntry();
         }
-
-        function logCravingDefeat() {
-            adjustCraving(1);
-        }
+        function logCravingDefeat() { adjustCraving(1); }
 
         function toggleMuscle(btn, m) {
             if(!appState.currentEntry.muscles) appState.currentEntry.muscles = [];
@@ -1394,10 +1106,7 @@
         }
         function renderMuscles() {
             const ms = appState.currentEntry.muscles || [];
-            document.querySelectorAll('.muscle-btn').forEach(btn => {
-                const type = btn.getAttribute('onclick').split("'")[1]; 
-                if(ms.includes(type)) btn.classList.add('active'); else btn.classList.remove('active');
-            });
+            document.querySelectorAll('.muscle-btn').forEach(btn => { const type = btn.getAttribute('onclick').split("'")[1]; if(ms.includes(type)) btn.classList.add('active'); else btn.classList.remove('active'); });
         }
         function renderStars(val) { let s = ""; for(let i=1; i<=5; i++) s += i<=val ? "★" : "☆"; document.getElementById('star-display').innerText = s; }
         
@@ -1406,87 +1115,38 @@
                 const el = document.getElementById('h-'+id); const icon = el.querySelector('.status-icon');
                 if(on) { el.classList.add('bg-missionTeal/10', alc ? 'border-missionOrange' : 'border-missionTeal'); el.classList.remove('bg-black/40', 'border-gray-800'); icon.innerText = "ON"; icon.className = `status-icon text-[10px] ${alc?'text-missionOrange':'text-missionTeal'}`; } else { el.classList.remove('bg-missionTeal/10', 'border-missionOrange', 'border-missionTeal'); el.classList.add('bg-black/40', 'border-gray-800'); icon.innerText = "OFF"; icon.className = "status-icon text-gray-600 text-[10px]"; }
             };
-            set('carnivore', appState.currentEntry.carnivore); 
-            set('alcohol', appState.currentEntry.alcohol, true); // true means abstained
-
-            // Breach Panel Logic
+            set('carnivore', appState.currentEntry.carnivore); set('alcohol', appState.currentEntry.alcohol, true); // true means abstained
             const breachPanel = document.getElementById('breach-panel');
             if(appState.currentEntry.alcohol === false) {
-                if(breachPanel.classList.contains('hidden')) {
-                    AudioEngine.playDown();
-                    document.getElementById('breach-quote').innerText = `"${generateQuote('negative')}"`;
-                }
-                breachPanel.classList.remove('hidden');
-                handleBreachUpdate(); 
-            } else {
-                breachPanel.classList.add('hidden');
-            }
+                if(breachPanel.classList.contains('hidden')) { AudioEngine.playDown(); document.getElementById('breach-quote').innerText = `"${generateQuote('negative')}"`; }
+                breachPanel.classList.remove('hidden'); handleBreachUpdate(); 
+            } else { breachPanel.classList.add('hidden'); }
         }
 
         function handleBreachUpdate() {
-            const drinks = parseInt(document.getElementById('inpBreachDrinks').value) || 1;
-            const loc = document.getElementById('inpBreachLoc').value;
-            const tammy = document.getElementById('inpBreachTammy').value;
-
-            let costPer = loc === 'bar' ? 10 : 3;
-            let mult = tammy === 'tammy' ? 2 : 1;
-            let totalCost = drinks * costPer * mult;
-
-            let cals = drinks * 120;
-            let pauseHrs = drinks * 1.5;
-            let stepsPen = Math.round(cals / 0.06);
-
-            document.getElementById('breach-cost').innerText = `-$${totalCost}`;
-            document.getElementById('breach-cals').innerText = `+${cals}`;
-            document.getElementById('breach-pause').innerText = `${pauseHrs} HRS`;
-            document.getElementById('breach-steps').innerText = `${stepsPen}`;
-            
+            const drinks = parseInt(document.getElementById('inpBreachDrinks').value) || 1; const loc = document.getElementById('inpBreachLoc').value; const tammy = document.getElementById('inpBreachTammy').value;
+            let totalCost = drinks * (loc === 'bar' ? 10 : 3) * (tammy === 'tammy' ? 2 : 1);
+            let cals = drinks * 120; let pauseHrs = drinks * 1.5; let stepsPen = Math.round(cals / 0.06);
+            document.getElementById('breach-cost').innerText = `-$${totalCost}`; document.getElementById('breach-cals').innerText = `+${cals}`; document.getElementById('breach-pause').innerText = `${pauseHrs} HRS`; document.getElementById('breach-steps').innerText = `${stepsPen}`;
             saveEntry();
         }
 
         function handleMoodChange(v) { document.getElementById('mood-val-display').innerText = v; AudioEngine.playVibe(v); saveEntry(); }
         function handleSleepChange(v) { document.getElementById('sleep-val-display').innerText = v; AudioEngine.playVibe(v); saveEntry(); }
 
+        // --- STREAMING_CHUNK: Injecting complex math engines... ---
         // --- BIO-MATH ENGINE ---
         function calcMetabolics() {
-            const m = getActiveMission();
-            const w = parseFloat(document.getElementById('inpWeight').value) || m.startW;
-            const steps = parseInt(document.getElementById('inpSteps').value) || 0;
-            const stars = parseInt(document.getElementById('inpIntensity').value) || 0;
-            const foodIn = parseInt(document.getElementById('inpCals').value) || 0;
-
-            const kg = w * 0.453592;
-            const cm = m.height || 178;
-            const age = m.age || 59;
-            const bmr = Math.round((10 * kg) + (6.25 * cm) - (5 * age) + 5);
-
-            const stepBurn = Math.round(steps * 0.06);
-            const starMap = [0, 150, 250, 350, 500, 700];
-            const workBurn = starMap[stars] || 0;
-
-            const totalOut = bmr + stepBurn + workBurn;
-            const net = foodIn > 0 ? (foodIn - totalOut) : 0; 
-
-            document.getElementById('calc-bmr').innerText = bmr;
-            document.getElementById('calc-steps').innerText = stepBurn;
-            document.getElementById('calc-work').innerText = workBurn;
-            document.getElementById('calc-total-out').innerText = totalOut;
-
-            const elNet = document.getElementById('daily-net-cals');
-            const elMsg = document.getElementById('daily-net-msg');
-
-            if (foodIn === 0) {
-                elNet.innerText = "--"; elNet.className = "text-3xl font-black text-gray-600 my-2";
-                elMsg.innerText = "ENTER FOOD DATA"; elMsg.className = "text-[10px] text-gray-500 font-bold uppercase";
-            } else {
-                if (net < 0) {
-                    elNet.innerText = net; elNet.className = "text-3xl font-black text-missionGreen my-2";
-                    elMsg.innerText = "DEFICIT (WEIGHT LOSS)"; elMsg.className = "text-[10px] text-missionGreen font-bold uppercase";
-                } else {
-                    elNet.innerText = "+" + net; elNet.className = "text-3xl font-black text-missionRed my-2";
-                    elMsg.innerText = "SURPLUS (WEIGHT GAIN)"; elMsg.className = "text-[10px] text-missionRed font-bold uppercase";
-                }
-            }
+            const m = getActiveMission(); const w = parseFloat(document.getElementById('inpWeight').value) || m.startW;
+            const steps = parseInt(document.getElementById('inpSteps').value) || 0; const stars = parseInt(document.getElementById('inpIntensity').value) || 0; const foodIn = parseInt(document.getElementById('inpCals').value) || 0;
+            const bmr = Math.round((10 * (w * 0.453592)) + (6.25 * (m.height||178)) - (5 * (m.age||59)) + 5);
+            const stepBurn = Math.round(steps * 0.06); const workBurn = [0, 150, 250, 350, 500, 700][stars] || 0;
+            const totalOut = bmr + stepBurn + workBurn; const net = foodIn > 0 ? (foodIn - totalOut) : 0; 
+            document.getElementById('calc-bmr').innerText = bmr; document.getElementById('calc-steps').innerText = stepBurn; document.getElementById('calc-work').innerText = workBurn; document.getElementById('calc-total-out').innerText = totalOut;
+            const elNet = document.getElementById('daily-net-cals'); const elMsg = document.getElementById('daily-net-msg');
+            if (foodIn === 0) { elNet.innerText = "--"; elNet.className = "text-3xl font-black text-gray-600 my-2"; elMsg.innerText = "ENTER FOOD DATA"; elMsg.className = "text-[10px] text-gray-500 font-bold uppercase"; } 
+            else if (net < 0) { elNet.innerText = net; elNet.className = "text-3xl font-black text-missionGreen my-2"; elMsg.innerText = "DEFICIT (WEIGHT LOSS)"; elMsg.className = "text-[10px] text-missionGreen font-bold uppercase"; } 
+            else { elNet.innerText = "+" + net; elNet.className = "text-3xl font-black text-missionRed my-2"; elMsg.innerText = "SURPLUS (WEIGHT GAIN)"; elMsg.className = "text-[10px] text-missionRed font-bold uppercase"; }
         }
 
         // --- VISUALS & STATS ---
@@ -1495,130 +1155,95 @@
 
         function refreshUI() {
             const m = getActiveMission();
-            
-            // Filter Range
             const sParts = appState.filter.start.split('-'); const s = new Date(sParts[0], sParts[1]-1, sParts[2]); s.setHours(0,0,0,0);
             const eParts = appState.filter.end.split('-'); const e = new Date(eParts[0], eParts[1]-1, eParts[2]); e.setHours(23,59,59,999);
-
-            const entries = appState.entries.filter(x => { 
-                const dParts = x.date.split('-'); const d = new Date(dParts[0], dParts[1]-1, dParts[2]); return d>=s && d<=e; 
-            });
+            const entries = appState.entries.filter(x => { const dParts = x.date.split('-'); const d = new Date(dParts[0], dParts[1]-1, dParts[2]); return d>=s && d<=e; });
             const wEntries = entries.filter(e => e.weight);
 
             updateDashboard(entries, wEntries, m);
             updateChart(entries, m);
             updateWorkoutChart(entries);
+            updateFinanceChart(entries, m);
             updateUnlocks(wEntries, m);
-            
             updateSoberStats([...appState.entries].sort((a,b)=>new Date(a.date)-new Date(b.date)), m);
-
             updateDisciplineAnalytics(entries);
             updatePerformanceStats(entries, m, wEntries);
             
-            const totalSteps = entries.reduce((a,b) => a + (b.steps||0), 0);
-            const totalKm = totalSteps/1250;
-            const dayCount = entries.length; 
-            
-            document.getElementById('stat-total-steps').innerText = totalSteps.toLocaleString();
-            document.getElementById('stat-avg-steps').innerText = dayCount > 0 ? Math.round(totalSteps/dayCount).toLocaleString() : "0";
-            document.getElementById('stat-total-km').innerText = totalKm.toFixed(2) + " km";
-            document.getElementById('stat-avg-km').innerText = dayCount > 0 ? (totalKm/dayCount).toFixed(2) : "0";
+            const totalSteps = entries.reduce((a,b) => a + (b.steps||0), 0); const dayCount = entries.length; 
+            document.getElementById('stat-total-steps').innerText = totalSteps.toLocaleString(); document.getElementById('stat-avg-steps').innerText = dayCount > 0 ? Math.round(totalSteps/dayCount).toLocaleString() : "0";
+            document.getElementById('stat-total-km').innerText = (totalSteps/1250).toFixed(2) + " km"; document.getElementById('stat-avg-km').innerText = dayCount > 0 ? ((totalSteps/1250)/dayCount).toFixed(2) : "0";
 
-            // CALORIE & REALITY CHECK
-            let totalNet = 0; let daysWithFood = 0;
-            const allEntries = [...appState.entries].sort((a,b)=>new Date(a.date)-new Date(b.date));
-            let cumulativeNet = 0;
-            
-            allEntries.forEach(x => {
+            let totalNet = 0; let daysWithFood = 0; let cumulativeNet = 0;
+            [...appState.entries].sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(x => {
                 if(x.cals > 0) {
-                    const kg = (x.weight || m.startW) * 0.453592;
-                    const bmr = (10 * kg) + (6.25 * (m.height||178)) - (5 * (m.age||59)) + 5;
-                    const burn = bmr + Math.round((x.steps||0)*0.06) + ([0,150,250,350,500,700][x.intensity||0]);
-                    const dayNet = (x.cals - burn);
+                    const bmr = (10 * ((x.weight || m.startW) * 0.453592)) + (6.25 * (m.height||178)) - (5 * (m.age||59)) + 5;
+                    const dayNet = (x.cals - (bmr + Math.round((x.steps||0)*0.06) + ([0,150,250,350,500,700][x.intensity||0])));
                     cumulativeNet += dayNet;
-
                     const dParts = x.date.split('-'); const d = new Date(dParts[0], dParts[1]-1, dParts[2]);
                     if(d>=s && d<=e) { totalNet += dayNet; daysWithFood++; }
                 }
             });
 
-            // 1. Filtered Net Calories (Visual Box)
             const elNetStat = document.getElementById('stat-total-net-cals');
             if(daysWithFood===0) { elNetStat.innerText = "NO DATA"; elNetStat.className="text-lg font-mono font-bold text-gray-500"; }
             else if(totalNet < 0) { elNetStat.innerText = totalNet.toLocaleString(); elNetStat.className="text-lg font-mono font-bold text-missionGreen"; }
             else { elNetStat.innerText = "+" + totalNet.toLocaleString(); elNetStat.className="text-lg font-mono font-bold text-missionRed"; }
 
-            // 2. Reality Check
-            const poundsLostTheoretical = (cumulativeNet / 3500).toFixed(1);
-            const theoreticalW = (m.startW + parseFloat(poundsLostTheoretical)).toFixed(1);
+            const theoreticalW = (m.startW + parseFloat((cumulativeNet / 3500).toFixed(1))).toFixed(1);
             const actualW = wEntries.length ? wEntries[wEntries.length-1].weight : m.startW;
-            
-            document.getElementById('stat-theoretical-w').innerText = theoreticalW;
-            document.getElementById('stat-actual-w').innerText = actualW;
-            
-            const diff = (actualW - theoreticalW).toFixed(1);
-            const elDiff = document.getElementById('reality-diff');
-            if(diff < 0) {
-                elDiff.innerText = `${Math.abs(diff)} LBS AHEAD OF MATH (HIGH EFFICIENCY)`;
-                elDiff.className = "mt-2 text-[9px] font-bold text-missionGreen animate-pulse";
-            } else {
-                elDiff.innerText = `${diff} LBS BEHIND MATH (CHECK TRACKING)`;
-                elDiff.className = "mt-2 text-[9px] font-bold text-missionOrange";
-            }
+            document.getElementById('stat-theoretical-w').innerText = theoreticalW; document.getElementById('stat-actual-w').innerText = actualW;
+            const diff = (actualW - theoreticalW).toFixed(1); const elDiff = document.getElementById('reality-diff');
+            if(diff < 0) { elDiff.innerText = `${Math.abs(diff)} LBS AHEAD OF MATH (HIGH EFFICIENCY)`; elDiff.className = "mt-2 text-[9px] font-bold text-missionGreen animate-pulse"; } 
+            else { elDiff.innerText = `${diff} LBS BEHIND MATH (CHECK TRACKING)`; elDiff.className = "mt-2 text-[9px] font-bold text-missionOrange"; }
 
-            const mCounts = {};
-            entries.forEach(x => { if(x.muscles) x.muscles.forEach(m => mCounts[m] = (mCounts[m]||0)+1); });
+            const mCounts = {}; entries.forEach(x => { if(x.muscles) x.muscles.forEach(mu => mCounts[mu] = (mCounts[mu]||0)+1); });
             const mGrid = document.getElementById('muscle-stats-grid'); mGrid.innerHTML = '';
-            ['chest','back','shoulders','arms','legs','core','cardio'].forEach(m => {
-                const c = mCounts[m] || 0;
+            ['chest','back','shoulders','arms','legs','core','cardio'].forEach(mu => {
                 const div = document.createElement('div'); div.className = "flex justify-between bg-gray-900/50 border border-gray-800 px-2 py-1 items-center";
-                div.innerHTML = `<span class="text-[8px] md:text-[9px] text-gray-500 font-bold uppercase">${m}</span><span class="text-[9px] md:text-[10px] font-mono text-missionTeal">${String(c).padStart(2,'0')}</span>`;
+                div.innerHTML = `<span class="text-[8px] md:text-[9px] text-gray-500 font-bold uppercase">${mu}</span><span class="text-[9px] md:text-[10px] font-mono text-missionTeal">${String(mCounts[mu] || 0).padStart(2,'0')}</span>`;
                 mGrid.appendChild(div);
             });
         }
 
+        // --- STREAMING_CHUNK: Re-wiring the financial logic into the Wealth Dashboard... ---
         function updateSoberStats(allSortedEntries, m) {
-            let activeStreak = 0;
-            let totalCravings = 0;
-            let totalVaporized = 0;
+            let activeStreak = 0; let totalCravings = 0; let totalVaporized = 0; let totalSoberDays = 0;
             
-            // Contiguous logic from most recent log backwards
-            for(let i = allSortedEntries.length - 1; i >= 0; i--) {
-                if(allSortedEntries[i].alcohol) activeStreak++;
-                else break; // Streak broken
-            }
+            // Streak
+            for(let i = allSortedEntries.length - 1; i >= 0; i--) { if(allSortedEntries[i].alcohol) activeStreak++; else break; }
             
+            // Wealth Calculation
             allSortedEntries.forEach(e => {
                 totalCravings += (e.cravingsDefeated || 0);
-                if(e.alcohol === false && e.breachDrinks) {
+                if(e.alcohol) {
+                    totalSoberDays++; 
+                } else if(e.alcohol === false && e.breachDrinks) {
                     let costPer = e.breachLoc === 'bar' ? 10 : 3;
                     let mult = e.breachTammy === 'tammy' ? 2 : 1;
                     totalVaporized += (e.breachDrinks * costPer * mult);
                 }
             });
 
-            const totalSaved = Math.round(activeStreak * (m.boozeDailySpend || 0));
-            const netFunds = totalSaved - totalVaporized;
+            const totalAverted = Math.round(totalSoberDays * (m.boozeDailySpend || 0));
+            const bankAcctUp = totalAverted - totalVaporized;
+            const daysElapsed = Math.max(1, allSortedEntries.length);
+            const yearlyProj = Math.round((bankAcctUp / daysElapsed) * 365);
 
             document.getElementById('stat-sober-streak').innerText = `${activeStreak} DAYS`;
-            document.getElementById('stat-funds-saved').innerText = `$${totalSaved}`;
-            document.getElementById('stat-funds-vaporized').innerText = `-$${totalVaporized}`;
-            
-            const netEl = document.getElementById('stat-net-funds');
-            if (netFunds > 0) {
-                netEl.innerText = `+$${netFunds}`;
-                netEl.className = "text-lg md:text-xl font-black text-missionGreen font-mono";
-            } else if (netFunds < 0) {
-                netEl.innerText = `-$${Math.abs(netFunds)}`;
-                netEl.className = "text-lg md:text-xl font-black text-red-500 font-mono";
-            } else {
-                netEl.innerText = `$0`;
-                netEl.className = "text-lg md:text-xl font-black text-gray-500 font-mono";
-            }
-
             document.getElementById('stat-cravings-total').innerText = totalCravings;
+            document.getElementById('stat-habit-averted').innerText = `$${totalAverted}`;
+            document.getElementById('stat-cash-bleed').innerText = `-$${totalVaporized}`;
+            
+            const netEl = document.getElementById('stat-bank-up');
+            if (bankAcctUp > 0) { netEl.innerText = `+$${bankAcctUp}`; netEl.className = "text-xl md:text-2xl font-black text-missionTeal font-mono mt-1"; } 
+            else if (bankAcctUp < 0) { netEl.innerText = `-$${Math.abs(bankAcctUp)}`; netEl.className = "text-xl md:text-2xl font-black text-red-500 font-mono mt-1"; } 
+            else { netEl.innerText = `$0`; netEl.className = "text-xl md:text-2xl font-black text-gray-500 font-mono mt-1"; }
 
-            // Render Biological Unlocks
+            const projEl = document.getElementById('stat-yearly-proj');
+            if (yearlyProj > 0) { projEl.innerText = `+$${yearlyProj}`; projEl.className = "text-base md:text-lg font-black text-missionGreen font-mono mt-1"; }
+            else if (yearlyProj < 0) { projEl.innerText = `-$${Math.abs(yearlyProj)}`; projEl.className = "text-base md:text-lg font-black text-red-500 font-mono mt-1"; }
+            else { projEl.innerText = `$0`; projEl.className = "text-base md:text-lg font-black text-gray-500 font-mono mt-1"; }
+
             const bioContainer = document.getElementById('bio-unlock-container'); bioContainer.innerHTML = '';
             BIO_UNLOCKS.forEach(u => {
                 const unlocked = activeStreak >= u.d;
@@ -1631,70 +1256,38 @@
 
         function updateDisciplineAnalytics(entries) {
             const totalDays = entries.length;
-            if(totalDays === 0) {
-                ['carnivore','alcohol','walk','workout'].forEach(k => { document.getElementById(`disc-${k}-pct`).innerText = "0%"; document.getElementById(`bar-${k}`).style.width = "0%"; });
-                return;
-            }
-            const meatCount = entries.filter(e => e.carnivore).length;
-            const alcoholCount = entries.filter(e => e.alcohol).length; // True = abstained
-            const walkCount = entries.filter(e => (e.steps||0) > 0).length;
-            const workoutCount = entries.filter(e => (e.intensity||0) > 0 || (e.muscles && e.muscles.length > 0)).length;
-
-            const updateBar = (id, count) => {
-                const pct = Math.round((count / totalDays) * 100);
-                document.getElementById(`disc-${id}-pct`).innerText = pct + "%";
-                document.getElementById(`bar-${id}`).style.width = pct + "%";
-            };
-            updateBar('carnivore', meatCount); updateBar('alcohol', alcoholCount); updateBar('walk', walkCount); updateBar('workout', workoutCount);
+            if(totalDays === 0) { ['carnivore','alcohol','walk','workout'].forEach(k => { document.getElementById(`disc-${k}-pct`).innerText = "0%"; document.getElementById(`bar-${k}`).style.width = "0%"; }); return; }
+            const updateBar = (id, count) => { const pct = Math.round((count / totalDays) * 100); document.getElementById(`disc-${id}-pct`).innerText = pct + "%"; document.getElementById(`bar-${id}`).style.width = pct + "%"; };
+            updateBar('carnivore', entries.filter(e => e.carnivore).length); updateBar('alcohol', entries.filter(e => e.alcohol).length); updateBar('walk', entries.filter(e => (e.steps||0) > 0).length); updateBar('workout', entries.filter(e => (e.intensity||0) > 0 || (e.muscles && e.muscles.length > 0)).length);
         }
 
         function updatePerformanceStats(entries, m, wEntries) {
             const card = document.getElementById('perf-card');
             const partsStart = m.start.split('-'); const mStart = new Date(partsStart[0], partsStart[1]-1, partsStart[2]);
             const partsEnd = m.end.split('-'); const mEnd = new Date(partsEnd[0], partsEnd[1]-1, partsEnd[2]);
-            
-            const today = new Date(); const msPerDay = 86400000;
-            const daysLeft = Math.ceil((mEnd - today) / msPerDay);
-            
+            const today = new Date(); const daysLeft = Math.ceil((mEnd - today) / 86400000);
             const currW = wEntries.length ? wEntries[wEntries.length-1].weight : m.startW;
-            const daysSinceStart = Math.max(1, Math.floor((today - mStart) / msPerDay));
-            const totalLost = m.startW - currW;
-            const ratePerDay = totalLost / daysSinceStart;
+            const ratePerDay = (m.startW - currW) / Math.max(1, Math.floor((today - mStart) / 86400000));
 
-            document.getElementById('perf-curr-weight').innerText = currW;
-            document.getElementById('perf-goal-weight').innerText = m.goalW;
+            document.getElementById('perf-curr-weight').innerText = currW; document.getElementById('perf-goal-weight').innerText = m.goalW;
             
             if(ratePerDay <= 0) {
-                document.getElementById('perf-rate-display').innerText = "RATE: GAINING/STAGNANT";
-                document.getElementById('perf-forecast-weight').innerText = "N/A";
-                document.getElementById('perf-result-text').innerText = "CRITICAL WARNING";
-                document.getElementById('perf-result-text').className = "text-xl font-black text-missionRed animate-pulse";
-                document.getElementById('perf-result-diff').innerText = "NO WEIGHT LOSS DETECTED";
-                
-                card.classList.remove('border-missionTeal', 'border-missionRed'); card.classList.add('border-missionRed');
-                document.getElementById('perf-urgent-msg').innerText = "TRAJECTORY FAILURE. IMMEDIATE CORRECTION REQUIRED.";
-                document.getElementById('perf-urgent-msg').className = "mt-4 text-center text-[10px] font-bold tracking-[0.2em] uppercase text-missionRed animate-pulse";
+                document.getElementById('perf-rate-display').innerText = "RATE: GAINING/STAGNANT"; document.getElementById('perf-forecast-weight').innerText = "N/A";
+                document.getElementById('perf-result-text').innerText = "CRITICAL WARNING"; document.getElementById('perf-result-text').className = "text-xl font-black text-missionRed animate-pulse";
+                document.getElementById('perf-result-diff').innerText = "NO WEIGHT LOSS DETECTED"; card.classList.remove('border-missionTeal', 'border-missionRed'); card.classList.add('border-missionRed');
+                document.getElementById('perf-urgent-msg').innerText = "TRAJECTORY FAILURE. IMMEDIATE CORRECTION REQUIRED."; document.getElementById('perf-urgent-msg').className = "mt-4 text-center text-[10px] font-bold tracking-[0.2em] uppercase text-missionRed animate-pulse";
             } else {
                 document.getElementById('perf-rate-display').innerText = `RATE: -${ratePerDay.toFixed(2)} LBS/DAY`;
-                
-                const projectedLossRemaining = ratePerDay * daysLeft;
-                const forecastEndW = (currW - projectedLossRemaining).toFixed(1);
-                document.getElementById('perf-forecast-weight').innerText = forecastEndW;
-                
+                const forecastEndW = (currW - (ratePerDay * daysLeft)).toFixed(1); document.getElementById('perf-forecast-weight').innerText = forecastEndW;
                 const gap = (forecastEndW - m.goalW).toFixed(1);
-                const elResText = document.getElementById('perf-result-text');
-                const elResDiff = document.getElementById('perf-result-diff');
-                const elUrg = document.getElementById('perf-urgent-msg');
-
+                const elResText = document.getElementById('perf-result-text'); const elResDiff = document.getElementById('perf-result-diff'); const elUrg = document.getElementById('perf-urgent-msg');
                 if (parseFloat(forecastEndW) <= m.goalW) {
                     card.classList.remove('border-missionRed'); card.classList.add('border-missionTeal');
-                    elResText.innerText = "SUCCESS FORECASTED"; elResText.className = "text-xl font-black text-missionTeal";
-                    elResDiff.innerText = `PROJECTED TO BEAT GOAL BY ${Math.abs(gap)} LBS`; elResDiff.className = "text-sm font-mono font-bold mt-1 text-missionTeal";
+                    elResText.innerText = "SUCCESS FORECASTED"; elResText.className = "text-xl font-black text-missionTeal"; elResDiff.innerText = `PROJECTED TO BEAT GOAL BY ${Math.abs(gap)} LBS`; elResDiff.className = "text-sm font-mono font-bold mt-1 text-missionTeal";
                     elUrg.innerText = "MISSION TRAJECTORY OPTIMAL. MAINTAIN VELOCITY."; elUrg.className = "mt-4 text-center text-[10px] font-bold tracking-[0.2em] uppercase text-missionTeal";
                 } else {
                     card.classList.remove('border-missionTeal'); card.classList.add('border-missionRed');
-                    elResText.innerText = "FAILURE IMMINENT"; elResText.className = "text-xl font-black text-missionRed animate-pulse";
-                    elResDiff.innerText = `PROJECTED TO MISS GOAL BY ${gap} LBS`; elResDiff.className = "text-sm font-mono font-bold mt-1 text-missionRed";
+                    elResText.innerText = "FAILURE IMMINENT"; elResText.className = "text-xl font-black text-missionRed animate-pulse"; elResDiff.innerText = `PROJECTED TO MISS GOAL BY ${gap} LBS`; elResDiff.className = "text-sm font-mono font-bold mt-1 text-missionRed";
                     elUrg.innerText = "COURSE CORRECTION REQUIRED. INCREASE INTENSITY."; elUrg.className = "mt-4 text-center text-[10px] font-bold tracking-[0.2em] uppercase text-missionRed animate-pulse";
                 }
             }
@@ -1702,21 +1295,13 @@
 
         function updateDashboard(entries, wEntries, m) {
             const currW = wEntries.length ? wEntries[wEntries.length-1].weight : m.startW;
-            let lastEntryDate = new Date();
-            if(wEntries.length) { const parts = wEntries[wEntries.length-1].date.split('-'); lastEntryDate = new Date(parts[0], parts[1]-1, parts[2]); }
-
-            document.getElementById('main-weight-display').innerText = currW;
-            document.getElementById('status-date-display').innerText = lastEntryDate.toLocaleDateString(undefined, {month:'short', day:'numeric'});
-            document.getElementById('disp-start-weight').innerText = m.startW;
-            document.getElementById('disp-goal-weight').innerText = m.goalW;
+            let lastEntryDate = new Date(); if(wEntries.length) { const parts = wEntries[wEntries.length-1].date.split('-'); lastEntryDate = new Date(parts[0], parts[1]-1, parts[2]); }
+            document.getElementById('main-weight-display').innerText = currW; document.getElementById('status-date-display').innerText = lastEntryDate.toLocaleDateString(undefined, {month:'short', day:'numeric'});
+            document.getElementById('disp-start-weight').innerText = m.startW; document.getElementById('disp-goal-weight').innerText = m.goalW;
             
             const elMainW = document.getElementById('main-weight-display'); const elStatLine = document.getElementById('trajectory-status');
-            const partsStart = m.start.split('-'); const partsEnd = m.end.split('-');
-            const start = new Date(partsStart[0], partsStart[1]-1, partsStart[2]);
-            const end = new Date(partsEnd[0], partsEnd[1]-1, partsEnd[2]); end.setHours(23,59,59,999);
-            const totalDur = end - start; const elapsed = lastEntryDate - start;
-            const timePct = Math.max(0, Math.min(1, elapsed/totalDur));
-            const totalToLose = m.startW - m.goalW; const targetW = m.startW - (totalToLose * timePct);
+            const partsStart = m.start.split('-'); const partsEnd = m.end.split('-'); const start = new Date(partsStart[0], partsStart[1]-1, partsStart[2]); const end = new Date(partsEnd[0], partsEnd[1]-1, partsEnd[2]); end.setHours(23,59,59,999);
+            const targetW = m.startW - ((m.startW - m.goalW) * Math.max(0, Math.min(1, (lastEntryDate - start)/(end - start))));
             const diff = parseFloat((currW - targetW).toFixed(2));
 
             if(elMainW && elStatLine) {
@@ -1724,8 +1309,7 @@
                 else { elMainW.classList.remove('text-missionGreen'); elMainW.classList.add('text-missionRed'); elStatLine.innerText = `${diff.toFixed(1)} LBS BEHIND PACE`; elStatLine.className = "text-[10px] md:text-[11px] font-bold uppercase mt-2 text-missionRed animate-pulse bg-black/50 px-2 py-1 rounded border border-missionRed/30"; }
             }
             
-            const lost = m.startW - currW;
-            const pct = Math.max(0, Math.min(100, (lost/totalToLose)*100));
+            const pct = Math.max(0, Math.min(100, ((m.startW - currW)/(m.startW - m.goalW))*100));
             if (pct > appState.lastPct + 0.1) AudioEngine.playSlide(); if (pct < appState.lastPct - 0.1) AudioEngine.playDown(); appState.lastPct = pct;
             document.getElementById('ship-track-fill').style.width = pct + '%'; document.getElementById('the-ship').style.left = pct + '%'; document.getElementById('pct-text').innerText = pct.toFixed(1) + '% COMPLETE';
         }
@@ -1737,72 +1321,78 @@
                 const unlocked = currW <= u.w;
                 const d = document.createElement('div'); d.className = `flex items-center gap-3 p-3 border rounded-sm transition-all ${unlocked ? 'border-missionOrange bg-missionOrange/10' : 'border-gray-800 bg-black opacity-50'}`;
                 d.innerHTML = `<div class="${unlocked ? 'text-missionOrange' : 'text-gray-600'}"><i data-lucide="${u.i}" class="w-5 h-5"></i></div><div class="flex-grow"><div class="text-[10px] font-bold ${unlocked?'text-white':'text-gray-500'}">${u.t}</div><div class="text-[9px] ${unlocked?'text-missionOrange':'text-gray-600'}">REQ: ${u.w} LBS</div></div><div class="${unlocked?'text-missionOrange':'text-gray-700'} text-xs font-bold">${unlocked?'UNLOCKED':'LOCKED'}</div>`;
-                if(unlocked) d.onmouseenter = () => AudioEngine.playEquip();
-                c.appendChild(d);
+                if(unlocked) d.onmouseenter = () => AudioEngine.playEquip(); c.appendChild(d);
             });
             lucide.createIcons();
         }
 
-        let chart; let workoutChart;
+        // --- STREAMING_CHUNK: Initializing Chart.js logic... ---
         function initCharts() {
-            const ctx = document.getElementById('weightChart').getContext('2d');
-            chart = new Chart(ctx, { type: 'line', data: {labels:[], datasets:[]}, options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#666' } }, y: { grid: { color: '#222' }, ticks: { color: '#888' } } }, plugins: { legend: { display: false } } } });
-            const ctx2 = document.getElementById('workoutChart').getContext('2d');
-            workoutChart = new Chart(ctx2, { type: 'bar', data: {labels:[], datasets:[]}, options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#666' } }, y: { grid: { color: '#222' }, ticks: { color: '#00FF00' }, beginAtZero: true, max: 5 } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return context.raw.notes; } } } } } });
+            const cfgLine = { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#666' } }, y: { grid: { color: '#222' }, ticks: { color: '#888' } } }, plugins: { legend: { display: false } } };
+            chart = new Chart(document.getElementById('weightChart').getContext('2d'), { type: 'line', data: {labels:[], datasets:[]}, options: cfgLine });
+            workoutChart = new Chart(document.getElementById('workoutChart').getContext('2d'), { type: 'bar', data: {labels:[], datasets:[]}, options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#666' } }, y: { grid: { color: '#222' }, ticks: { color: '#00FF00' }, beginAtZero: true, max: 5 } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(c) { return c.raw.notes; } } } } } });
+            financeChart = new Chart(document.getElementById('financeChart').getContext('2d'), { type: 'line', data: {labels:[], datasets:[]}, options: { responsive: true, maintainAspectRatio: false, scales: { x: { grid: { display: false }, ticks: { color: '#666' } }, y: { grid: { color: '#222' }, ticks: { color: '#00FFFF' } } }, plugins: { legend: { display: false } }, elements: { line: { tension: 0.3 } } } });
         }
 
         function updateChart(entries, m) {
             if(!chart) return;
-            const sParts = appState.filter.start.split('-'); const start = new Date(sParts[0], sParts[1]-1, sParts[2]);
-            const eParts = appState.filter.end.split('-'); const end = new Date(eParts[0], eParts[1]-1, eParts[2]);
-
             const labels=[], goals=[], acts=[];
-            const mStartParts = m.start.split('-'); const mEndParts = m.end.split('-');
-            const mStart = new Date(mStartParts[0], mStartParts[1]-1, mStartParts[2]);
-            const mEnd = new Date(mEndParts[0], mEndParts[1]-1, mEndParts[2]);
-            const dur = (mEnd - mStart)/86400000; const perDay = (m.startW - m.goalW)/dur;
+            const sParts = appState.filter.start.split('-'); const start = new Date(sParts[0], sParts[1]-1, sParts[2]); const eParts = appState.filter.end.split('-'); const end = new Date(eParts[0], eParts[1]-1, eParts[2]);
+            const mStartParts = m.start.split('-'); const mEndParts = m.end.split('-'); const mStart = new Date(mStartParts[0], mStartParts[1]-1, mStartParts[2]); const mEnd = new Date(mEndParts[0], mEndParts[1]-1, mEndParts[2]);
+            const perDay = (m.startW - m.goalW)/((mEnd - mStart)/86400000);
             for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)) {
                 const str = d.toISOString().split('T')[0]; labels.push(d.toLocaleDateString(undefined, {month:'numeric', day:'numeric'}));
-                const dp = (d - mStart)/86400000; goals.push(m.startW - (dp*perDay));
+                goals.push(m.startW - (((d - mStart)/86400000)*perDay));
                 const e = entries.find(x=>x.date===str); acts.push(e ? e.weight : null);
             }
-            chart.data.labels = labels;
-            chart.data.datasets = [{ label: 'Goal', data: goals, borderColor: '#FF9F00', borderDash: [5,5], borderWidth: 1, pointRadius: 0 }, { label: 'Actual', data: acts, borderColor: '#00FFFF', backgroundColor: 'rgba(0,255,255,0.1)', borderWidth: 2, fill: true, spanGaps: true }];
-            chart.update();
+            chart.data.labels = labels; chart.data.datasets = [{ label: 'Goal', data: goals, borderColor: '#FF9F00', borderDash: [5,5], borderWidth: 1, pointRadius: 0 }, { label: 'Actual', data: acts, borderColor: '#00FFFF', backgroundColor: 'rgba(0,255,255,0.1)', borderWidth: 2, fill: true, spanGaps: true }]; chart.update();
         }
 
         function updateWorkoutChart(entries) {
-              if(!workoutChart) return;
-              const workouts = entries.filter(e => (e.intensity && e.intensity > 0) || (e.muscles && e.muscles.length > 0));
-              const labels = []; const data = []; const bgColors = []; const borderColors = [];
-              workouts.forEach(w => {
-                  const parts = w.date.split('-'); const d = new Date(parts[0], parts[1]-1, parts[2]);
-                  labels.push(d.toLocaleDateString(undefined, {month:'short', day:'numeric'}));
-                  const muscleText = (w.muscles && w.muscles.length > 0) ? w.muscles.join(', ').toUpperCase() : "GENERIC";
-                  const isZero = !w.intensity || w.intensity === 0;
-                  data.push({ x: d.toLocaleDateString(undefined, {month:'short', day:'numeric'}), y: isZero ? 0.2 : w.intensity, notes: `Intensity: ${w.intensity||0}/5 | Focus: ${muscleText}` });
-                  bgColors.push(isZero ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 255, 0, 0.5)'); borderColors.push(isZero ? '#666' : '#00FF00');
-              });
-              workoutChart.data.labels = labels;
-              workoutChart.data.datasets = [{ label: 'Intensity', data: data, backgroundColor: bgColors, borderColor: borderColors, borderWidth: 1 }];
-              workoutChart.update();
+            if(!workoutChart) return;
+            const labels = []; const data = []; const bgColors = []; const borderColors = [];
+            entries.filter(e => (e.intensity && e.intensity > 0) || (e.muscles && e.muscles.length > 0)).forEach(w => {
+                const parts = w.date.split('-'); labels.push(new Date(parts[0], parts[1]-1, parts[2]).toLocaleDateString(undefined, {month:'short', day:'numeric'}));
+                const isZero = !w.intensity || w.intensity === 0;
+                data.push({ x: labels[labels.length-1], y: isZero ? 0.2 : w.intensity, notes: `Intensity: ${w.intensity||0}/5 | Focus: ${(w.muscles && w.muscles.length > 0) ? w.muscles.join(', ').toUpperCase() : "GENERIC"}` });
+                bgColors.push(isZero ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 255, 0, 0.5)'); borderColors.push(isZero ? '#666' : '#00FF00');
+            });
+            workoutChart.data.labels = labels; workoutChart.data.datasets = [{ label: 'Intensity', data: data, backgroundColor: bgColors, borderColor: borderColors, borderWidth: 1 }]; workoutChart.update();
+        }
+
+        function updateFinanceChart(entries, m) {
+            if(!financeChart) return;
+            const labels = []; const data = [];
+            let cumulativeAverted = 0; let cumulativeBleed = 0;
+            const sParts = appState.filter.start.split('-'); const start = new Date(sParts[0], sParts[1]-1, sParts[2]); const eParts = appState.filter.end.split('-'); const end = new Date(eParts[0], eParts[1]-1, eParts[2]);
+            
+            for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)) {
+                const str = d.toISOString().split('T')[0];
+                const e = entries.find(x=>x.date===str);
+                if(e) {
+                    if(e.alcohol) cumulativeAverted += (m.boozeDailySpend || 0);
+                    else if(e.alcohol === false && e.breachDrinks) cumulativeBleed += (e.breachDrinks * (e.breachLoc === 'bar' ? 10 : 3) * (e.breachTammy === 'tammy' ? 2 : 1));
+                }
+                labels.push(d.toLocaleDateString(undefined, {month:'numeric', day:'numeric'}));
+                data.push(cumulativeAverted - cumulativeBleed);
+            }
+            financeChart.data.labels = labels;
+            financeChart.data.datasets = [{ label: 'Net Wealth', data: data, borderColor: '#00FFFF', backgroundColor: 'rgba(0,255,255,0.1)', borderWidth: 2, fill: true, pointRadius: 1 }];
+            financeChart.update();
         }
 
         function renderCalendar() {
             const year = appState.calendarDate.getFullYear(); const month = appState.calendarDate.getMonth();
             const firstDay = new Date(year, month, 1).getDay(); const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const selectedStr = document.getElementById('inpDate').value;
             document.getElementById('calMonthYear').innerText = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
             const grid = document.getElementById('calendarGrid'); grid.innerHTML = '';
             for(let i=0; i<firstDay; i++) grid.appendChild(document.createElement('div'));
             for(let d=1; d<=daysInMonth; d++) {
-                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                const entry = appState.entries.find(e => e.date === dateStr);
+                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const entry = appState.entries.find(e => e.date === dateStr);
                 const div = document.createElement('div'); div.innerText = d; div.className = "calendar-day rounded-sm font-bold text-gray-500";
-                if(entry) { const habitCount = (entry.carnivore?1:0) + (entry.alcohol?1:0); if(habitCount === 2) div.className = "calendar-day rounded-sm font-bold day-perfect"; else div.className = "calendar-day rounded-sm font-bold day-good"; } else div.classList.add('day-unrated');
-                if(dateStr === selectedStr) div.classList.add('day-selected');
-                div.onclick = () => { document.getElementById('inpDate').value = dateStr; loadEntryForDate(dateStr); renderCalendar(); AudioEngine.playChirp(); };
-                grid.appendChild(div);
+                if(entry) { div.className = `calendar-day rounded-sm font-bold ${(entry.carnivore?1:0)+(entry.alcohol?1:0) === 2 ? 'day-perfect' : 'day-good'}`; } else div.classList.add('day-unrated');
+                if(dateStr === document.getElementById('inpDate').value) div.classList.add('day-selected');
+                div.onclick = () => { document.getElementById('inpDate').value = dateStr; loadEntryForDate(dateStr); renderCalendar(); AudioEngine.playChirp(); }; grid.appendChild(div);
             }
         }
 
@@ -1811,8 +1401,7 @@
                 const m = getActiveMission(); if (!m) return;
                 const parts = m.end.split('-'); const end = new Date(parts[0], parts[1]-1, parts[2]); end.setHours(23,59,59,999);
                 const selectedDateVal = document.getElementById('inpDate').value; const selected = new Date(selectedDateVal);
-                const today = new Date();
-                const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()); const selectedStart = new Date(selected.getFullYear(), selected.getMonth(), selected.getDate()); const isToday = selectedStart.getTime() === todayStart.getTime();
+                const today = new Date(); const isToday = new Date(selected.getFullYear(), selected.getMonth(), selected.getDate()).getTime() === new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
                 const daysEl = document.getElementById('cnt-days'); const hoursEl = document.getElementById('cnt-hours'); const contextEl = document.getElementById('countdown-context');
                 if (!daysEl) return;
                 if (isToday) {
@@ -1829,88 +1418,42 @@
         function cycleFearImage(silent) {
             if(!silent) AudioEngine.playStatic();
             appState.imgIndex = (appState.imgIndex+1)%IMAGE_LIB.length; document.getElementById('fear-img').src = IMAGE_LIB[appState.imgIndex];
-            
-            // Generate a fresh positive quote for the visual programmer
-            const generatedQuote = generateQuote('positive');
-            document.getElementById('fear-quote').innerText = `"${generatedQuote}"`;
-            
-            const authorEl = document.getElementById('quote-author'); if (authorEl) authorEl.innerText = "TACTICAL OVERRIDE";
+            document.getElementById('fear-quote').innerText = `"${generateQuote('positive')}"`; const authorEl = document.getElementById('quote-author'); if (authorEl) authorEl.innerText = "TACTICAL OVERRIDE";
         }
 
         // --- EXPORT ---
         function syncGoogle() {
-            const e = appState.currentEntry; const m = getActiveMission();
-            const w = document.getElementById('inpWeight').value || "N/A";
-            const steps = document.getElementById('inpSteps').value || 0;
-            const km = (steps/1250).toFixed(2);
-            const cals = document.getElementById('inpCals').value || 0;
-            const mood = e.mood || 5;
-            const parts = m.end.split('-'); const end = new Date(parts[0], parts[1]-1, parts[2]);
-            const selectedDate = new Date(document.getElementById('inpDate').value);
-            const daysLeft = Math.floor((end - selectedDate) / (1000 * 60 * 60 * 24));
-            const left = (parseFloat(w) - m.goalW).toFixed(1);
-
+            const e = appState.currentEntry; const m = getActiveMission(); const w = document.getElementById('inpWeight').value || "N/A"; const steps = document.getElementById('inpSteps').value || 0;
+            const km = (steps/1250).toFixed(2); const cals = document.getElementById('inpCals').value || 0; const mood = e.mood || 5;
+            const parts = m.end.split('-'); const end = new Date(parts[0], parts[1]-1, parts[2]); const selectedDate = new Date(document.getElementById('inpDate').value);
+            const daysLeft = Math.floor((end - selectedDate) / (1000 * 60 * 60 * 24)); const left = (parseFloat(w) - m.goalW).toFixed(1);
             const t = encodeURIComponent(`🚢 ${m.name}: ${w} lbs (${left} lbs to go | ${daysLeft} Days Left)`);
-            const muscles = (e.muscles || []).join(", ").toUpperCase();
-            const d = encodeURIComponent(`Steps: ${steps} (${km}km)\nCalories In: ${cals}\nWork: ${muscles} (${e.intensity || 0}/5)\nVibe: ${mood}/10 | Sleep: ${e.sleep || 5}/10\n🥩MEAT ${e.carnivore?'✅':'❌'} 🚫NO-ALC ${e.alcohol?'✅':'❌'}\nCravings Beaten: ${e.cravingsDefeated||0}\nWater: ${e.water||0} | Fast: ${e.fasting||0}h\nNotes: ${document.getElementById('inpNotes').value}`);
-            const dt = document.getElementById('inpDate').value.replace(/-/g,'');
-            window.open(`https://calendar.google.com/calendar/r/eventedit?text=${t}&details=${d}&dates=${dt}/${dt}`,'_blank');
+            const d = encodeURIComponent(`Steps: ${steps} (${km}km)\nCalories In: ${cals}\nWork: ${(e.muscles || []).join(", ").toUpperCase()} (${e.intensity || 0}/5)\nVibe: ${mood}/10 | Sleep: ${e.sleep || 5}/10\n🥩MEAT ${e.carnivore?'✅':'❌'} 🚫NO-ALC ${e.alcohol?'✅':'❌'}\nCravings Beaten: ${e.cravingsDefeated||0}\nWater: ${e.water||0} | Fast: ${e.fasting||0}h\nNotes: ${document.getElementById('inpNotes').value}`);
+            const dt = document.getElementById('inpDate').value.replace(/-/g,''); window.open(`https://calendar.google.com/calendar/r/eventedit?text=${t}&details=${d}&dates=${dt}/${dt}`,'_blank');
         }
         
         function exportFullICS() {
-            const m = getActiveMission();
-            let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//MC//EN\n";
-            let curr = new Date(appState.filter.start); const end = new Date(appState.filter.end);
-            let runningSteps = 0;
+            const m = getActiveMission(); let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//MC//EN\n";
+            let curr = new Date(appState.filter.start); const end = new Date(appState.filter.end); let runningSteps = 0;
             const rate = (m.startW - m.goalW) / ((new Date(m.end) - new Date(m.start))/86400000);
-            
             while(curr <= end) {
                 const dateStr = curr.toISOString().split('T')[0]; const clean = dateStr.replace(/-/g,'');
                 const days = (curr - new Date(m.start))/86400000; const tgt = (m.startW - (days*rate)).toFixed(1);
                 const e = appState.entries.find(x=>x.date===dateStr);
-
-                if(e && e.steps) runningSteps += parseInt(e.steps);
-                const runningKm = (runningSteps / 1250).toFixed(2);
-
-                let summary = `🎯 PLAN: ${tgt}`; 
-                if(e && e.weight) { const left = (e.weight - m.goalW).toFixed(1); summary = `✅ ${e.weight} (${left} to go) / 🎯 ${tgt}`; }
-                
+                if(e && e.steps) runningSteps += parseInt(e.steps); const runningKm = (runningSteps / 1250).toFixed(2);
+                let summary = `🎯 PLAN: ${tgt}`; if(e && e.weight) { const left = (e.weight - m.goalW).toFixed(1); summary = `✅ ${e.weight} (${left} to go) / 🎯 ${tgt}`; }
                 let desc = `TARGET: ${tgt} lbs\n`;
                 if(e) {
-                    const muscles = (e.muscles || []).join(", ").toUpperCase();
-                    const dailyKm = ((e.steps || 0)/1250).toFixed(2);
-                    const kg = (e.weight || m.startW) * 0.453592;
-                    const bmr = (10 * kg) + (6.25 * (m.height||178)) - (5 * (m.age||59)) + 5;
-                    const burn = bmr + Math.round((e.steps||0)*0.06) + ([0,150,250,350,500,700][e.intensity||0]);
-                    const net = (e.cals||0) - burn;
-
-                    desc += `\n--- MISSION LOG ---\n`;
-                    desc += `WEIGHT: ${e.weight || 'N/A'} lbs\n`;
-                    desc += `CALORIES: In ${e.cals||0} | Out ${Math.round(burn)} | Net ${net}\n`;
-                    desc += `MACROS: Pro ${e.protein||0}g | Fat ${e.fat||0}g\n`;
-                    desc += `STEPS: ${e.steps || 0} (${dailyKm} km)\n`;
-                    desc += `TOTAL DISTANCE: ${runningKm} km\n`; 
-                    desc += `WORKOUT: ${muscles || 'None'} (Int: ${e.intensity || 0}/5)\n`;
-                    desc += `VIBE/SLEEP: Vibe ${e.mood || 5}/10 | Sleep ${e.sleep || 5}/10\n`;
-                    desc += `PROTOCOLS: ${e.carnivore?'🥩MEAT':'-'} ${e.alcohol?'🚫NO-ALC':'-'}\n`;
-                    desc += `HYDRATION/FAST: Water ${e.water||0} | Fasting ${e.fasting||0}h\n`;
-                    desc += `CRAVINGS BEATEN: ${e.cravingsDefeated||0}\n`;
-                    desc += `NOTES: ${e.notes || 'No notes.'}`;
+                    const bmr = (10 * ((e.weight || m.startW) * 0.453592)) + (6.25 * (m.height||178)) - (5 * (m.age||59)) + 5; const burn = bmr + Math.round((e.steps||0)*0.06) + ([0,150,250,350,500,700][e.intensity||0]);
+                    desc += `\n--- MISSION LOG ---\nWEIGHT: ${e.weight || 'N/A'} lbs\nCALORIES: In ${e.cals||0} | Out ${Math.round(burn)} | Net ${(e.cals||0) - burn}\nMACROS: Pro ${e.protein||0}g | Fat ${e.fat||0}g\nSTEPS: ${e.steps || 0} (${((e.steps || 0)/1250).toFixed(2)} km)\nTOTAL DISTANCE: ${runningKm} km\nWORKOUT: ${(e.muscles || []).join(", ").toUpperCase() || 'None'} (Int: ${e.intensity || 0}/5)\nVIBE/SLEEP: Vibe ${e.mood || 5}/10 | Sleep ${e.sleep || 5}/10\nPROTOCOLS: ${e.carnivore?'🥩MEAT':'-'} ${e.alcohol?'🚫NO-ALC':'-'}\nHYDRATION/FAST: Water ${e.water||0} | Fasting ${e.fasting||0}h\nCRAVINGS BEATEN: ${e.cravingsDefeated||0}\nNOTES: ${e.notes || 'No notes.'}`;
                 } else { desc += `\n(No data logged for this date yet)`; }
-
-                ics += `BEGIN:VEVENT\nDTSTART;VALUE=DATE:${clean}\nDTEND;VALUE=DATE:${clean}\nSUMMARY:${summary}\nDESCRIPTION:${desc.replace(/\n/g, '\\n')}\nEND:VEVENT\n`;
-                curr.setDate(curr.getDate()+1);
+                ics += `BEGIN:VEVENT\nDTSTART;VALUE=DATE:${clean}\nDTEND;VALUE=DATE:${clean}\nSUMMARY:${summary}\nDESCRIPTION:${desc.replace(/\n/g, '\\n')}\nEND:VEVENT\n`; curr.setDate(curr.getDate()+1);
             }
             ics += "END:VCALENDAR";
             const b = new Blob([ics], {type:'text/calendar'}); const a = document.createElement('a'); a.href=URL.createObjectURL(b); a.download="MissionPlan_Full_Details.ics"; a.click();
         }
 
-        function exportJSON() { 
-            const b = new Blob([JSON.stringify(appState)], {type:'application/json'}); 
-            const a = document.createElement('a'); a.href=URL.createObjectURL(b); a.download="data.json"; a.click(); 
-            localStorage.setItem('cruiseMissionLastBackup', new Date().toISOString());
-            document.getElementById('backup-warning').classList.add('hidden');
-        }
+        function exportJSON() { const b = new Blob([JSON.stringify(appState)], {type:'application/json'}); const a = document.createElement('a'); a.href=URL.createObjectURL(b); a.download="data.json"; a.click(); localStorage.setItem('cruiseMissionLastBackup', new Date().toISOString()); document.getElementById('backup-warning').classList.add('hidden'); }
         function importJSON(inp) { const r = new FileReader(); r.onload = e => { try { const d = JSON.parse(e.target.result); if(d.entries) appState = d; saveData(true); location.reload(); } catch(e) { sysAlert("Error parsing JSON file."); } }; r.readAsText(inp.files[0]); }
     </script>
 </body>
