@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUISE MISSION CONTROL V4.3 (WEALTH & COMBAT UPGRADE)</title>
+    <title>CRUISE MISSION CONTROL V5.0 (ULTIMATE OMNI-PROTOCOL)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -18,6 +18,7 @@
                         missionGreen: '#00FF00', 
                         missionRed: '#FF0000', 
                         missionPurple: '#B026FF',
+                        neonPurple: '#d946ef',
                         missionBg: '#050505', 
                         panelBg: '#111111'
                     },
@@ -60,6 +61,12 @@
         }
         .mission-input:focus { outline: none; border-color: #FF9F00; box-shadow: 0 0 10px rgba(255, 159, 0, 0.3); }
 
+        /* Exercise Inputs Specifics */
+        .ex-input-teal:focus { border-color: #00FFFF; box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); }
+        .ex-input-green:focus { border-color: #00FF00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); }
+        .ex-input-orange:focus { border-color: #FF9F00; box-shadow: 0 0 10px rgba(255, 159, 0, 0.3); }
+        .ex-input-purple:focus { border-color: #d946ef; box-shadow: 0 0 10px rgba(217, 70, 239, 0.3); }
+
         /* Chevron Buttons */
         .chevron-btn {
             background: #1a1a1a; border: 1px solid #333; color: #00FFFF; width: 30px; height: 100%;
@@ -92,9 +99,9 @@
 
         /* CRT Scanline */
         .scanlines {
-            position: fixed; top: 0; left: 0; w: 100%; h: 100%; pointer-events: none; z-index: 9999;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            background-size: 100% 3px, 3px 100%; width: 100vw; height: 100vh; opacity: 0.4;
+            background-size: 100% 3px, 3px 100%; opacity: 0.4;
         }
 
         /* Star Field */
@@ -114,6 +121,19 @@
             display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s;
         }
         .muscle-btn.active { border-color: #00FFFF; color: #000; background: #00FFFF; box-shadow: 0 0 10px rgba(0,255,255,0.4); }
+
+        /* Progress Bar Styles */
+        .prog-track { background: #111; height: 6px; border-radius: 3px; width: 100%; overflow: hidden; margin-top: 4px; }
+        .prog-fill { height: 100%; transition: width 0.5s ease-out; }
+
+        /* Auto-expanding textarea */
+        .auto-expand {
+            resize: none;
+            overflow: hidden;
+            min-height: 48px;
+            max-height: 200px;
+            transition: height 0.2s;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center pb-20">
@@ -217,7 +237,7 @@
                     <i data-lucide="ship" class="w-8 h-8 text-missionTeal"></i>
                 </div>
                 <div class="flex-grow">
-                    <div class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em] mb-1">ACTIVE PROTOCOL (V4.3)</div>
+                    <div class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.3em] mb-1">ULTIMATE PROTOCOL (V5.0)</div>
                     <select id="missionSelector" onchange="switchMission()" onmouseenter="AudioEngine.playHover()" class="bg-transparent font-black text-xl md:text-3xl text-white uppercase tracking-widest outline-none cursor-pointer hover:text-missionOrange transition w-full">
                     </select>
                 </div>
@@ -324,7 +344,7 @@
                     </div>
                 </div>
 
-                <!-- Sober Stats Dashboard (V4.3 - The Wealth Dashboard) -->
+                <!-- Sober Stats Dashboard (The Wealth Dashboard) -->
                 <div class="mt-2 grid grid-cols-2 md:grid-cols-6 gap-2 text-center border-t border-gray-800 pt-4 relative z-10">
                     <div class="bg-black/60 p-2 border border-missionOrange/30 shadow-[inset_0_0_10px_rgba(255,159,0,0.1)] flex flex-col justify-center">
                         <div class="text-[7px] md:text-[8px] text-gray-500 uppercase font-bold tracking-widest">SOBER STREAK</div>
@@ -372,10 +392,10 @@
             <!-- Left Column: Daily Log & Core Stats -->
             <div class="lg:col-span-5 space-y-8">
                 
-                <!-- DAILY LOG V4.3 -->
+                <!-- DAILY LOG OMNI -->
                 <div class="glass-panel">
                     <div class="bg-missionTeal/10 p-3 flex justify-between items-center px-5 border-b border-missionTeal/20">
-                        <span class="text-xs font-bold text-missionTeal uppercase tracking-widest">DAILY LOG V4.3</span>
+                        <span class="text-xs font-bold text-missionTeal uppercase tracking-widest">DAILY LOG V5.0 OMNI</span>
                         <i data-lucide="database" class="w-4 h-4 text-missionTeal"></i>
                     </div>
                     <div class="p-5 space-y-5">
@@ -392,11 +412,11 @@
                             </div>
                             <div>
                                 <label class="text-[10px] text-gray-500 font-bold block mb-2">WEIGHT</label>
-                                <input type="number" id="inpWeight" step="0.1" class="mission-input text-center font-black text-xl md:text-2xl text-white border-missionOrange/50 focus:border-missionOrange h-12" placeholder="000.0">
+                                <input type="number" id="inpWeight" step="0.1" class="mission-input text-center font-black text-xl md:text-2xl text-white border-missionOrange/50 focus:border-missionOrange h-12" placeholder="000.0" oninput="saveEntry()">
                             </div>
                         </div>
 
-                        <!-- Carnivore / Health Protocols -->
+                        <!-- Carnivore / Health Protocols (V4.3) -->
                         <div class="bg-gray-900/40 border border-gray-800 p-3 rounded-sm space-y-4">
                             <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-2">
                                 <span class="text-[9px] md:text-[10px] font-bold text-gray-500 uppercase">HEALTH METRICS</span>
@@ -406,11 +426,11 @@
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="text-[9px] text-blue-400 font-bold mb-1 block">WATER (GLS/BOT)</label>
-                                    <input type="number" id="inpWater" class="mission-input text-center text-sm font-mono border-blue-900 focus:border-blue-500 text-blue-300" placeholder="0" onchange="saveEntry()">
+                                    <input type="number" id="inpWater" class="mission-input text-center text-sm font-mono border-blue-900 focus:border-blue-500 text-blue-300" placeholder="0" oninput="saveEntry()">
                                 </div>
                                 <div>
                                     <label class="text-[9px] text-yellow-500 font-bold mb-1 block">FASTING (HRS)</label>
-                                    <input type="number" id="inpFasting" class="mission-input text-center text-sm font-mono border-yellow-900 focus:border-yellow-500 text-yellow-300" placeholder="16" onchange="saveEntry()">
+                                    <input type="number" id="inpFasting" class="mission-input text-center text-sm font-mono border-yellow-900 focus:border-yellow-500 text-yellow-300" placeholder="16" oninput="saveEntry()">
                                 </div>
                             </div>
 
@@ -418,14 +438,48 @@
                                 <div class="flex justify-between items-end mb-1">
                                     <label class="text-[9px] text-missionGreen font-bold">CALORIES IN</label>
                                 </div>
-                                <input type="number" id="inpCals" class="mission-input text-center text-sm font-mono text-missionGreen border-missionGreen/50" placeholder="0">
+                                <input type="number" id="inpCals" class="mission-input text-center text-sm font-mono text-missionGreen border-missionGreen/50" placeholder="0" oninput="saveEntry()">
                             </div>
 
                             <div class="grid grid-cols-2 gap-3">
-                                <div><label class="text-[9px] text-red-400 font-bold mb-1 block">PROTEIN (g)</label><input type="number" id="inpProtein" class="mission-input text-center text-sm font-mono border-gray-700" placeholder="0" onchange="saveEntry()"></div>
-                                <div><label class="text-[9px] text-orange-300 font-bold mb-1 block">FAT (g)</label><input type="number" id="inpFat" class="mission-input text-center text-sm font-mono border-gray-700" placeholder="0" onchange="saveEntry()"></div>
+                                <div><label class="text-[9px] text-red-400 font-bold mb-1 block">PROTEIN (g)</label><input type="number" id="inpProtein" class="mission-input text-center text-sm font-mono border-gray-700" placeholder="0" oninput="saveEntry()"></div>
+                                <div><label class="text-[9px] text-orange-300 font-bold mb-1 block">FAT (g)</label><input type="number" id="inpFat" class="mission-input text-center text-sm font-mono border-gray-700" placeholder="0" oninput="saveEntry()"></div>
                             </div>
                         </div>
+
+                        <div class="border-t border-gray-800 my-4"></div>
+
+                        <!-- EXERCISE RESTORE (V3.3) -->
+                        <div>
+                            <div class="text-[10px] text-gray-500 font-bold mb-2 uppercase flex justify-between">
+                                <span>Daily Exercise Input</span>
+                                <i data-lucide="dumbbell" class="w-4 h-4 text-gray-500"></i>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="border border-missionTeal p-3 rounded bg-black/40">
+                                    <label class="text-[10px] font-bold text-missionTeal block text-center mb-1">PUSHUPS</label>
+                                    <input type="number" id="inpPushups" class="mission-input ex-input-teal text-center text-xl font-bold mb-1" placeholder="0" oninput="saveEntry()">
+                                    <div class="text-[9px] text-gray-600 text-center">Goal: 100</div>
+                                </div>
+                                <div class="border border-missionGreen p-3 rounded bg-black/40">
+                                    <label class="text-[10px] font-bold text-missionGreen block text-center mb-1">SITUPS</label>
+                                    <input type="number" id="inpSitups" class="mission-input ex-input-green text-center text-xl font-bold mb-1" placeholder="0" oninput="saveEntry()">
+                                    <div class="text-[9px] text-gray-600 text-center">Goal: 100</div>
+                                </div>
+                                <div class="border border-missionOrange p-3 rounded bg-black/40">
+                                    <label class="text-[10px] font-bold text-missionOrange block text-center mb-1">PULL-UPS</label>
+                                    <input type="number" id="inpPullups" class="mission-input ex-input-orange text-center text-xl font-bold mb-1" placeholder="0" oninput="saveEntry()">
+                                    <div class="text-[9px] text-gray-600 text-center">Goal: 50</div>
+                                </div>
+                                <div class="border border-neonPurple p-3 rounded bg-black/40">
+                                    <label class="text-[10px] font-bold text-neonPurple block text-center mb-1">SQUATS</label>
+                                    <input type="number" id="inpSquats" class="mission-input ex-input-purple text-center text-xl font-bold mb-1" placeholder="0" oninput="saveEntry()">
+                                    <div class="text-[9px] text-gray-600 text-center">Goal: 100</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-gray-800 my-4"></div>
 
                         <!-- Movement -->
                         <div>
@@ -433,10 +487,10 @@
                                 <label class="text-[10px] text-gray-500 font-bold">STEPS (6250 = 5km)</label>
                                 <span id="calc-km-display" class="text-[10px] md:text-xs font-bold text-missionTeal">0.00 km</span>
                             </div>
-                            <input type="number" id="inpSteps" class="mission-input text-center text-sm md:text-lg font-mono" placeholder="0" oninput="calcKm(this.value)">
+                            <input type="number" id="inpSteps" class="mission-input text-center text-sm md:text-lg font-mono" placeholder="0" oninput="calcKm(this.value); saveEntry()">
                         </div>
 
-                        <!-- Habits & Sobriety -->
+                        <!-- Habits & Sobriety (V4.3) -->
                         <div class="grid grid-cols-2 gap-3">
                             <button type="button" onclick="toggleHabit('carnivore')" id="h-carnivore" class="p-2 border border-gray-800 bg-black/40 transition group flex items-center justify-between">
                                 <span class="text-[9px] md:text-[10px] font-bold text-gray-400 group-[.active]:text-missionTeal">🥩 CARNIVORE</span>
@@ -450,7 +504,7 @@
                             </div>
                         </div>
 
-                        <!-- PROTOCOL BREACH PANEL (HIDDEN BY DEFAULT) -->
+                        <!-- PROTOCOL BREACH PANEL -->
                         <div id="breach-panel" class="hidden bg-red-950/30 border border-red-900 p-3 rounded-sm space-y-3 mt-3">
                             <div class="flex justify-between items-center border-b border-red-900/50 pb-2 animate-pulse">
                                 <span class="text-[10px] font-black text-red-500 uppercase tracking-widest flex items-center gap-2">
@@ -518,7 +572,7 @@
                                 <label class="text-[10px] text-gray-500 font-bold">WORKOUT INTENSITY</label>
                                 <div class="flex text-missionOrange text-xs" id="star-display">☆☆☆☆☆</div>
                             </div>
-                            <input type="range" id="inpIntensity" min="0" max="5" value="0" class="w-full" oninput="renderStars(this.value); AudioEngine.playVibe(this.value)">
+                            <input type="range" id="inpIntensity" min="0" max="5" value="0" class="w-full" oninput="renderStars(this.value); AudioEngine.playVibe(this.value); saveEntry();">
                             
                             <div class="text-[10px] text-gray-500 font-bold mt-2">MUSCLE FOCUS</div>
                             <div class="grid grid-cols-4 gap-1">
@@ -548,7 +602,13 @@
                             </div>
                         </div>
                         
-                        <input id="inpNotes" class="mission-input text-xs py-3" placeholder="Log intel notes...">
+                        <!-- Auto-Expanding Textarea (V3.3) -->
+                        <textarea 
+                            id="inpNotes" 
+                            class="mission-input text-xs py-3 resize-none overflow-hidden min-h-[48px] max-h-[200px] transition-all duration-200" 
+                            placeholder="Log intel notes..."
+                            rows="1"
+                            oninput="autoExpand(this)"></textarea>
                     </div>
                 </div>
 
@@ -628,12 +688,10 @@
                 <div class="glass-panel p-5 border-l-2 border-missionOrange bg-black/20">
                     <h3 class="text-[10px] font-bold text-gray-500 uppercase mb-4 tracking-widest border-b border-gray-700 pb-2 text-center">REWARD PROTOCOLS</h3>
                     <div class="space-y-2 mb-6" id="unlock-container">
-                        <!-- Weight Unlocks Generated Here -->
                     </div>
 
                     <h3 class="text-[10px] font-bold text-missionPurple uppercase mb-4 tracking-widest border-b border-gray-700 pb-2 text-center">BIOLOGICAL REPAIR</h3>
                     <div class="space-y-2" id="bio-unlock-container">
-                        <!-- Bio Unlocks Generated Here -->
                     </div>
                 </div>
 
@@ -691,6 +749,85 @@
                         <input type="date" id="filterEnd" onchange="applyFilter()" class="bg-black border border-gray-700 text-white text-[9px] md:text-[10px] p-1 w-20 md:w-24 text-center h-8">
                         <button type="button" onclick="adjustDate('filterEnd', 1)" class="chevron-btn w-6 h-6 md:w-8 md:h-8"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                         <button type="button" onclick="resetFilter()" class="ml-2 md:ml-4 text-[9px] md:text-[10px] bg-missionTeal/10 text-missionTeal px-3 md:px-4 h-8 border border-missionTeal/30 hover:bg-missionTeal/20 tracking-wider font-bold">RESET</button>
+                    </div>
+
+                    <!-- EXERCISE COMMAND CENTER RESTORED FROM V3.3 -->
+                    <div class="glass-panel p-6 border-b-4 border-missionTeal mb-8">
+                        <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-4">EXERCISE COMMAND CENTER // LIFETIME TOTALS</div>
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                            <div class="bg-black/60 border border-missionTeal/50 p-3 rounded text-center relative overflow-hidden group">
+                                <div class="absolute inset-0 bg-missionTeal/5 opacity-0 group-hover:opacity-100 transition"></div>
+                                <div class="text-[9px] font-bold text-gray-500 uppercase">PUSHUPS</div>
+                                <div id="total-pushups" class="text-2xl font-black text-missionTeal drop-shadow-[0_0_8px_rgba(0,255,255,0.5)]">0</div>
+                            </div>
+                            <div class="bg-black/60 border border-missionGreen/50 p-3 rounded text-center relative overflow-hidden group">
+                                <div class="absolute inset-0 bg-missionGreen/5 opacity-0 group-hover:opacity-100 transition"></div>
+                                <div class="text-[9px] font-bold text-gray-500 uppercase">SITUPS</div>
+                                <div id="total-situps" class="text-2xl font-black text-missionGreen drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]">0</div>
+                            </div>
+                            <div class="bg-black/60 border border-missionOrange/50 p-3 rounded text-center relative overflow-hidden group">
+                                <div class="absolute inset-0 bg-missionOrange/5 opacity-0 group-hover:opacity-100 transition"></div>
+                                <div class="text-[9px] font-bold text-gray-500 uppercase">PULL-UPS</div>
+                                <div id="total-pullups" class="text-2xl font-black text-missionOrange drop-shadow-[0_0_8px_rgba(255,159,0,0.5)]">0</div>
+                            </div>
+                            <div class="bg-black/60 border border-neonPurple/50 p-3 rounded text-center relative overflow-hidden group">
+                                <div class="absolute inset-0 bg-neonPurple/5 opacity-0 group-hover:opacity-100 transition"></div>
+                                <div class="text-[9px] font-bold text-gray-500 uppercase">SQUATS</div>
+                                <div id="total-squats" class="text-2xl font-black text-neonPurple drop-shadow-[0_0_8px_rgba(217,70,239,0.5)]">0</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div>
+                                <div class="text-[9px] text-missionTeal font-bold uppercase mb-1">PUSHUPS PROGRESS</div>
+                                <div class="mb-2">
+                                    <div class="flex justify-between text-[8px] text-gray-400"><span>Daily Goal (100)</span><span id="pct-day-pushups">0%</span></div>
+                                    <div class="prog-track"><div id="bar-day-pushups" class="prog-fill bg-missionTeal" style="width:0%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-[8px] text-gray-400"><span>Monthly</span><span id="pct-month-pushups">0%</span></div>
+                                    <div class="prog-track"><div id="bar-month-pushups" class="prog-fill bg-missionTeal/50" style="width:0%"></div></div>
+                                </div>
+                            </div> 
+                            <div>
+                                <div class="text-[9px] text-missionGreen font-bold uppercase mb-1">SITUPS PROGRESS</div>
+                                <div class="mb-2">
+                                    <div class="flex justify-between text-[8px] text-gray-400"><span>Daily Goal (100)</span><span id="pct-day-situps">0%</span></div>
+                                    <div class="prog-track"><div id="bar-day-situps" class="prog-fill bg-missionGreen" style="width:0%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-[8px] text-gray-400"><span>Monthly</span><span id="pct-month-situps">0%</span></div>
+                                    <div class="prog-track"><div id="bar-month-situps" class="prog-fill bg-missionGreen/50" style="width:0%"></div></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-[9px] text-missionOrange font-bold uppercase mb-1">PULL-UPS PROGRESS</div>
+                                <div class="mb-2">
+                                    <div class="flex justify-between text-[8px] text-gray-400"><span>Daily Goal (50)</span><span id="pct-day-pullups">0%</span></div>
+                                    <div class="prog-track"><div id="bar-day-pullups" class="prog-fill bg-missionOrange" style="width:0%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-[8px] text-gray-400"><span>Monthly</span><span id="pct-month-pullups">0%</span></div>
+                                    <div class="prog-track"><div id="bar-month-pullups" class="prog-fill bg-missionOrange/50" style="width:0%"></div></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-[9px] text-neonPurple font-bold uppercase mb-1">SQUATS PROGRESS</div>
+                                <div class="mb-2">
+                                    <div class="flex justify-between text-[8px] text-gray-400"><span>Daily Goal (100)</span><span id="pct-day-squats">0%</span></div>
+                                    <div class="prog-track"><div id="bar-day-squats" class="prog-fill bg-neonPurple" style="width:0%"></div></div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-[8px] text-gray-400"><span>Monthly</span><span id="pct-month-squats">0%</span></div>
+                                    <div class="prog-track"><div id="bar-month-squats" class="prog-fill bg-neonPurple/50" style="width:0%"></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="ex-forecast" class="mt-4 pt-4 border-t border-gray-800 text-[10px] text-gray-500 font-mono text-center">
+                            FORECAST BASED ON TRAJECTORY: <span id="ex-forecast-val" class="text-white font-bold">CALCULATING...</span>
+                        </div>
                     </div>
 
                     <!-- Performance Trajectory -->
@@ -796,9 +933,10 @@
         <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mt-8">
             <button type="button" onclick="syncGoogle()" onmouseenter="AudioEngine.playHover()" class="md:col-span-2 btn-sci bg-blue-900/50 text-blue-200 border border-blue-800 py-4 text-[10px] md:text-xs font-bold tracking-wider">SYNC CALENDAR</button>
             <button type="button" onclick="exportFullICS()" onmouseenter="AudioEngine.playHover()" class="btn-sci bg-gray-800 text-gray-300 border border-gray-600 py-4 text-[10px] md:text-xs font-bold tracking-wider">EXPORT ICS</button>
+            <button type="button" onclick="exportCSV()" onmouseenter="AudioEngine.playHover()" class="btn-sci bg-gray-800 hover:bg-gray-700 text-white border border-gray-600 py-4 font-mono font-bold text-[10px] md:text-xs tracking-wider">EXPORT .CSV</button>
             <button type="button" onclick="exportJSON()" onmouseenter="AudioEngine.playHover()" class="btn-sci bg-gray-800 text-missionGreen border border-missionGreen/50 py-4 text-[10px] md:text-xs font-bold tracking-wider">BACKUP JSON</button>
             <label class="btn-sci bg-gray-800 text-missionTeal border border-missionTeal/50 py-4 text-[10px] md:text-xs font-bold flex justify-center items-center cursor-pointer hover:bg-gray-700 tracking-wider">
-                MERGE LOG <input type="file" onchange="mergeJSON(this)" accept=".json" class="hidden">
+                MERGE <input type="file" onchange="mergeJSON(this)" accept=".json" class="hidden">
             </label>
             <label class="btn-sci bg-gray-800 text-gray-300 border border-gray-600 py-4 text-[10px] md:text-xs font-bold flex justify-center items-center cursor-pointer hover:bg-gray-700 tracking-wider">
                 RESTORE <input type="file" onchange="importJSON(this)" accept=".json" class="hidden">
@@ -864,6 +1002,15 @@
             lucide.createIcons();
         }
 
+        // --- AUTO EXPAND TEXTAREA (From V3.3) ---
+        function autoExpand(textarea) {
+            textarea.style.height = 'auto';
+            const newHeight = Math.min(textarea.scrollHeight, 200);
+            textarea.style.height = newHeight + 'px';
+            if (textarea.scrollHeight > 200) { textarea.style.overflowY = 'auto'; } else { textarea.style.overflowY = 'hidden'; }
+            saveEntry();
+        }
+
         // --- PROCEDURAL MOTIVATION ENGINE (V4.2) ---
         const POS_HOOKS = [
             "By executing protocol flawlessly today", "Every single morning you wake up sober", "By crushing the 4 PM witching hour", "Staying locked into this mission means", "When you string together days of absolute discipline", "Drinking 32oz of water instead of caving", "The sheer willpower you are showing right now means", "Every time you say no to the toxin", "Fasting, sweating, and staying sober means", "When you respect your own boundaries", "Waking up without a drop of ethanol in your system", "Your relentless commitment to this journey means", "Refusing to negotiate with weakness ensures", "This unbreakable streak of yours means", "By protecting your liver and your bank account", "Choosing pure, unfiltered reality over a buzz", "Pushing through the fatigue with pure grit means", "When you treat your body like a multi-million dollar asset", "Guarding your biological repair processes ensures", "By making the hard choice in the moment", "Every dollar saved and every calorie burned means", "Standing tall against your old triggers ensures", "The absolute mastery of your own habits means", "Taking total ownership of your metabolism", "When your actions perfectly align with your goals"
@@ -908,6 +1055,9 @@
             {d: 3, t: "BLOOD STREAM CLEARED", i: "droplet"}, {d: 7, t: "REM SLEEP RESTORED", i: "moon"}, {d: 14, t: "DOPAMINE RECEPTORS RESET", i: "brain"}, {d: 30, t: "LIVER FAT REDUCED", i: "activity"}, {d: 90, t: "NEURAL PATHWAYS REWIRED", i: "zap"}
         ];
 
+        // EXERCISE GOALS (From V3.3)
+        const EX_GOALS = { pushups: 100, situps: 100, pullups: 50, squats: 100 };
+
         const DEFAULT_MISSION = { id: 1, name: "CRUISE PREP", start: "2025-11-21", end: "2026-02-01", startW: 201.6, goalW: 175.0, age: 59, height: 178, boozeDailySpend: 20 };
 
         // --- STATE ---
@@ -929,10 +1079,15 @@
             loadEntryForDate(document.getElementById('inpDate').value);
             
             // BINDINGS
-            document.getElementById('inpWeight').addEventListener('change', saveEntry);
+            document.getElementById('inpWeight').addEventListener('input', saveEntry);
             document.getElementById('inpNotes').addEventListener('input', saveEntry);
-            document.getElementById('inpCals').addEventListener('change', saveEntry);
+            document.getElementById('inpCals').addEventListener('input', saveEntry);
             document.getElementById('inpDate').addEventListener('change', (e) => { loadEntryForDate(e.target.value); renderCalendar(); });
+            
+            // Exercise Bindings
+            ['inpPushups', 'inpSitups', 'inpPullups', 'inpSquats'].forEach(id => {
+                document.getElementById(id)?.addEventListener('input', saveEntry);
+            });
         };
 
         function checkBackupStatus() {
@@ -984,7 +1139,7 @@
                 document.getElementById('briefingModal').classList.remove('hidden'); localStorage.setItem('briefingSeenDate', today);
                 const m = getActiveMission(); const generatedQuote = generateQuote('positive');
                 document.getElementById('briefing-days').innerText = Math.floor((new Date(m.end) - new Date())/86400000) + " DAYS";
-                document.getElementById('briefing-quote').innerText = `"${generatedQuote}"`; document.getElementById('briefing-author').innerText = "CRUISE MISSION AI (V4.3)";
+                document.getElementById('briefing-quote').innerText = `"${generatedQuote}"`; document.getElementById('briefing-author').innerText = "CRUISE MISSION AI (V5.0)";
                 if(appState.entries.length > 0) { document.getElementById('briefing-status').innerText = `${appState.entries[appState.entries.length-1].weight} LBS`; } else { document.getElementById('briefing-status').innerText = "AWAITING DATA"; }
             }
         }
@@ -1053,7 +1208,13 @@
         function loadEntryForDate(date) {
             const entry = appState.entries.find(e => e.date === date);
             if(entry) {
-                document.getElementById('inpWeight').value = entry.weight || ""; document.getElementById('inpNotes').value = entry.notes || "";
+                document.getElementById('inpWeight').value = entry.weight || ""; 
+                document.getElementById('inpNotes').value = entry.notes || "";
+                
+                // Trigger auto-expand for notes textarea
+                const notesTextarea = document.getElementById('inpNotes');
+                if (notesTextarea && notesTextarea.value) { setTimeout(() => autoExpand(notesTextarea), 10); }
+                
                 document.getElementById('inpMood').value = entry.mood || 5; document.getElementById('mood-val-display').innerText = (entry.mood || 5);
                 document.getElementById('inpSleep').value = entry.sleep || 5; document.getElementById('sleep-val-display').innerText = (entry.sleep || 5);
                 document.getElementById('inpSteps').value = entry.steps || ""; calcKm(entry.steps || 0);
@@ -1062,6 +1223,13 @@
                 document.getElementById('inpProtein').value = entry.protein || ""; document.getElementById('inpFat').value = entry.fat || "";
                 document.getElementById('craving-count').innerText = `(${entry.cravingsDefeated || 0})`;
                 document.getElementById('inpBreachDrinks').value = entry.breachDrinks || 1; document.getElementById('inpBreachLoc').value = entry.breachLoc || 'home'; document.getElementById('inpBreachTammy').value = entry.breachTammy || 'solo';
+                
+                // Exercise Inputs
+                document.getElementById('inpPushups').value = entry.pushups || "";
+                document.getElementById('inpSitups').value = entry.situps || "";
+                document.getElementById('inpPullups').value = entry.pullups || "";
+                document.getElementById('inpSquats').value = entry.squats || "";
+
                 renderStars(entry.intensity || 0); appState.currentEntry = {...entry}; if(!appState.currentEntry.muscles) appState.currentEntry.muscles = [];
             } else {
                 document.getElementById('inpWeight').value = ""; document.getElementById('inpNotes').value = "";
@@ -1070,6 +1238,13 @@
                 document.getElementById('inpSteps').value = ""; calcKm(0); document.getElementById('inpCals').value = ""; document.getElementById('inpIntensity').value = 0;
                 document.getElementById('inpWater').value = ""; document.getElementById('inpFasting').value = "16"; document.getElementById('inpProtein').value = ""; document.getElementById('inpFat').value = "";
                 document.getElementById('craving-count').innerText = "(0)"; document.getElementById('inpBreachDrinks').value = 1; document.getElementById('inpBreachLoc').value = 'home'; document.getElementById('inpBreachTammy').value = 'solo';
+                
+                // Exercise Inputs
+                document.getElementById('inpPushups').value = "";
+                document.getElementById('inpSitups').value = "";
+                document.getElementById('inpPullups').value = "";
+                document.getElementById('inpSquats').value = "";
+
                 renderStars(0); appState.currentEntry = {carnivore:false, alcohol:true, mood:5, sleep:5, steps:0, intensity:0, muscles:[], cals:0, water:0, fasting:16, protein:0, fat:0, cravingsDefeated:0, breachDrinks: 0, breachLoc: 'home', breachTammy: 'solo'};
             }
             renderChecklist(); renderMuscles(); calcMetabolics();
@@ -1082,14 +1257,19 @@
             const m = getActiveMission();
             UNLOCKS.forEach(u => { if(weightVal && weightVal <= u.w && (!appState.currentEntry.weight || appState.currentEntry.weight > u.w)) AudioEngine.playUnlock(); });
 
-            const entry = { ...appState.currentEntry, date: date, weight: weightVal, notes: document.getElementById('inpNotes').value, mood: document.getElementById('inpMood').value, sleep: document.getElementById('inpSleep').value, steps: parseInt(document.getElementById('inpSteps').value) || 0, intensity: parseInt(document.getElementById('inpIntensity').value) || 0, cals: parseInt(document.getElementById('inpCals').value) || 0, water: parseFloat(document.getElementById('inpWater').value) || 0, fasting: parseFloat(document.getElementById('inpFasting').value) || 0, protein: parseInt(document.getElementById('inpProtein').value) || 0, fat: parseInt(document.getElementById('inpFat').value) || 0, breachDrinks: bDrinks, breachLoc: bLoc, breachTammy: bTammy };
+            const entry = { 
+                ...appState.currentEntry, 
+                date: date, weight: weightVal, notes: document.getElementById('inpNotes').value, mood: document.getElementById('inpMood').value, sleep: document.getElementById('inpSleep').value, steps: parseInt(document.getElementById('inpSteps').value) || 0, intensity: parseInt(document.getElementById('inpIntensity').value) || 0, cals: parseInt(document.getElementById('inpCals').value) || 0, water: parseFloat(document.getElementById('inpWater').value) || 0, fasting: parseFloat(document.getElementById('inpFasting').value) || 0, protein: parseInt(document.getElementById('inpProtein').value) || 0, fat: parseInt(document.getElementById('inpFat').value) || 0, breachDrinks: bDrinks, breachLoc: bLoc, breachTammy: bTammy,
+                pushups: parseInt(document.getElementById('inpPushups').value) || 0, situps: parseInt(document.getElementById('inpSitups').value) || 0, pullups: parseInt(document.getElementById('inpPullups').value) || 0, squats: parseInt(document.getElementById('inpSquats').value) || 0
+            };
+            
             if(entry.alcohol === true) entry.breachDrinks = 0; // zero out if not breached
             
             appState.entries = appState.entries.filter(e => e.date !== date); appState.entries.push(entry); appState.entries.sort((a,b)=>new Date(a.date)-new Date(b.date));
-            saveData(true); refreshUI(); renderCalendar();
+            saveData(true); refreshUI(); renderCalendar(); calcMetabolics();
         }
 
-        function calcKm(steps) { document.getElementById('calc-km-display').innerText = (parseInt(steps)||0 / 1250).toFixed(2) + " km"; }
+        function calcKm(steps) { document.getElementById('calc-km-display').innerText = ((parseInt(steps)||0) / 1250).toFixed(2) + " km"; }
         function toggleHabit(k) { appState.currentEntry[k] = !appState.currentEntry[k]; AudioEngine.playChirp(); saveEntry(); renderChecklist(); }
         
         function adjustCraving(amount) {
@@ -1156,6 +1336,57 @@
             else { elNet.innerText = "+" + net; elNet.className = "text-3xl font-black text-missionRed my-2"; elMsg.innerText = "SURPLUS (WEIGHT GAIN)"; elMsg.className = "text-[10px] text-missionRed font-bold uppercase"; }
         }
 
+        // --- EXERCISE COMMAND CENTER ENGINE ---
+        function updateExerciseCommandCenter(entries) {
+            // Totals
+            const tPushups = entries.reduce((a, b) => a + (b.pushups || 0), 0);
+            const tSitups = entries.reduce((a, b) => a + (b.situps || 0), 0);
+            const tPullups = entries.reduce((a, b) => a + (b.pullups || 0), 0);
+            const tSquats = entries.reduce((a, b) => a + (b.squats || 0), 0);
+
+            document.getElementById('total-pushups').innerText = tPushups.toLocaleString();
+            document.getElementById('total-situps').innerText = tSitups.toLocaleString();
+            document.getElementById('total-pullups').innerText = tPullups.toLocaleString();
+            document.getElementById('total-squats').innerText = tSquats.toLocaleString();
+
+            // Progress Logic
+            let latestEntry = entries.length > 0 ? entries[entries.length - 1] : { pushups:0, situps:0, pullups:0, squats:0 };
+            
+            const updateProg = (type, val, goal, color) => {
+                const dayPct = Math.min(100, Math.round((val / goal) * 100));
+                document.getElementById(`pct-day-${type}`).innerText = dayPct + "%";
+                document.getElementById(`bar-day-${type}`).style.width = dayPct + "%";
+                
+                // Monthly Calculation
+                const d = latestEntry.date ? new Date(latestEntry.date) : new Date();
+                const mEntries = entries.filter(e => e.date.startsWith(d.toISOString().substring(0, 7))); // YYYY-MM
+                const mTotal = mEntries.reduce((a, b) => a + (b[type] || 0), 0);
+                const dayOfMonth = d.getDate();
+                const mGoal = goal * dayOfMonth;
+                const mPct = mGoal > 0 ? Math.min(100, Math.round((mTotal / mGoal) * 100)) : 0;
+                
+                document.getElementById(`pct-month-${type}`).innerText = mPct + "%";
+                document.getElementById(`bar-month-${type}`).style.width = mPct + "%";
+            };
+
+            updateProg('pushups', latestEntry.pushups||0, EX_GOALS.pushups, 'missionTeal');
+            updateProg('situps', latestEntry.situps||0, EX_GOALS.situps, 'missionGreen');
+            updateProg('pullups', latestEntry.pullups||0, EX_GOALS.pullups, 'missionOrange');
+            updateProg('squats', latestEntry.squats||0, EX_GOALS.squats, 'neonPurple');
+
+            // Forecast
+            const daysLogged = entries.length;
+            if(daysLogged > 0) {
+                const avgPush = tPushups / daysLogged;
+                const avgSit = tSitups / daysLogged;
+                const estAnnualPush = Math.round(avgPush * 365);
+                const estAnnualSit = Math.round(avgSit * 365);
+                document.getElementById('ex-forecast-val').innerText = `${estAnnualPush.toLocaleString()} PUSHUPS & ${estAnnualSit.toLocaleString()} SITUPS / YEAR`;
+            } else {
+                document.getElementById('ex-forecast-val').innerText = "AWAITING DATA";
+            }
+        }
+
         // --- VISUALS & STATS ---
         function resetFilter() { const m = getActiveMission(); appState.filter = { start: m.start, end: m.end }; document.getElementById('filterStart').value = m.start; document.getElementById('filterEnd').value = m.end; refreshUI(); }
         function applyFilter() { appState.filter.start = document.getElementById('filterStart').value; appState.filter.end = document.getElementById('filterEnd').value; refreshUI(); }
@@ -1175,28 +1406,45 @@
             updateSoberStats([...appState.entries].sort((a,b)=>new Date(a.date)-new Date(b.date)), m);
             updateDisciplineAnalytics(entries);
             updatePerformanceStats(entries, m, wEntries);
+            updateExerciseCommandCenter(entries);
             
             const totalSteps = entries.reduce((a,b) => a + (b.steps||0), 0); const dayCount = entries.length; 
             document.getElementById('stat-total-steps').innerText = totalSteps.toLocaleString(); document.getElementById('stat-avg-steps').innerText = dayCount > 0 ? Math.round(totalSteps/dayCount).toLocaleString() : "0";
             document.getElementById('stat-total-km').innerText = (totalSteps/1250).toFixed(2) + " km"; document.getElementById('stat-avg-km').innerText = dayCount > 0 ? ((totalSteps/1250)/dayCount).toFixed(2) : "0";
 
             let totalNet = 0; let daysTracked = 0; let cumulativeNet = 0;
-            [...appState.entries].sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(x => {
-                // If there's any valid data (including fasting or workouts), calculate the burn
-                if(x.cals > 0 || x.steps > 0 || x.intensity > 0 || (x.pushups||0) > 0 || (x.situps||0) > 0 || (x.fasting||0) >= 12) {
-                    const bmr = (10 * ((x.weight || m.startW) * 0.453592)) + (6.25 * (m.height||178)) - (5 * (m.age||59)) + 5;
-                    const exerciseBurn = Math.round(((x.pushups||0)*0.3) + ((x.situps||0)*0.3) + ((x.squats||0)*0.3) + ((x.pullups||0)*1));
-                    const burn = bmr + Math.round((x.steps||0)*0.06) + ([0,150,250,350,500,700][x.intensity||0]) + exerciseBurn;
-                    const dayNet = (x.cals || 0) - burn;
-                    cumulativeNet += dayNet;
-                    const dParts = x.date.split('-'); const d = new Date(dParts[0], dParts[1]-1, dParts[2]);
-                    if(d>=s && d<=e) { totalNet += dayNet; daysTracked++; }
+            let lastKnownWeight = m.startW;
+
+            const now = new Date();
+            now.setHours(0,0,0,0);
+            const mStartParts = m.start.split('-');
+            const mStart = new Date(mStartParts[0], mStartParts[1]-1, mStartParts[2]);
+            const mEndParts = m.end.split('-');
+            const mEnd = new Date(mEndParts[0], mEndParts[1]-1, mEndParts[2]);
+            
+            const endLoop = now < mEnd ? now : mEnd;
+
+            for (let d = new Date(mStart); d <= endLoop; d.setDate(d.getDate() + 1)) {
+                const dateStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+                const x = appState.entries.find(entry => entry.date === dateStr);
+                
+                if (x && x.weight) lastKnownWeight = x.weight;
+
+                const bmr = (10 * (lastKnownWeight * 0.453592)) + (6.25 * (m.height||178)) - (5 * (m.age||59)) + 5;
+                const exerciseBurn = Math.round(((x?.pushups||0)*0.3) + ((x?.situps||0)*0.3) + ((x?.squats||0)*0.3) + ((x?.pullups||0)*1));
+                const burn = bmr + Math.round((x?.steps||0)*0.06) + ([0,150,250,350,500,700][x?.intensity||0] || 0) + exerciseBurn;
+                const dayNet = (x?.cals || 0) - burn;
+                
+                cumulativeNet += dayNet;
+
+                if(d >= s && d <= e) {
+                    totalNet += dayNet;
+                    if(x) daysTracked++;
                 }
-            });
+            }
 
             const elNetStat = document.getElementById('stat-total-net-cals');
-            if(daysTracked===0) { elNetStat.innerText = "NO DATA"; elNetStat.className="text-lg font-mono font-bold text-gray-500"; }
-            else if(totalNet < 0) { elNetStat.innerText = totalNet.toLocaleString(); elNetStat.className="text-lg font-mono font-bold text-missionGreen"; }
+            if(totalNet < 0) { elNetStat.innerText = totalNet.toLocaleString(); elNetStat.className="text-lg font-mono font-bold text-missionGreen"; }
             else { elNetStat.innerText = "+" + totalNet.toLocaleString(); elNetStat.className="text-lg font-mono font-bold text-missionRed"; }
 
             const theoreticalW = (m.startW + parseFloat((cumulativeNet / 3500).toFixed(1))).toFixed(1);
@@ -1267,7 +1515,7 @@
             const totalDays = entries.length;
             if(totalDays === 0) { ['carnivore','alcohol','walk','workout'].forEach(k => { document.getElementById(`disc-${k}-pct`).innerText = "0%"; document.getElementById(`bar-${k}`).style.width = "0%"; }); return; }
             const updateBar = (id, count) => { const pct = Math.round((count / totalDays) * 100); document.getElementById(`disc-${id}-pct`).innerText = pct + "%"; document.getElementById(`bar-${id}`).style.width = pct + "%"; };
-            updateBar('carnivore', entries.filter(e => e.carnivore).length); updateBar('alcohol', entries.filter(e => e.alcohol).length); updateBar('walk', entries.filter(e => (e.steps||0) > 0).length); updateBar('workout', entries.filter(e => (e.intensity||0) > 0 || (e.muscles && e.muscles.length > 0)).length);
+            updateBar('carnivore', entries.filter(e => e.carnivore).length); updateBar('alcohol', entries.filter(e => e.alcohol).length); updateBar('walk', entries.filter(e => (e.steps||0) > 0).length); updateBar('workout', entries.filter(e => (e.intensity||0) > 0 || (e.muscles && e.muscles.length > 0) || (e.pushups>0 || e.situps>0)).length);
         }
 
         function updatePerformanceStats(entries, m, wEntries) {
@@ -1359,10 +1607,12 @@
         function updateWorkoutChart(entries) {
             if(!workoutChart) return;
             const labels = []; const data = []; const bgColors = []; const borderColors = [];
-            entries.filter(e => (e.intensity && e.intensity > 0) || (e.muscles && e.muscles.length > 0)).forEach(w => {
+            entries.filter(e => (e.intensity && e.intensity > 0) || (e.muscles && e.muscles.length > 0) || (e.pushups>0 || e.situps>0)).forEach(w => {
                 const parts = w.date.split('-'); labels.push(new Date(parts[0], parts[1]-1, parts[2]).toLocaleDateString(undefined, {month:'short', day:'numeric'}));
                 const isZero = !w.intensity || w.intensity === 0;
-                data.push({ x: labels[labels.length-1], y: isZero ? 0.2 : w.intensity, notes: `Intensity: ${w.intensity||0}/5 | Focus: ${(w.muscles && w.muscles.length > 0) ? w.muscles.join(', ').toUpperCase() : "GENERIC"}` });
+                let exerciseText = (w.muscles && w.muscles.length > 0) ? w.muscles.join(', ').toUpperCase() : "GENERIC";
+                if(w.pushups || w.situps) exerciseText += ` (P:${w.pushups||0} S:${w.situps||0})`;
+                data.push({ x: labels[labels.length-1], y: isZero ? 0.2 : w.intensity, notes: `Intensity: ${w.intensity||0}/5 | Focus: ${exerciseText}` });
                 bgColors.push(isZero ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 255, 0, 0.5)'); borderColors.push(isZero ? '#666' : '#00FF00');
             });
             workoutChart.data.labels = labels; workoutChart.data.datasets = [{ label: 'Intensity', data: data, backgroundColor: bgColors, borderColor: borderColors, borderWidth: 1 }]; workoutChart.update();
@@ -1436,7 +1686,7 @@
             const parts = m.end.split('-'); const end = new Date(parts[0], parts[1]-1, parts[2]); const selectedDate = new Date(document.getElementById('inpDate').value);
             const daysLeft = Math.floor((end - selectedDate) / (1000 * 60 * 60 * 24)); const left = (parseFloat(w) - m.goalW).toFixed(1);
             const t = encodeURIComponent(`🚢 ${m.name}: ${w} lbs (${left} lbs to go | ${daysLeft} Days Left)`);
-            const d = encodeURIComponent(`Steps: ${steps} (${km}km)\nCalories In: ${cals}\nWork: ${(e.muscles || []).join(", ").toUpperCase()} (${e.intensity || 0}/5)\nVibe: ${mood}/10 | Sleep: ${e.sleep || 5}/10\n🥩MEAT ${e.carnivore?'✅':'❌'} 🚫NO-ALC ${e.alcohol?'✅':'❌'}\nCravings Beaten: ${e.cravingsDefeated||0}\nWater: ${e.water||0} | Fast: ${e.fasting||0}h\nNotes: ${document.getElementById('inpNotes').value}`);
+            const d = encodeURIComponent(`Steps: ${steps} (${km}km)\nCalories In: ${cals}\nWork: ${(e.muscles || []).join(", ").toUpperCase()} (${e.intensity || 0}/5)\nExercises: P:${e.pushups||0} S:${e.situps||0} P:${e.pullups||0} S:${e.squats||0}\nVibe: ${mood}/10 | Sleep: ${e.sleep || 5}/10\n🥩MEAT ${e.carnivore?'✅':'❌'} 🚫NO-ALC ${e.alcohol?'✅':'❌'}\nCravings Beaten: ${e.cravingsDefeated||0}\nWater: ${e.water||0} | Fast: ${e.fasting||0}h\nNotes: ${document.getElementById('inpNotes').value}`);
             const dt = document.getElementById('inpDate').value.replace(/-/g,''); window.open(`https://calendar.google.com/calendar/r/eventedit?text=${t}&details=${d}&dates=${dt}/${dt}`,'_blank');
         }
         
@@ -1490,6 +1740,61 @@
             }; 
             r.readAsText(inp.files[0]); 
             inp.value = ""; // Reset input
+        }
+
+        // --- CSV EXPORT (Restored & Upgraded from V3.3) ---
+        function exportCSV() {
+            const m = getActiveMission();
+            let csv = "Date,Weight,Pushups,Situps,Pullups,Squats,Steps,Calories,Water,Fasting,Protein,Fat,Intensity,Mood,Sleep,Carnivore,Alcohol,BreachDrinks,BreachLoc,BreachTammy,CravingsDefeated,Muscles,Notes\n";
+            
+            const sParts = appState.filter.start.split('-'); const eParts = appState.filter.end.split('-');
+            const start = new Date(sParts[0], sParts[1]-1, sParts[2]); const end = new Date(eParts[0], eParts[1]-1, eParts[2]);
+            
+            const entries = appState.entries.filter(x => {
+                const dParts = x.date.split('-'); const d = new Date(dParts[0], dParts[1]-1, dParts[2]);
+                return d >= start && d <= end;
+            }).sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            entries.forEach(entry => {
+                const row = [
+                    entry.date,
+                    entry.weight || '',
+                    entry.pushups || '',
+                    entry.situps || '',
+                    entry.pullups || '',
+                    entry.squats || '',
+                    entry.steps || '',
+                    entry.cals || '',
+                    entry.water || '',
+                    entry.fasting || '',
+                    entry.protein || '',
+                    entry.fat || '',
+                    entry.intensity || '',
+                    entry.mood || '',
+                    entry.sleep || '',
+                    entry.carnivore ? 'YES' : 'NO',
+                    entry.alcohol ? 'NO' : 'YES', // Note: alcohol is stored as "no alcohol" when true
+                    entry.breachDrinks || '',
+                    entry.breachLoc || '',
+                    entry.breachTammy || '',
+                    entry.cravingsDefeated || '',
+                    (entry.muscles || []).join(';'),
+                    `"${(entry.notes || '').replace(/"/g, '""')}"` // Escape quotes for CSV
+                ];
+                csv += row.join(',') + '\n';
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `mission_data_${m.name.replace(/\s+/g, '_')}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            AudioEngine.playChirp();
         }
     </script>
 </body>
