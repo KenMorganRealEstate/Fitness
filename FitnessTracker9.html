@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUISE MISSION CONTROL V5.1 (OMNI-PROTOCOL & ANALYTICS)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        missionTeal: { DEFAULT: '#00FFFF', light: '#E0FFFF', dark: '#008B8B' },
+                        missionOrange: { DEFAULT: '#FF9F00', light: '#FFD700', dark: '#FF4500' },
+                        missionGreen: '#00FF00', 
+                        missionRed: '#FF0000', 
+                        missionPurple: '#B026FF',
+                        neonPurple: '#d946ef',
+                        missionBg: '#050505', 
+                        panelBg: '#111111'
+                    },
+                    fontFamily: {
+                        mono: ['Courier New', 'monospace'],
+                        sans: ['Segoe UI', 'Roboto', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #050505; font-family: 'Segoe UI', Roboto, monospace; color: #c7d2fe; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #008B8B; border-radius: 4px; border: 1px solid #00FFFF; }
+        
+        .glass-panel { background: rgba(10, 10, 15, 0.95); border: 1px solid #333; box-shadow: 0 0 20px rgba(0, 255, 255, 0.05); backdrop-filter: blur(10px); }
+        .btn-sci { position: relative; overflow: hidden; transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px; clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%); }
+        .btn-sci:hover { filter: brightness(1.2); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0, 255, 255, 0.2); }
+        .btn-sci:active { transform: translateY(1px); }
+
+        .mission-input { background: #000; border: 1px solid #333; color: #00FFFF; padding: 8px; font-family: monospace; font-size: 0.9rem; width: 100%; transition: all 0.2s; }
+        .mission-input:focus { outline: none; border-color: #FF9F00; box-shadow: 0 0 10px rgba(255, 159, 0, 0.3); }
+
+        .ex-input-teal:focus { border-color: #00FFFF; box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); }
+        .ex-input-green:focus { border-color: #00FF00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.3); }
+        .ex-input-orange:focus { border-color: #FF9F00; box-shadow: 0 0 10px rgba(255, 159, 0, 0.3); }
+        .ex-input-purple:focus { border-color: #d946ef; box-shadow: 0 0 10px rgba(217, 70, 239, 0.3); }
+
+        .chevron-btn { background: #1a1a1a; border: 1px solid #333; color: #00FFFF; width: 30px; height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.1s; }
+        .chevron-btn:hover { background: #00FFFF; color: #000; }
+        
+        .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; border: 1px solid #222; transition: all 0.2s; position: relative; font-size: 0.7rem; }
+        .calendar-day:hover { z-index: 10; transform: scale(1.2); border-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.8); background: #222; }
+        .day-perfect { background: rgba(16, 185, 129, 0.3); border-color: #10B981; color: #fff; }
+        .day-good { background: rgba(245, 158, 11, 0.3); border-color: #F59E0B; color: #fff; }
+        .day-unrated { background: #0a0a0a; color: #444; }
+        .day-selected { box-shadow: inset 0 0 0 2px white; z-index: 5; }
+
+        input[type=range] { -webkit-appearance: none; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #FF9F00; cursor: pointer; margin-top: -6px; border: 2px solid black; box-shadow: 0 0 5px #FF9F00; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #333; }
+
+        .scanlines { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)); background-size: 100% 3px, 3px 100%; opacity: 0.4; }
+        .star-field { background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px); background-size: 550px 550px; background-position: 0 0; }
+
+        @keyframes shipFloat { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+        .ship-anim { animation: shipFloat 3s ease-in-out infinite; }
+
+        .prog-track { background: #111; height: 6px; border-radius: 3px; width: 100%; overflow: hidden; margin-top: 4px; }
+        .prog-fill { height: 100%; transition: width 0.5s ease-out; }
+
+        .auto-expand { resize: none; overflow: hidden; min-height: 48px; max-height: 200px; transition: height 0.2s; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center pb-20">
+    <div class="scanlines"></div>
+
+    <!-- TAB NAVIGATION BAR -->
+    <div class="w-full bg-black/95 backdrop-blur-lg border-b-2 border-missionTeal sticky top-0 z-50 flex shadow-[0_4px_20px_rgba(0,255,255,0.15)]">
+        <button onclick="switchTab('command')" id="btn-tab-command" class="flex-1 py-4 text-xs md:text-sm font-black text-missionTeal bg-missionTeal/10 border-r border-gray-800 tracking-[0.2em] transition-all">TACTICAL COMMAND</button>
+        <button onclick="switchTab('analytics')" id="btn-tab-analytics" class="flex-1 py-4 text-xs md:text-sm font-bold text-gray-500 hover:text-missionTeal tracking-[0.2em] transition-all">DEEP ANALYTICS</button>
+    </div>
+
+    <!-- Modals -->
+    <div id="sysModal" class="hidden fixed inset-0 z-[20000] flex items-center justify-center bg-black/95 backdrop-blur-md">
+        <div class="glass-panel p-6 max-w-sm w-full mx-4 border-2 border-missionOrange text-center">
+            <h3 id="sysModalTitle" class="text-missionOrange font-bold mb-4">SYSTEM ALERT</h3>
+            <p id="sysModalText" class="text-white text-sm mb-6"></p>
+            <div id="sysModalActions" class="flex justify-center gap-4">
+                <button id="sysModalOk" class="btn-sci bg-missionTeal text-black font-bold py-2 px-6">ACKNOWLEDGE</button>
+                <button id="sysModalCancel" class="hidden btn-sci bg-gray-800 text-white font-bold py-2 px-6">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="briefingModal" class="fixed inset-0 z-[10000] flex items-center justify-center bg-black/95 backdrop-blur-md hidden">
+        <div class="glass-panel max-w-2xl w-full mx-4 border-2 border-missionOrange p-1 relative">
+            <div class="bg-black p-8 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-missionOrange animate-pulse"></div>
+                <h1 class="text-3xl font-black text-white mb-2 tracking-tighter">COMMANDER BRIEFING</h1>
+                <div class="text-xs font-bold text-missionOrange mb-6 tracking-widest">TOP SECRET // EYES ONLY</div>
+                <div class="flex gap-4 mb-6">
+                    <div class="w-1/2 p-4 border border-gray-800 bg-gray-900/50">
+                        <div class="text-xs md:text-sm text-gray-500 uppercase font-bold">CURRENT STATUS</div>
+                        <div id="briefing-status" class="text-xl md:text-2xl font-bold text-white mt-1">CALCULATING...</div>
+                    </div>
+                    <div class="w-1/2 p-4 border border-gray-800 bg-gray-900/50">
+                        <div class="text-xs md:text-sm text-gray-500 uppercase font-bold">MISSION DEADLINE</div>
+                        <div id="briefing-days" class="text-xl md:text-2xl font-bold text-missionTeal mt-1">-- DAYS</div>
+                    </div>
+                </div>
+                <p class="text-gray-400 font-mono text-sm md:text-base leading-relaxed mb-8 border-l-2 border-missionTeal pl-4 italic" id="briefing-quote">"Loading intelligence..."</p>
+                <div class="text-right"> 
+                    <p class="text-[10px] text-gray-600 uppercase font-bold mb-2" id="briefing-author">--</p>
+                    <button onclick="closeBriefing()" class="btn-sci bg-missionOrange text-black font-bold py-3 px-8 hover:bg-white transition">ACKNOWLEDGE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="panicModal" class="hidden fixed inset-0 z-[30000] flex flex-col items-center justify-center bg-black/95 backdrop-blur-xl">
+        <div class="absolute inset-0 bg-red-900/20 animate-pulse pointer-events-none"></div>
+        <div class="z-10 text-center max-w-4xl w-full px-6 flex flex-col items-center">
+            <i data-lucide="shield-alert" class="w-16 h-16 text-red-500 mb-4 animate-bounce"></i>
+            <h1 class="text-4xl md:text-6xl font-black text-red-500 tracking-tighter mb-2">DEFENSE OVERRIDE</h1>
+            <div class="text-white font-mono text-lg md:text-2xl mb-8 bg-red-950 border border-red-500 p-4 md:p-6 inline-block text-left shadow-[0_0_30px_rgba(255,0,0,0.3)]">
+                <span class="text-red-400 font-bold mb-2 tracking-widest border-b border-red-800 pb-2">IMMEDIATE ACTION REQUIRED:</span>
+                1. POUR 32oz ICE WATER. CHUG IMMEDIATELY.<br>
+                2. DROP AND EXECUTE 50 PUSHUPS.
+            </div>
+            <div id="panic-timer" class="text-8xl md:text-9xl font-black text-white font-mono tracking-tighter mb-8 drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">05:00</div>
+            <div class="min-h-[120px] flex items-center justify-center w-full border-l-4 border-missionTeal bg-gray-900/80 p-6 relative overflow-hidden">
+                <div class="absolute left-0 top-0 w-[200%] h-1 bg-missionTeal/50 animate-[scan_2s_linear_infinite]"></div>
+                <p id="panic-quote" class="text-missionTeal font-mono text-base md:text-xl font-bold leading-relaxed">"Loading cognitive defense..."</p>
+            </div>
+            <button id="panic-close-btn" onclick="closePanicProtocol()" class="hidden mt-12 btn-sci bg-missionGreen text-black font-black text-xl py-4 px-12 hover:bg-white shadow-[0_0_30px_rgba(0,255,0,0.6)] transition-all">CRAVING DEFEATED. RETURN TO MISSION.</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT WRAPPER -->
+    <div class="w-full px-4 md:px-12 py-8 relative z-10">
+
+        <!-- COMMON HEADER -->
+        <div id="backup-warning" class="hidden w-full bg-red-900/80 border-b-2 border-red-500 p-2 mb-4 text-center text-white font-bold text-[10px] tracking-widest animate-pulse flex justify-center items-center gap-2">
+            <i data-lucide="alert-triangle" class="w-4 h-4"></i> PROTOCOL BREACH: CRITICAL DATA UNBACKED FOR OVER 7 DAYS. EXPORT JSON IMMEDIATELY.
+        </div>
+
+        <div id="witching-hour-banner" class="hidden w-full bg-red-950/90 border-y-4 border-red-600 p-4 md:p-6 mb-4 text-center shadow-[0_0_40px_rgba(255,0,0,0.3)] backdrop-blur-md relative overflow-hidden">
+            <div class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,0,0,0.1)_10px,rgba(255,0,0,0.1)_20px)]"></div>
+            <div class="relative z-10">
+                <h2 class="text-red-500 font-black text-xl md:text-3xl animate-pulse tracking-widest flex items-center justify-center gap-3">
+                    <i data-lucide="siren" class="w-8 h-8 md:w-10 md:h-10 text-red-500"></i> HIGH-RISK CRAVING WINDOW ACTIVE (15:00 - 17:30) <i data-lucide="siren" class="w-8 h-8 md:w-10 md:h-10 text-red-500"></i>
+                </h2>
+                <p class="text-red-200 text-xs md:text-sm font-bold mt-2 uppercase tracking-[0.2em]">FATIGUE DETECTED. HABIT LOOP VULNERABLE.</p>
+                <button type="button" onclick="initiatePanicProtocol()" class="mt-4 btn-sci bg-red-600 text-white font-black text-sm md:text-lg py-3 md:py-4 px-8 md:px-12 hover:bg-red-500 shadow-[0_0_20px_rgba(255,0,0,0.6)]">
+                    INITIATE DEFENSE PROTOCOL (PANIC BUTTON)
+                </button>
+            </div>
+        </div>
+
+        <div class="glass-panel p-4 border-t-4 border-missionTeal flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
+            <div class="flex items-center gap-4 w-full md:w-auto">
+                <div class="p-2 bg-missionTeal/20 rounded-full border border-missionTeal/50 animate-pulse"><i data-lucide="ship" class="w-8 h-8 text-missionTeal"></i></div>
+                <div class="flex-grow">
+                    <div class="text-xs font-bold text-gray-500 uppercase tracking-[0.3em] mb-1">ULTIMATE PROTOCOL (V5.1)</div>
+                    <select id="missionSelector" onchange="switchMission()" onmouseenter="AudioEngine.playHover()" class="bg-transparent font-black text-xl md:text-3xl text-white uppercase tracking-widest outline-none cursor-pointer hover:text-missionOrange transition w-full"></select>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="toggleAudio()" id="audioBtn" class="btn-sci bg-gray-900 text-missionTeal border border-gray-700 p-3" title="Audio"><i data-lucide="volume-2" class="w-5 h-5"></i></button>
+                <button type="button" onclick="toggleMissionManager()" class="btn-sci bg-gray-900 text-missionOrange border border-gray-700 py-3 px-6 font-bold text-xs flex items-center gap-2"><i data-lucide="settings"></i> CONFIG</button>
+            </div>
+        </div>
+
+        <!-- Mission Manager Modal -->
+        <div id="missionManager" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm p-4">
+            <div class="glass-panel w-full max-w-4xl border border-missionOrange flex flex-col max-h-[90vh]">
+                <div class="p-4 border-b border-gray-800 flex justify-between items-center bg-missionOrange/10">
+                    <h2 class="text-lg font-bold text-missionOrange font-mono">MISSION CONFIGURATION</h2>
+                    <button type="button" onclick="toggleMissionManager()" class="text-white"><i data-lucide="x"></i></button>
+                </div>
+                <div class="flex flex-col md:flex-row flex-grow overflow-hidden">
+                    <div class="w-full md:w-1/3 border-r border-gray-800 p-4 bg-black/50 overflow-y-auto">
+                        <div class="text-xs font-bold text-gray-500 mb-3">SAVED MISSIONS</div>
+                        <div id="missionListContainer" class="space-y-2"></div>
+                        <button type="button" onclick="prepareCreateNew()" class="mt-4 w-full btn-sci bg-missionTeal/20 text-missionTeal border border-missionTeal/50 py-2 text-xs font-bold">+ NEW MISSION</button>
+                        <button type="button" onclick="clearLogsOnly()" class="mt-8 w-full btn-sci bg-yellow-900/50 text-yellow-500 border border-yellow-700 py-2 text-[10px] font-bold hover:bg-yellow-900">♻️ CLEAR DATA ONLY</button>
+                        <button type="button" onclick="factoryReset()" class="mt-2 w-full btn-sci bg-red-950 text-red-500 border border-red-900 py-2 text-[10px] font-bold hover:bg-red-900">⚠️ FACTORY RESET</button>
+                    </div>
+                    <div class="w-full md:w-2/3 p-6 bg-[#050505] space-y-4 overflow-y-auto">
+                        <h3 id="editorTitle" class="text-missionTeal font-bold border-b border-gray-800 pb-2">EDIT MISSION</h3>
+                        <input type="hidden" id="editId">
+                        <div><label class="text-[10px] text-gray-500 font-bold block mb-1">NAME</label><input id="editName" class="mission-input text-lg font-bold"></div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="text-[10px] text-gray-500 font-bold block mb-1">START DATE</label><input type="date" id="editStart" class="mission-input"></div>
+                            <div><label class="text-[10px] text-gray-500 font-bold block mb-1">END DATE</label><input type="date" id="editEnd" class="mission-input"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="text-[10px] text-gray-500 font-bold block mb-1">START WEIGHT</label><input type="number" id="editStartW" class="mission-input text-missionOrange"></div>
+                            <div><label class="text-[10px] text-gray-500 font-bold block mb-1">GOAL WEIGHT</label><input type="number" id="editGoalW" class="mission-input text-missionTeal"></div>
+                        </div>
+                        <div class="mt-4 border-t border-gray-800 pt-4">
+                            <h4 class="text-xs font-bold text-missionGreen mb-2">BIO-METRICS & ECONOMICS</h4>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div><label class="text-[10px] text-gray-500 font-bold block mb-1">AGE</label><input type="number" id="editAge" class="mission-input" placeholder="59"></div>
+                                <div><label class="text-[10px] text-gray-500 font-bold block mb-1">HEIGHT (CM)</label><input type="number" id="editHeight" class="mission-input" placeholder="178"></div>
+                                <div><label class="text-[10px] text-gray-500 font-bold block mb-1">DAILY BOOZE SPEND ($)</label><input type="number" id="editBoozeSpend" class="mission-input text-missionPurple" placeholder="20"></div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 pt-4 border-t border-gray-800 mt-4">
+                            <button type="button" onclick="saveMissionFromEditor()" class="flex-1 btn-sci bg-missionTeal text-black font-bold py-3">SAVE</button>
+                            <button type="button" onclick="loadMissionFromEditor()" class="flex-1 btn-sci bg-blue-900 text-white font-bold py-3">LOAD</button>
+                            <button type="button" onclick="deleteMissionFromEditor()" class="btn-sci bg-red-900/50 text-red-500 border border-red-900 py-3 px-4"><i data-lucide="trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 1: TACTICAL COMMAND                    -->
+        <!-- ========================================== -->
+        <div id="tab-command" class="w-full space-y-8 block">
+            
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <!-- T-Minus -->
+                <div class="md:col-span-3 glass-panel p-6 flex flex-col justify-center items-center bg-black border-l-4 border-missionOrange">
+                    <div class="text-[10px] md:text-xs text-missionOrange uppercase mb-2 font-bold tracking-wider">MISSION T-MINUS</div>
+                    <div class="flex gap-3 text-center font-mono text-white items-baseline">
+                        <div><span id="cnt-days" class="text-5xl md:text-6xl font-black tracking-tighter">--</span><div class="text-[9px] text-gray-500 mt-1 font-bold">DAYS</div></div>
+                        <div class="text-4xl text-gray-700 -mt-4">:</div>
+                        <div><span id="cnt-hours" class="text-2xl md:text-3xl font-bold text-gray-400">--</span><div class="text-[9px] text-gray-500 mt-1 font-bold">HRS</div></div>
+                    </div>
+                    <div id="countdown-context" class="text-[9px] text-gray-600 uppercase mt-2 font-bold tracking-wider">FROM SELECTED DATE</div>
+                </div>
+
+                <!-- Status Banner -->
+                <div class="md:col-span-9 glass-panel p-6 flex flex-col justify-between relative border-r-4 border-missionTeal star-field">
+                    <div class="flex flex-wrap justify-between items-end mb-4 gap-4 relative z-10">
+                        <div>
+                            <div class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">START</div>
+                            <div class="text-xl md:text-2xl font-bold text-gray-400 font-mono"><span id="disp-start-weight">--</span></div>
+                        </div>
+                        
+                        <div class="text-center px-4 md:px-8 bg-black/80 backdrop-blur-sm border border-gray-800 rounded-lg p-4">
+                            <div class="text-[9px] md:text-xs text-gray-500 font-bold uppercase tracking-wider mb-1">CURRENT STATUS (<span id="status-date-display">--</span>)</div>
+                            <div class="flex items-baseline gap-1 justify-center">
+                                <div id="main-weight-display" class="text-5xl md:text-6xl font-black text-white tracking-tighter transition-colors duration-300">--</div>
+                            </div>
+                            <div id="trajectory-status" class="text-[10px] md:text-xs font-bold uppercase mt-2 bg-black/50 py-1 px-3 rounded border border-gray-800 inline-block">CALCULATING...</div>
+                        </div>
+                        
+                        <div class="text-right">
+                            <div class="text-xs text-missionOrange font-bold uppercase tracking-wider mb-1">DESTINATION</div>
+                            <div class="text-2xl md:text-3xl font-black text-missionOrange font-mono">
+                                <span id="disp-goal-weight">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative w-full h-12 md:h-16 mt-6">
+                        <div class="absolute top-1/2 left-0 w-full h-1 bg-gray-800 rounded-full"></div>
+                        <div id="ship-track-fill" class="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-missionTeal-dark to-missionTeal rounded-full transition-all duration-1000" style="width:0%"></div>
+                        <div class="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/2 w-4 h-4 md:w-6 md:h-6 rounded-full bg-gray-600 border-2 border-gray-400 z-10"></div>
+                        <div class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-6 h-6 md:w-8 md:h-8 rounded-full bg-missionOrange border-2 border-white shadow-[0_0_15px_#FF9F00] z-10"></div>
+                        <div id="the-ship" class="absolute top-1/2 -translate-y-1/2 z-20 transition-all duration-1000 ship-anim" style="left:0%">
+                            <div class="text-white drop-shadow-[0_0_10px_rgba(0,255,255,0.8)]">
+                                <i data-lucide="ship" class="w-6 h-6 md:w-8 md:h-8 fill-black rotate-12"></i>
+                            </div>
+                            <div id="pct-text" class="absolute top-8 md:top-10 left-1/2 -translate-x-1/2 text-[9px] md:text-xs font-bold text-missionTeal w-max bg-black/80 px-2 py-1 rounded border border-gray-800">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Daily Log & Input -->
+                <div class="lg:col-span-8 space-y-8">
+                    <!-- DAILY LOG OMNI -->
+                    <div class="glass-panel">
+                        <div class="bg-missionTeal/10 p-3 flex justify-between items-center px-5 border-b border-missionTeal/20">
+                            <span class="text-sm md:text-base font-bold text-missionTeal uppercase tracking-widest">DAILY LOG V5.1 OMNI</span>
+                            <i data-lucide="database" class="w-5 h-5 text-missionTeal"></i>
+                        </div>
+                        <div class="p-5 space-y-5">
+                            
+                            <!-- Date & Weight -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs text-gray-500 font-bold block mb-2">MISSION DATE</label>
+                                    <div class="flex h-12">
+                                        <button type="button" onclick="adjustDate('inpDate', -1)" class="chevron-btn border-r-0"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                                        <input type="date" id="inpDate" class="mission-input text-center h-full border-x-0 text-xs md:text-sm font-bold">
+                                        <button type="button" onclick="adjustDate('inpDate', 1)" class="chevron-btn border-l-0"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-xs text-gray-500 font-bold block mb-2">WEIGHT</label>
+                                    <input type="number" id="inpWeight" step="0.1" class="mission-input text-center font-black text-2xl md:text-3xl text-white border-missionOrange/50 focus:border-missionOrange h-12" placeholder="000.0" oninput="saveEntry()">
+                                </div>
+                            </div>
+
+                            <!-- Carnivore / Health Protocols -->
+                            <div class="bg-gray-900/40 border border-gray-800 p-3 rounded-sm space-y-4">
+                                <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-2">
+                                    <span class="text-xs md:text-sm font-bold text-gray-500 uppercase">HEALTH METRICS</span>
+                                    <i data-lucide="activity" class="w-4 h-4 text-gray-500"></i>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="text-[10px] text-blue-400 font-bold mb-1 block">WATER (GLS/BOT)</label>
+                                        <input type="number" id="inpWater" class="mission-input text-center text-lg font-mono border-blue-900 focus:border-blue-500 text-blue-300" placeholder="0" oninput="saveEntry()">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] text-yellow-500 font-bold mb-1 block">FASTING (HRS)</label>
+                                        <input type="number" id="inpFasting" class="mission-input text-center text-lg font-mono border-yellow-900 focus:border-yellow-500 text-yellow-300" placeholder="16" oninput="saveEntry()">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between items-end mb-1">
+                                        <label class="text-[10px] text-missionGreen font-bold">CALORIES IN</label>
+                                    </div>
+                                    <input type="number" id="inpCals" class="mission-input text-center text-xl font-mono text-missionGreen border-missionGreen/50" placeholder="0" oninput="saveEntry()">
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div><label class="text-[10px] text-red-400 font-bold mb-1 block">PROTEIN (g)</label><input type="number" id="inpProtein" class="mission-input text-center text-lg font-mono border-gray-700" placeholder="0" oninput="saveEntry()"></div>
+                                    <div><label class="text-[10px] text-orange-300 font-bold mb-1 block">FAT (g)</label><input type="number" id="inpFat" class="mission-input text-center text-lg font-mono border-gray-700" placeholder="0" oninput="saveEntry()"></div>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-gray-800 my-4"></div>
+
+                            <!-- EXERCISE INPUTS -->
+                            <div>
+                                <div class="text-xs text-gray-500 font-bold mb-3 uppercase flex justify-between">
+                                    <span>Daily Exercise Input</span>
+                                    <i data-lucide="dumbbell" class="w-4 h-4 text-gray-500"></i>
+                                </div>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    <div class="border border-missionTeal p-3 rounded bg-black/40 flex flex-col justify-between">
+                                        <label class="text-xs font-bold text-missionTeal block text-center mb-1 tracking-wider">PUSHUPS</label>
+                                        <input type="number" id="inpPushups" class="mission-input ex-input-teal text-center text-2xl font-black mb-2" placeholder="0" oninput="saveEntry()">
+                                        <div id="daily-load-pushups" class="text-[11px] text-gray-400 text-center font-mono leading-tight">-- lbs/rep<br><span class="text-white">Vol: 0 lbs</span></div>
+                                    </div>
+                                    <div class="border border-missionGreen p-3 rounded bg-black/40 flex flex-col justify-between">
+                                        <label class="text-xs font-bold text-missionGreen block text-center mb-1 tracking-wider">SITUPS</label>
+                                        <input type="number" id="inpSitups" class="mission-input ex-input-green text-center text-2xl font-black mb-2" placeholder="0" oninput="saveEntry()">
+                                        <div id="daily-load-situps" class="text-[11px] text-gray-400 text-center font-mono leading-tight">-- lbs/rep<br><span class="text-white">Vol: 0 lbs</span></div>
+                                    </div>
+                                    <div class="border border-missionOrange p-3 rounded bg-black/40 flex flex-col justify-between">
+                                        <label class="text-xs font-bold text-missionOrange block text-center mb-1 tracking-wider">CHIN-UPS</label>
+                                        <input type="number" id="inpPullups" class="mission-input ex-input-orange text-center text-2xl font-black mb-2" placeholder="0" oninput="saveEntry()">
+                                        <div id="daily-load-pullups" class="text-[11px] text-gray-400 text-center font-mono leading-tight">-- lbs/rep<br><span class="text-white">Vol: 0 lbs</span></div>
+                                    </div>
+                                    <div class="border border-neonPurple p-3 rounded bg-black/40 flex flex-col justify-between">
+                                        <label class="text-xs font-bold text-neonPurple block text-center mb-1 tracking-wider">SQUATS</label>
+                                        <input type="number" id="inpSquats" class="mission-input ex-input-purple text-center text-2xl font-black mb-2" placeholder="0" oninput="saveEntry()">
+                                        <div id="daily-load-squats" class="text-[11px] text-gray-400 text-center font-mono leading-tight">-- lbs/rep<br><span class="text-white">Vol: 0 lbs</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Lifting Protocols -->
+                            <div class="mt-4">
+                                <div class="text-xs text-gray-500 font-bold mb-3 uppercase">LIFTING PROTOCOLS (PYRAMID)</div>
+                                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                    <button type="button" id="rtn-chest" onclick="toggleRoutine('chest')" class="p-3 border border-gray-800 bg-black/40 transition flex flex-col items-center justify-center group text-center">
+                                        <span class="text-xs font-bold text-gray-400 group-[.active]:text-missionTeal tracking-wide">CHEST<br><span class="text-[10px] opacity-80">(9.3k lbs)</span></span>
+                                    </button>
+                                    <button type="button" id="rtn-shoulders" onclick="toggleRoutine('shoulders')" class="p-3 border border-gray-800 bg-black/40 transition flex flex-col items-center justify-center group text-center">
+                                        <span class="text-xs font-bold text-gray-400 group-[.active]:text-missionTeal tracking-wide">SHOULDERS<br><span class="text-[10px] opacity-80">(3.3k lbs)</span></span>
+                                    </button>
+                                    <button type="button" id="rtn-back" onclick="toggleRoutine('back')" class="p-3 border border-gray-800 bg-black/40 transition flex flex-col items-center justify-center group text-center">
+                                        <span class="text-xs font-bold text-gray-400 group-[.active]:text-missionTeal tracking-wide">BACK ROWS<br><span class="text-[10px] opacity-80">(3.0k lbs)</span></span>
+                                    </button>
+                                    <button type="button" id="rtn-biceps" onclick="toggleRoutine('biceps')" class="p-3 border border-gray-800 bg-black/40 transition flex flex-col items-center justify-center group text-center">
+                                        <span class="text-xs font-bold text-gray-400 group-[.active]:text-missionTeal tracking-wide">BICEPS<br><span class="text-[10px] opacity-80">(3.0k lbs)</span></span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-gray-800 my-4"></div>
+
+                            <!-- Movement -->
+                            <div>
+                                <div class="flex justify-between items-end mb-2">
+                                    <label class="text-xs text-gray-500 font-bold uppercase">STEPS (6250 = 5km)</label>
+                                    <span id="calc-km-display" class="text-xs md:text-sm font-bold text-missionTeal">0.00 km</span>
+                                </div>
+                                <input type="number" id="inpSteps" class="mission-input text-center text-xl md:text-2xl font-mono" placeholder="0" oninput="calcKm(this.value); saveEntry()">
+                            </div>
+
+                            <!-- Habits & Sobriety -->
+                            <div class="grid grid-cols-2 gap-3 mt-4">
+                                <button type="button" onclick="toggleHabit('carnivore')" id="h-carnivore" class="p-3 border border-gray-800 bg-black/40 transition group flex items-center justify-between">
+                                    <span class="text-xs font-bold text-gray-400 group-[.active]:text-missionTeal tracking-wide">🥩 CARNIVORE</span>
+                                    <span class="status-icon text-[10px] text-gray-600">OFF</span>
+                                </button>
+                                <div class="flex flex-col gap-2">
+                                    <button type="button" onclick="toggleHabit('alcohol')" id="h-alcohol" class="p-3 border border-gray-800 bg-black/40 transition group flex items-center justify-between h-full">
+                                        <span class="text-xs font-bold text-gray-400 group-[.active]:text-missionOrange tracking-wide">🚫 NO ALC</span>
+                                        <span class="status-icon text-[10px] text-gray-600">OFF</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- PROTOCOL BREACH PANEL -->
+                            <div id="breach-panel" class="hidden bg-red-950/30 border border-red-900 p-3 rounded-sm space-y-3 mt-3">
+                                <div class="flex justify-between items-center border-b border-red-900/50 pb-2 animate-pulse">
+                                    <span class="text-[10px] font-black text-red-500 uppercase tracking-widest flex items-center gap-2">
+                                        <i data-lucide="alert-triangle" class="w-4 h-4"></i> PROTOCOL BREACH DETECTED
+                                    </span>
+                                </div>
+                                
+                                <div class="grid grid-cols-3 gap-2">
+                                    <div>
+                                        <label class="text-[8px] text-red-400 font-bold mb-1 block uppercase">Units</label>
+                                        <input type="number" id="inpBreachDrinks" min="1" value="1" class="mission-input text-center text-sm font-mono border-red-900 focus:border-red-500 text-red-300 h-8" oninput="handleBreachUpdate()">
+                                    </div>
+                                    <div>
+                                        <label class="text-[8px] text-red-400 font-bold mb-1 block uppercase">Location</label>
+                                        <select id="inpBreachLoc" class="mission-input text-center text-[10px] font-bold border-red-900 focus:border-red-500 text-red-300 h-8 px-0" onchange="handleBreachUpdate()">
+                                            <option value="home">BASE ($3)</option>
+                                            <option value="bar">FIELD ($10)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="text-[8px] text-red-400 font-bold mb-1 block uppercase">Collateral</label>
+                                        <select id="inpBreachTammy" class="mission-input text-center text-[10px] font-bold border-red-900 focus:border-red-500 text-red-300 h-8 px-0" onchange="handleBreachUpdate()">
+                                            <option value="solo">SOLO (x1)</option>
+                                            <option value="tammy">+ TAMMY (x2)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="bg-black/50 p-2 border border-red-900/30 grid grid-cols-2 gap-2 text-center mt-2">
+                                    <div>
+                                        <div class="text-[8px] text-gray-500 uppercase">Financial Loss</div>
+                                        <div id="breach-cost" class="text-sm font-black text-red-500 font-mono">--</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-[8px] text-gray-500 uppercase">Toxin Calories</div>
+                                        <div id="breach-cals" class="text-sm font-black text-red-400 font-mono">--</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-[8px] text-gray-500 uppercase">Fat Burn Paused</div>
+                                        <div id="breach-pause" class="text-sm font-black text-yellow-500 font-mono">--</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-[8px] text-gray-500 uppercase">Steps Penalty</div>
+                                        <div id="breach-steps" class="text-sm font-black text-orange-500 font-mono">--</div>
+                                    </div>
+                                </div>
+
+                                <div class="border-l-2 border-red-500 pl-3 py-1 mt-2">
+                                    <p id="breach-quote" class="text-[10px] text-gray-400 italic leading-tight"></p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-stretch gap-2 mt-4">
+                                <button type="button" onclick="adjustCraving(-1)" class="btn-sci bg-black text-gray-500 border border-gray-800 w-12 flex justify-center items-center hover:bg-gray-900 transition-colors" title="Subtract Craving">
+                                    <i data-lucide="minus" class="w-4 h-4"></i>
+                                </button>
+                                <button type="button" onclick="adjustCraving(1)" class="flex-grow btn-sci bg-missionPurple/20 text-missionPurple border border-missionPurple/50 py-2 text-xs font-bold flex justify-center items-center gap-2 hover:bg-missionPurple/40 transition-colors tracking-wide">
+                                    <i data-lucide="shield-alert" class="w-5 h-5"></i> DEFEAT CRAVING <span id="craving-count" class="font-mono bg-black px-2 py-1 rounded text-sm">(0)</span>
+                                </button>
+                            </div>
+
+                            <!-- Auto-Expanding Textarea -->
+                            <textarea 
+                                id="inpNotes" 
+                                class="mission-input text-sm py-4 mt-4 resize-none overflow-hidden min-h-[64px] max-h-[250px] transition-all duration-200" 
+                                placeholder="Log intel notes..."
+                                rows="2"
+                                oninput="autoExpand(this)"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Live Mechanics -->
+                <div class="lg:col-span-4 space-y-8">
+                    <!-- Metabolic Core -->
+                    <div class="glass-panel p-5 border-l-2 border-missionGreen bg-black/20">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">METABOLIC CORE</h3>
+                            <i data-lucide="zap" class="w-4 h-4 text-missionGreen"></i>
+                        </div>
+                        
+                        <div id="metabolic-display" class="text-center p-4 border border-gray-800 bg-black/50 mb-4">
+                            <div class="text-[9px] text-gray-500 uppercase">DAILY NET BALANCE</div>
+                            <div id="daily-net-cals" class="text-4xl md:text-5xl font-black text-gray-600 my-3">--</div>
+                            <div id="daily-net-msg" class="text-[10px] text-gray-500 font-bold uppercase">ENTER DATA</div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 text-xs text-gray-500 font-mono">
+                            <div>BMR (Base): <span id="calc-bmr" class="text-white font-bold">--</span></div>
+                            <div>Steps Burn: <span id="calc-steps" class="text-white font-bold">--</span></div>
+                            <div>Work Burn: <span id="calc-work" class="text-white font-bold">--</span></div>
+                            <div>Total Out: <span id="calc-total-out" class="text-missionTeal font-bold">--</span></div>
+                        </div>
+                        
+                        <div id="ketosis-msg" class="hidden mt-4 text-center text-[10px] font-bold text-missionTeal uppercase animate-pulse border-t border-gray-800 pt-3">
+                            +5% CARNIVORE TEF METABOLIC BOOST ACTIVE
+                        </div>
+                    </div>
+
+                    <!-- Rewards & Biology -->
+                    <div class="glass-panel p-5 border-l-2 border-missionOrange bg-black/20">
+                        <h3 class="text-[10px] font-bold text-gray-500 uppercase mb-4 tracking-widest border-b border-gray-700 pb-2 text-center">REWARD PROTOCOLS</h3>
+                        <div class="space-y-2 mb-6" id="unlock-container">
+                        </div>
+
+                        <h3 class="text-[10px] font-bold text-missionPurple uppercase mb-4 tracking-widest border-b border-gray-700 pb-2 text-center">BIOLOGICAL REPAIR</h3>
+                        <div class="space-y-2" id="bio-unlock-container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: DEEP ANALYTICS                      -->
+        <!-- ========================================== -->
+        <div id="tab-analytics" class="w-full hidden space-y-8">
+            
+            <!-- Filters & Calendar Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Calendar -->
+                <div class="lg:col-span-1 glass-panel flex flex-col overflow-hidden">
+                    <div class="flex justify-between items-center p-3 bg-gray-900 border-b border-gray-800">
+                        <button type="button" onclick="changeMonth(-1)" class="chevron-btn w-8 h-8 text-xs"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                        <span id="calMonthYear" class="text-xs font-bold text-missionTeal font-mono uppercase">MONTH</span>
+                        <button type="button" onclick="changeMonth(1)" class="chevron-btn w-8 h-8 text-xs"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                    </div>
+                    <div class="p-3 flex-grow flex flex-col justify-start">
+                        <div class="grid grid-cols-7 text-center text-[10px] text-gray-500 font-bold mb-2">
+                            <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+                        </div>
+                        <div id="calendarGrid" class="grid grid-cols-7 gap-px text-[11px] font-mono"></div>
+                    </div>
+                </div>
+
+                <!-- Filters & Psychology -->
+                <div class="lg:col-span-2 flex flex-col space-y-4">
+                    <div class="flex flex-wrap items-center gap-2 glass-panel p-4">
+                        <span class="text-xs text-gray-500 font-bold uppercase mr-2">GLOBAL DATE FILTER:</span>
+                        <button type="button" onclick="adjustDate('filterStart', -1)" class="chevron-btn w-8 h-8"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                        <input type="date" id="filterStart" onchange="applyFilter()" class="bg-black border border-gray-700 text-white text-xs p-1 w-32 text-center h-8">
+                        <button type="button" onclick="adjustDate('filterStart', 1)" class="chevron-btn w-8 h-8"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                        <span class="text-gray-600 px-2">-</span>
+                        <button type="button" onclick="adjustDate('filterEnd', -1)" class="chevron-btn w-8 h-8"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                        <input type="date" id="filterEnd" onchange="applyFilter()" class="bg-black border border-gray-700 text-white text-xs p-1 w-32 text-center h-8">
+                        <button type="button" onclick="adjustDate('filterEnd', 1)" class="chevron-btn w-8 h-8"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                        <button type="button" onclick="resetFilter()" class="ml-auto text-[10px] bg-missionTeal/10 text-missionTeal px-4 h-8 border border-missionTeal/30 hover:bg-missionTeal/20 tracking-wider font-bold transition">RESET FILTER</button>
+                    </div>
+
+                    <div class="glass-panel relative border-t-2 border-missionOrange overflow-hidden group h-full min-h-[250px]">
+                        <div class="absolute top-0 left-0 w-full p-3 z-10 flex justify-between bg-gradient-to-b from-black/90 to-transparent">
+                            <span class="text-[10px] font-bold text-missionOrange uppercase tracking-widest">VISUAL PROGRAMMING</span>
+                            <button type="button" onclick="cycleFearImage()" class="text-gray-400 hover:text-white"><i data-lucide="refresh-ccw" class="w-4 h-4"></i></button>
+                        </div>
+                        <div class="fear-img-container w-full h-full">
+                            <img id="fear-img" src="" class="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity duration-500">
+                        </div>
+                        <div class="absolute bottom-0 left-0 w-full p-4 z-20 bg-gradient-to-t from-black via-black/80 to-transparent flex justify-between items-end">
+                            <div class="max-w-[70%]">
+                                <p id="fear-quote" class="text-white font-mono text-xs md:text-sm italic leading-tight">"LOADING..."</p>
+                                <p id="quote-author" class="text-missionOrange text-[10px] font-bold uppercase mt-2"></p>
+                            </div>
+                            <a href="https://photos.app.goo.gl/HBVGGen5bt1LmQYo8" target="_blank" class="bg-missionOrange text-black text-[9px] md:text-[10px] font-bold py-2 px-3 md:px-4 flex items-center gap-2 hover:bg-white transition rounded-sm">
+                                <i data-lucide="image" class="w-3 h-3 md:w-4 md:h-4"></i> OPEN ALBUM
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sober Stats Dashboard (The Wealth Dashboard) -->
+            <div class="glass-panel p-4 border-l-4 border-missionTeal">
+                <div class="text-xs md:text-sm text-gray-400 font-bold uppercase tracking-widest mb-4 border-b border-gray-800 pb-2">FINANCIAL & ADDICTION INTELLIGENCE</div>
+                <div class="grid grid-cols-2 md:grid-cols-6 gap-2 text-center relative z-10">
+                    <div class="bg-black/60 p-2 border border-missionOrange/30 shadow-[inset_0_0_10px_rgba(255,159,0,0.1)] flex flex-col justify-center">
+                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold tracking-widest">SOBER STREAK</div>
+                        <div id="stat-sober-streak" class="text-base md:text-xl font-black text-missionOrange font-mono mt-1">0 DAYS</div>
+                    </div>
+                    <div class="bg-black/60 p-2 border border-missionPurple/30 shadow-[inset_0_0_10px_rgba(176,38,255,0.1)] flex flex-col justify-center">
+                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold tracking-widest">CRAVINGS DEFEATED</div>
+                        <div id="stat-cravings-total" class="text-base md:text-xl font-black text-missionPurple font-mono mt-1">0</div>
+                    </div>
+                    <div class="bg-black/60 p-2 border border-missionGreen/30 flex flex-col justify-center opacity-70">
+                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold tracking-widest">PAST HABIT AVERTED</div>
+                        <div id="stat-habit-averted" class="text-base md:text-xl font-black text-gray-400 font-mono mt-1">$0</div>
+                    </div>
+                    <div class="bg-red-950/20 p-2 border border-red-900/50 flex flex-col justify-center opacity-70">
+                        <div class="text-[8px] md:text-[9px] text-red-500 uppercase font-bold tracking-widest">ACTUAL CASH BLEED</div>
+                        <div id="stat-cash-bleed" class="text-base md:text-xl font-black text-red-500 font-mono mt-1">$0</div>
+                    </div>
+                    <div class="bg-black/80 p-2 border border-missionTeal shadow-[0_0_15px_rgba(0,255,255,0.1)] flex flex-col justify-center transform scale-105 z-10">
+                        <div class="text-[9px] md:text-[10px] text-missionTeal uppercase font-black tracking-widest">BANK ACCT UP</div>
+                        <div id="stat-bank-up" class="text-xl md:text-3xl font-black text-missionTeal font-mono mt-1">$0</div>
+                    </div>
+                    <div class="bg-black/60 p-2 border border-gray-700 flex flex-col justify-center">
+                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold tracking-widest">1-YEAR PROJECTION</div>
+                        <div id="stat-yearly-proj" class="text-base md:text-xl font-black text-white font-mono mt-1">+$0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW GRAPHICAL OVERVIEW ROW (Pie, Doughnut, Radar) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-panel p-4 h-[300px] flex flex-col relative border-t-2 border-missionGreen">
+                    <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 text-center">WEALTH DISTRIBUTION</div>
+                    <div class="flex-grow relative w-full h-full">
+                        <canvas id="wealthPieChart"></canvas>
+                    </div>
+                </div>
+                <div class="glass-panel p-4 h-[300px] flex flex-col relative border-t-2 border-missionOrange">
+                    <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 text-center">LIFETIME TONNAGE BREAKDOWN</div>
+                    <div class="flex-grow relative w-full h-full">
+                        <canvas id="tonnageDoughnutChart"></canvas>
+                    </div>
+                </div>
+                <div class="glass-panel p-4 h-[300px] flex flex-col relative border-t-2 border-missionPurple">
+                    <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 text-center">DISCIPLINE ADHERENCE RADAR</div>
+                    <div class="flex-grow relative w-full h-full">
+                        <canvas id="disciplineRadarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW: Energy Expenditure & Weight Loss Impact Panel -->
+            <div class="glass-panel p-6 border-b-4 border-missionOrange mb-8">
+                <div class="text-xs md:text-sm text-gray-400 font-bold uppercase tracking-widest mb-6 border-b border-gray-800 pb-2 flex justify-between items-center">
+                    <span>ENERGY EXPENDITURE & WEIGHT LOSS IMPACT</span>
+                    <i data-lucide="flame" class="w-5 h-5 text-missionOrange"></i>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-black/80 border-2 border-missionOrange p-6 rounded text-center relative overflow-hidden shadow-[0_0_20px_rgba(255,159,0,0.1)]">
+                        <div class="text-xs md:text-sm font-bold text-missionOrange uppercase tracking-widest mb-2">TOTAL CALORIES BURNED (EXERCISE)</div>
+                        <div id="total-exercise-cals" class="text-5xl md:text-6xl font-black text-white font-mono drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">0 KCAL</div>
+                        <div class="text-xs text-gray-400 mt-3 italic">Calculated purely from Steps & Workouts</div>
+                    </div>
+                    <div class="bg-black/80 border-2 border-missionTeal p-6 rounded text-center relative overflow-hidden shadow-[0_0_20px_rgba(0,255,255,0.1)]">
+                        <div class="text-xs md:text-sm font-bold text-missionTeal uppercase tracking-widest mb-2">THEORETICAL WEIGHT LOST FROM EXERCISE</div>
+                        <div id="total-exercise-lbs" class="text-5xl md:text-6xl font-black text-white font-mono drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">0.0 LBS</div>
+                        <div class="text-xs text-gray-400 mt-3 italic">At 3,500 kcal per pound</div>
+                    </div>
+                </div>
+
+                <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-3">LIFETIME BURN BREAKDOWN</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                    <div class="bg-gray-900/50 p-3 rounded border border-gray-800 text-center">
+                        <div class="text-[9px] font-bold text-gray-400 uppercase">STEPS</div>
+                        <div id="brk-cals-steps" class="text-lg font-mono font-bold text-missionTeal">0</div>
+                    </div>
+                    <div class="bg-gray-900/50 p-3 rounded border border-gray-800 text-center">
+                        <div class="text-[9px] font-bold text-gray-400 uppercase">CHEST / PUSHUPS</div>
+                        <div id="brk-cals-chest" class="text-lg font-mono font-bold text-missionTeal">0</div>
+                    </div>
+                    <div class="bg-gray-900/50 p-3 rounded border border-gray-800 text-center">
+                        <div class="text-[9px] font-bold text-gray-400 uppercase">BACK / PULLUPS</div>
+                        <div id="brk-cals-back" class="text-lg font-mono font-bold text-missionOrange">0</div>
+                    </div>
+                    <div class="bg-gray-900/50 p-3 rounded border border-gray-800 text-center">
+                        <div class="text-[9px] font-bold text-gray-400 uppercase">SQUATS</div>
+                        <div id="brk-cals-squats" class="text-lg font-mono font-bold text-neonPurple">0</div>
+                    </div>
+                    <div class="bg-gray-900/50 p-3 rounded border border-gray-800 text-center">
+                        <div class="text-[9px] font-bold text-gray-400 uppercase">SHOULDERS/BICEPS</div>
+                        <div id="brk-cals-arms" class="text-lg font-mono font-bold text-gray-300">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXERCISE COMMAND CENTER -->
+            <div class="glass-panel p-6 border-b-4 border-missionTeal mb-8">
+                <div class="text-xs md:text-sm text-gray-400 font-bold uppercase tracking-widest mb-6 border-b border-gray-800 pb-2">EXERCISE COMMAND CENTER // LIFETIME TOTALS</div>
+                
+                <!-- MASSIVE LIFETIME TONNAGE DISPLAY -->
+                <div class="bg-black/80 border-2 border-missionTeal p-6 rounded text-center mb-8 relative overflow-hidden shadow-[0_0_20px_rgba(0,255,255,0.1)]">
+                    <div class="text-xs md:text-sm font-bold text-missionTeal uppercase tracking-widest mb-2">TOTAL VOLUME LIFTED (LIFETIME TONNAGE)</div>
+                    <div id="total-tonnage" class="text-5xl md:text-6xl font-black text-white font-mono drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">0 LBS</div>
+                    <div id="tonnage-equivalent" class="text-xs text-gray-400 mt-3 italic">Equivalent to lifting 0 African Elephants</div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-black/60 border border-missionTeal/50 p-4 rounded flex flex-col justify-between relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-missionTeal/5 opacity-0 group-hover:opacity-100 transition"></div>
+                        <div class="text-xs font-bold text-gray-400 uppercase text-center mb-3 tracking-widest">PUSHUPS</div>
+                        <div class="flex justify-between items-baseline border-b border-gray-800 pb-1 mb-2">
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">REPS</span>
+                            <span id="total-pushups" class="text-3xl font-black text-missionTeal drop-shadow-[0_0_8px_rgba(0,255,255,0.5)]">0</span>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">VOL</span>
+                            <span id="total-vol-pushups" class="text-sm font-bold text-white font-mono">0 LBS</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/60 border border-missionGreen/50 p-4 rounded flex flex-col justify-between relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-missionGreen/5 opacity-0 group-hover:opacity-100 transition"></div>
+                        <div class="text-xs font-bold text-gray-400 uppercase text-center mb-3 tracking-widest">SITUPS</div>
+                        <div class="flex justify-between items-baseline border-b border-gray-800 pb-1 mb-2">
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">REPS</span>
+                            <span id="total-situps" class="text-3xl font-black text-missionGreen drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]">0</span>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">VOL</span>
+                            <span id="total-vol-situps" class="text-sm font-bold text-white font-mono">0 LBS</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/60 border border-missionOrange/50 p-4 rounded flex flex-col justify-between relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-missionOrange/5 opacity-0 group-hover:opacity-100 transition"></div>
+                        <div class="text-xs font-bold text-gray-400 uppercase text-center mb-3 tracking-widest">CHIN-UPS</div>
+                        <div class="flex justify-between items-baseline border-b border-gray-800 pb-1 mb-2">
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">REPS</span>
+                            <span id="total-pullups" class="text-3xl font-black text-missionOrange drop-shadow-[0_0_8px_rgba(255,159,0,0.5)]">0</span>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">VOL</span>
+                            <span id="total-vol-pullups" class="text-sm font-bold text-white font-mono">0 LBS</span>
+                        </div>
+                    </div>
+                    <div class="bg-black/60 border border-neonPurple/50 p-4 rounded flex flex-col justify-between relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-neonPurple/5 opacity-0 group-hover:opacity-100 transition"></div>
+                        <div class="text-xs font-bold text-gray-400 uppercase text-center mb-3 tracking-widest">SQUATS</div>
+                        <div class="flex justify-between items-baseline border-b border-gray-800 pb-1 mb-2">
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">REPS</span>
+                            <span id="total-squats" class="text-3xl font-black text-neonPurple drop-shadow-[0_0_8px_rgba(217,70,239,0.5)]">0</span>
+                        </div>
+                        <div class="flex justify-between items-baseline">
+                            <span class="text-[10px] text-gray-500 uppercase font-bold">VOL</span>
+                            <span id="total-vol-squats" class="text-sm font-bold text-white font-mono">0 LBS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div>
+                        <div class="text-[9px] text-missionTeal font-bold uppercase mb-1">PUSHUPS PROGRESS</div>
+                        <div class="mb-2">
+                            <div class="flex justify-between text-[8px] text-gray-400"><span>Daily Goal (100)</span><span id="pct-day-pushups">0%</span></div>
+                            <div class="prog-track"><div id="bar-day-pushups" class="prog-fill bg-missionTeal" style="width:0%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[8px] text-gray-400"><span>Monthly</span><span id="pct-month-pushups">0%</span></div>
+                            <div class="prog-track"><div id="bar-month-pushups" class="prog-fill bg-missionTeal/50" style="width:0%"></div></div>
+                        </div>
+                    </div> 
+                    <div>
+                        <div class="text-[9px] text-missionGreen font-bold uppercase mb-1">SITUPS PROGRESS</div>
+                        <div class="mb-2">
+                            <div class="flex justify-between text-[8px] text-gray-400"><span>Daily Goal (100)</span><span id="pct-day-situps">0%</span></div>
+                            <div class="prog-track"><div id="bar-day-situps" class="prog-fill bg-missionGreen" style="width:0%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[8px] text-gray-400"><span>Monthly</span><span id="pct-month-situps">0%</span></div>
+                            <div class="prog-track"><div id="bar-month-situps" class="prog-fill bg-missionGreen/50" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-[9px] text-missionOrange font-bold uppercase mb-1">CHIN-UPS PROGRESS</div>
+                        <div class="mb-2">
+                            <div class="flex justify-between text-[8px] text-gray-400"><span>Daily Goal (50)</span><span id="pct-day-pullups">0%</span></div>
+                            <div class="prog-track"><div id="bar-day-pullups" class="prog-fill bg-missionOrange" style="width:0%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[8px] text-gray-400"><span>Monthly</span><span id="pct-month-pullups">0%</span></div>
+                            <div class="prog-track"><div id="bar-month-pullups" class="prog-fill bg-missionOrange/50" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="text-[9px] text-neonPurple font-bold uppercase mb-1">SQUATS PROGRESS</div>
+                        <div class="mb-2">
+                            <div class="flex justify-between text-[8px] text-gray-400"><span>Daily Goal (100)</span><span id="pct-day-squats">0%</span></div>
+                            <div class="prog-track"><div id="bar-day-squats" class="prog-fill bg-neonPurple" style="width:0%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-[8px] text-gray-400"><span>Monthly</span><span id="pct-month-squats">0%</span></div>
+                            <div class="prog-track"><div id="bar-month-squats" class="prog-fill bg-neonPurple/50" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="ex-forecast" class="mt-6 pt-4 border-t border-gray-800 text-xs md:text-sm text-gray-500 font-mono text-center tracking-wide">
+                    FORECAST BASED ON TRAJECTORY: <span id="ex-forecast-val" class="text-white font-bold">CALCULATING...</span>
+                </div>
+            </div>
+
+            <!-- Performance Trajectory -->
+            <div id="perf-card" class="glass-panel p-4 md:p-6 border-l-4 border-missionTeal mb-8 relative overflow-hidden transition-colors duration-500">
+                <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-4">
+                    <h3 class="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest">PERFORMANCE TRAJECTORY</h3>
+                    <div id="perf-rate-display" class="text-xs md:text-sm font-mono font-bold text-white">RATE: --/DAY</div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 md:gap-6 items-center">
+                    <div class="text-center bg-black/40 p-2 md:p-3 border border-gray-800">
+                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold">CURRENT</div>
+                        <div id="perf-curr-weight" class="text-xl md:text-3xl font-black text-white mt-1">--</div>
+                    </div> 
+                    <div class="text-center">
+                        <i data-lucide="chevrons-right" class="w-4 h-4 md:w-6 md:h-6 mx-auto text-gray-600 mb-1 md:mb-2"></i>
+                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold">FORECAST END</div>
+                        <div id="perf-forecast-weight" class="text-2xl md:text-4xl font-black text-white mt-1">--</div>
+                    </div>
+                    <div class="text-center bg-black/40 p-2 md:p-3 border border-gray-800">
+                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase font-bold">GOAL</div>
+                        <div id="perf-goal-weight" class="text-xl md:text-3xl font-black text-missionTeal mt-1">--</div>
+                    </div>
+                </div>
+
+                <div id="perf-result-container" class="mt-4 text-center p-3 border border-gray-800 bg-black/60 rounded">
+                    <div class="text-[9px] md:text-[10px] uppercase font-bold text-gray-500 mb-1">PROJECTED OUTCOME</div>
+                    <div id="perf-result-text" class="text-lg md:text-2xl font-black text-white">AWAITING DATA</div>
+                    <div id="perf-result-diff" class="text-sm md:text-base font-mono font-bold mt-1"></div>
+                </div>
+
+                <div id="perf-urgent-msg" class="mt-4 text-center text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase animate-pulse">
+                    --
+                </div>
+            </div>
+            
+            <!-- NEW METABOLIC BAR CHART -->
+            <div class="glass-panel p-3 h-[250px] md:h-[300px] relative mb-8 border-l-4 border-yellow-500">
+                <div class="absolute top-0 right-0 p-2 text-[8px] md:text-[9px] font-bold text-yellow-500 uppercase tracking-widest bg-black/50">DAILY NET CALORIES (DEFICIT VS SURPLUS)</div>
+                <canvas id="metabolicBarChart"></canvas>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <!-- Weight Chart -->
+                <div class="glass-panel p-3 h-[250px] md:h-[300px] relative border-l-4 border-missionTeal">
+                    <div class="absolute top-0 right-0 p-2 text-[8px] md:text-[9px] font-bold text-missionTeal uppercase tracking-widest bg-black/50">WEIGHT TRAJECTORY</div>
+                    <canvas id="weightChart"></canvas>
+                </div>
+                <!-- Finance Chart -->
+                <div class="glass-panel p-3 h-[250px] md:h-[300px] relative border-l-4 border-missionTeal">
+                    <div class="absolute top-0 right-0 p-2 text-[8px] md:text-[9px] font-bold text-missionTeal uppercase tracking-widest bg-black/50">WEALTH ACCUMULATION</div>
+                    <canvas id="financeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Tonnage Chart -->
+            <div class="glass-panel p-3 h-[250px] md:h-[300px] relative border-l-4 border-missionGreen mb-8">
+                <div class="absolute top-0 right-0 p-2 text-[8px] md:text-[9px] font-bold text-missionGreen uppercase tracking-widest bg-black/50">LIFETIME VOLUME PROGRESSION (LBS)</div>
+                <canvas id="workoutChart"></canvas>
+            </div>
+
+            <!-- Field Ops Stats -->
+            <div class="glass-panel p-5 border-l-2 border-blue-500 bg-black/20">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">FIELD OPERATIONS DATA</h3>
+                    <i data-lucide="activity" class="w-4 h-4 text-blue-500"></i>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 text-center mb-6">
+                    <div class="bg-black/40 p-2 border border-gray-800">
+                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase">TOTAL STEPS</div>
+                        <div id="stat-total-steps" class="text-lg md:text-xl font-mono font-bold text-white">0</div>
+                        <div class="text-[8px] text-gray-600 mt-1">AVG: <span id="stat-avg-steps">0</span> / DAY</div>
+                    </div>
+                    <div class="bg-black/40 p-2 border border-gray-800">
+                        <div class="text-[8px] md:text-[9px] text-gray-500 uppercase">DISTANCE</div>
+                        <div id="stat-total-km" class="text-lg md:text-xl font-mono font-bold text-missionTeal">0.0 km</div>
+                        <div id="stat-equivalent-walk" class="text-[8px] text-gray-600 mt-1">AVG: <span id="stat-avg-km">0</span> km / DAY</div>
+                    </div>
+                </div>
+
+                <div class="bg-black/40 p-2 border border-gray-800 text-center mb-6">
+                    <div class="text-[8px] md:text-[9px] text-gray-500 uppercase">NET CALORIC BALANCE (FILTERED)</div>
+                    <div id="stat-total-net-cals" class="text-lg md:text-xl font-mono font-bold text-white">0</div>
+                </div>
+
+                <div class="bg-gray-900/30 border border-dashed border-gray-700 p-3 mb-6 text-center">
+                    <div class="text-[8px] md:text-[9px] text-missionOrange uppercase font-bold tracking-widest mb-2">METABOLIC REALITY CHECK</div>
+                    <div class="flex justify-around items-center">
+                        <div>
+                            <div class="text-[8px] text-gray-500 uppercase">MATH SAYS (THEORY)</div>
+                            <div id="stat-theoretical-w" class="text-base md:text-lg font-bold text-white font-mono">--</div>
+                        </div>
+                        <div class="text-gray-600">vs</div>
+                        <div>
+                            <div class="text-[8px] text-gray-500 uppercase">SCALE SAYS (ACTUAL)</div>
+                            <div id="stat-actual-w" class="text-base md:text-lg font-bold text-white font-mono">--</div>
+                        </div>
+                    </div>
+                    <div id="reality-diff" class="mt-2 text-[8px] md:text-[9px] font-bold text-gray-400">--</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- System Controls -->
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mt-8">
+            <button type="button" onclick="syncGoogle()" onmouseenter="AudioEngine.playHover()" class="md:col-span-2 btn-sci bg-blue-900/50 text-blue-200 border border-blue-800 py-4 text-[10px] md:text-xs font-bold tracking-wider">SYNC CALENDAR</button>
+            <button type="button" onclick="exportFullICS()" onmouseenter="AudioEngine.playHover()" class="btn-sci bg-gray-800 text-gray-300 border border-gray-600 py-4 text-[10px] md:text-xs font-bold tracking-wider">EXPORT ICS</button>
+            <button type="button" onclick="exportCSV()" onmouseenter="AudioEngine.playHover()" class="btn-sci bg-gray-800 hover:bg-gray-700 text-white border border-gray-600 py-4 font-mono font-bold text-[10px] md:text-xs tracking-wider">EXPORT .CSV</button>
+            <button type="button" onclick="exportJSON()" onmouseenter="AudioEngine.playHover()" class="btn-sci bg-gray-800 text-missionGreen border border-missionGreen/50 py-4 text-[10px] md:text-xs font-bold tracking-wider">BACKUP JSON</button>
+            <label class="btn-sci bg-gray-800 text-missionTeal border border-missionTeal/50 py-4 text-[10px] md:text-xs font-bold flex justify-center items-center cursor-pointer hover:bg-gray-700 tracking-wider">
+                MERGE <input type="file" onchange="mergeJSON(this)" accept=".json" class="hidden">
+            </label>
+            <label class="btn-sci bg-gray-800 text-gray-300 border border-gray-600 py-4 text-[10px] md:text-xs font-bold flex justify-center items-center cursor-pointer hover:bg-gray-700 tracking-wider">
+                RESTORE <input type="file" onchange="importJSON(this)" accept=".json" class="hidden">
+            </label>
+        </div>
+    </div>
+
+    <script>
+        function startCountdown() {
+            const tick = () => {
+                const m = getActiveMission(); if (!m) return;
+                const parts = m.end.split('-'); const end = new Date(parts[0], parts[1]-1, parts[2]); end.setHours(23,59,59,999);
+                const selectedDateVal = document.getElementById('inpDate').value; const selected = new Date(selectedDateVal);
+                const today = new Date(); const isToday = new Date(selected.getFullYear(), selected.getMonth(), selected.getDate()).getTime() === new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
+                const daysEl = document.getElementById('cnt-days'); const hoursEl = document.getElementById('cnt-hours'); const contextEl = document.getElementById('countdown-context');
+                if (!daysEl) return;
+                if (isToday) {
+                   const diff = end - today; if(diff<0) { daysEl.innerText = "00"; hoursEl.innerText = "00"; return; }
+                   daysEl.innerText = Math.floor(diff/86400000); hoursEl.innerText = Math.floor((diff%86400000)/3600000);
+                   contextEl.innerText = "REAL-TIME REMAINING"; contextEl.className = "text-[9px] text-missionOrange uppercase mt-2 font-bold tracking-wider animate-pulse";
+                } else {
+                   const diff = end - selected; const days = Math.floor(diff/86400000); daysEl.innerText = days > 0 ? days : 0; hoursEl.innerText = "--";
+                   contextEl.innerText = "FROM SELECTED DATE"; contextEl.className = "text-[9px] text-gray-600 uppercase mt-2 font-bold tracking-wider";
+                }
+            };
+            setInterval(tick, 1000); tick();
+        }
+
+        function renderCalendar() {
+            const year = appState.calendarDate.getFullYear(); const month = appState.calendarDate.getMonth();
+            const firstDay = new Date(year, month, 1).getDay(); const daysInMonth = new Date(year, month + 1, 0).getDate();
+            document.getElementById('calMonthYear').innerText = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
+            const grid = document.getElementById('calendarGrid'); grid.innerHTML = '';
+            for(let i=0; i<firstDay; i++) grid.appendChild(document.createElement('div'));
+            for(let d=1; d<=daysInMonth; d++) {
+                const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; const entry = appState.entries.find(e => e.date === dateStr);
+                const div = document.createElement('div'); div.innerText = d; div.className = "calendar-day rounded-sm font-bold text-gray-500";
+                if(entry) { div.className = `calendar-day rounded-sm font-bold ${(entry.carnivore?1:0)+(entry.alcohol?1:0) === 2 ? 'day-perfect' : 'day-good'}`; } else div.classList.add('day-unrated');
+                if(dateStr === document.getElementById('inpDate').value) div.classList.add('day-selected');
+                div.onclick = () => { document.getElementById('inpDate').value = dateStr; loadEntryForDate(dateStr); renderCalendar(); AudioEngine.playChirp(); }; grid.appendChild(div);
+            }
+        }
+
+        function cycleFearImage(silent) {
+            if(!silent) AudioEngine.playStatic();
+            appState.imgIndex = (appState.imgIndex+1)%IMAGE_LIB.length; document.getElementById('fear-img').src = IMAGE_LIB[appState.imgIndex];
+            document.getElementById('fear-quote').innerText = `"${generateQuote('positive')}"`; const authorEl = document.getElementById('quote-author'); if (authorEl) authorEl.innerText = "TACTICAL OVERRIDE";
+        }
+    </script>
+</body>
+</html>
