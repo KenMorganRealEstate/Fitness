@@ -2119,10 +2119,16 @@ if(document.getElementById('total-walk-burn')) {
                 document.getElementById(`bar-month-${type}`).style.width = mPct + "%";
             };
 
-            updateProg('pushups', latestEntry.pushups||0, EX_GOALS.pushups, 'missionTeal');
-            updateProg('situps', latestEntry.situps||0, EX_GOALS.situps, 'missionGreen');
-            updateProg('pullups', latestEntry.pullups||0, EX_GOALS.pullups, 'missionOrange');
-            updateProg('squats', latestEntry.squats||0, EX_GOALS.squats, 'neonPurple');
+            /* --- LIVE UI INPUT OVERRIDES FOR REAL-TIME TRACKING --- */
+            const livePushups = parseInt(document.getElementById('inpPushups')?.value) || latestEntry.pushups || 0;
+            const liveSitups = parseInt(document.getElementById('inpSitups')?.value) || latestEntry.situps || 0;
+            const livePullups = parseInt(document.getElementById('inpPullups')?.value) || latestEntry.pullups || 0;
+            const liveSquats = parseInt(document.getElementById('inpSquats')?.value) || latestEntry.squats || 0;
+
+            updateProg('pushups', livePushups, EX_GOALS.pushups, 'missionTeal');
+            updateProg('situps', liveSitups, EX_GOALS.situps, 'missionGreen');
+            updateProg('pullups', livePullups, EX_GOALS.pullups, 'missionOrange');
+            updateProg('squats', liveSquats, EX_GOALS.squats, 'neonPurple');
 
             const daysLogged = entries.length;
             if(daysLogged > 0) {
