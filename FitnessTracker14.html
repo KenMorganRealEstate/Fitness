@@ -1700,7 +1700,7 @@
                 return;
             }
             const weightVal = parseFloat(document.getElementById('inpWeight').value) || null;
-            const bDrinks = parseInt(document.getElementById('inpBreachDrinks').value) || 1; 
+            const bDrinks = parseFloat(document.getElementById('inpBreachDrinks').value) || 0;
             const bLoc = document.getElementById('inpBreachLoc').value; 
             const bTammy = document.getElementById('inpBreachTammy').value;
             const m = getActiveMission();
@@ -1837,19 +1837,19 @@
         }
 
         function handleBreachUpdate() {
-            const drinks = parseInt(document.getElementById('inpBreachDrinks').value) || 1; 
-            const loc = document.getElementById('inpBreachLoc').value; 
-            const tammy = document.getElementById('inpBreachTammy').value;
-            let totalCost = drinks * (loc === 'bar' ? 10 : 3) * (tammy === 'tammy' ? 2 : 1);
-            let cals = drinks * 150; 
-            let pauseHrs = drinks * 1.5; 
-            let stepsPen = Math.round(cals / 0.06);
-            document.getElementById('breach-cost').innerText = `-$${totalCost}`; 
-            document.getElementById('breach-cals').innerText = `+${cals}`; 
-            document.getElementById('breach-pause').innerText = `${pauseHrs} HRS`; 
-            document.getElementById('breach-steps').innerText = `${stepsPen}`;
-            saveEntry();
-        }
+            const drinks = parseFloat(document.getElementById('inpBreachDrinks').value) || 0; 
+            const loc = document.getElementById('inpBreachLoc').value; 
+            const tammy = document.getElementById('inpBreachTammy').value;
+            let totalCost = drinks * (loc === 'bar' ? 10 : 3) * (tammy === 'tammy' ? 2 : 1);
+            let cals = drinks * 150; 
+            let pauseHrs = drinks * 1.5; 
+            let stepsPen = Math.round(cals / 0.06);
+            document.getElementById('breach-cost').innerText = `-$${totalCost.toFixed(2)}`; 
+            document.getElementById('breach-cals').innerText = `+${cals.toFixed(0)}`; 
+            document.getElementById('breach-pause').innerText = `${pauseHrs.toFixed(1)} HRS`; 
+            document.getElementById('breach-steps').innerText = `${stepsPen}`;
+            saveEntry();
+        }
 
         /* --- STREAMING_CHUNK:Building Workout and Calorie Mechanics... --- */
         /* --- TONNAGE / CALORIE CALCULATOR HELPER --- */
