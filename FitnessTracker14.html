@@ -1,3 +1,4 @@
+
 <!DOCTYPE html><html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -742,18 +743,28 @@
                             <div id="tonnage-equivalent" class="text-xs text-gray-400 mt-3 italic">Equivalent to lifting 0 African Elephants</div>
                         </div>
 
-                        <div class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-8">
-                            <div class="bg-black/60 border border-missionOrange/50 p-4 rounded text-center flex flex-col justify-center relative overflow-hidden group">
-                                <div class="absolute inset-0 bg-missionOrange/5 opacity-0 group-hover:opacity-100 transition"></div>
-                                <div class="text-[10px] md:text-xs text-gray-400 uppercase font-bold tracking-widest mb-1">LIFETIME WORKOUT CALORIES BURNED</div>
-                                <div id="total-lift-burn" class="text-2xl md:text-4xl font-black text-missionOrange font-mono drop-shadow-[0_0_8px_rgba(255,159,0,0.5)]">0 KCAL</div>
-                            </div>
-                            <div class="bg-black/60 border border-missionGreen/50 p-4 rounded text-center flex flex-col justify-center relative overflow-hidden group">
-                                <div class="absolute inset-0 bg-missionGreen/5 opacity-0 group-hover:opacity-100 transition"></div>
-                                <div class="text-[10px] md:text-xs text-gray-400 uppercase font-bold tracking-widest mb-1">THEORETICAL WEIGHT LOSS (FROM LIFTING)</div>
-                                <div id="total-lift-wl" class="text-2xl md:text-4xl font-black text-missionGreen font-mono drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]">-0.00 LBS</div>
-                            </div>
-                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="bg-black/60 border border-missionOrange/50 p-4 rounded text-center flex flex-col justify-center relative overflow-hidden group">
+        <div class="absolute inset-0 bg-missionOrange/5 opacity-0 group-hover:opacity-100 transition"></div>
+        <div class="text-[10px] md:text-xs text-gray-400 uppercase font-bold tracking-widest mb-1">LIFETIME WORKOUT CALORIES BURNED</div>
+        <div id="total-lift-burn" class="text-2xl md:text-3xl font-black text-missionOrange font-mono drop-shadow-[0_0_8px_rgba(255,159,0,0.5)]">0 KCAL</div>
+    </div>
+    <div class="bg-black/60 border border-missionGreen/50 p-4 rounded text-center flex flex-col justify-center relative overflow-hidden group">
+        <div class="absolute inset-0 bg-missionGreen/5 opacity-0 group-hover:opacity-100 transition"></div>
+        <div class="text-[10px] md:text-xs text-gray-400 uppercase font-bold tracking-widest mb-1">THEORETICAL WEIGHT LOSS (FROM LIFTING)</div>
+        <div id="total-lift-wl" class="text-2xl md:text-3xl font-black text-missionGreen font-mono drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]">-0.00 LBS</div>
+    </div>
+    <div class="bg-black/60 border border-missionTeal/50 p-4 rounded text-center flex flex-col justify-center relative overflow-hidden group">
+        <div class="absolute inset-0 bg-missionTeal/5 opacity-0 group-hover:opacity-100 transition"></div>
+        <div class="text-[10px] md:text-xs text-gray-400 uppercase font-bold tracking-widest mb-1">LIFETIME WALKING CALORIES BURNED</div>
+        <div id="total-walk-burn" class="text-2xl md:text-3xl font-black text-missionTeal font-mono drop-shadow-[0_0_8px_rgba(0,255,255,0.5)]">0 KCAL</div>
+    </div>
+    <div class="bg-black/60 border border-blue-400/50 p-4 rounded text-center flex flex-col justify-center relative overflow-hidden group">
+        <div class="absolute inset-0 bg-blue-400/5 opacity-0 group-hover:opacity-100 transition"></div>
+        <div class="text-[10px] md:text-xs text-gray-400 uppercase font-bold tracking-widest mb-1">THEORETICAL WEIGHT LOSS (FROM WALKING)</div>
+        <div id="total-walk-wl" class="text-2xl md:text-3xl font-black text-blue-400 font-mono drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]">-0.00 LBS</div>
+    </div>
+</div>
 
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                             <div class="bg-black/60 border border-missionTeal/50 p-4 rounded flex flex-col justify-between relative overflow-hidden group">
@@ -1927,8 +1938,17 @@
             
             /* Update Step stats display */
             if(document.getElementById('daily-step-stats')) {
-                document.getElementById('daily-step-stats').innerHTML = `<span class="text-missionOrange font-bold">Burn: ${stepBurn.toLocaleString()} kcal</span> | <span class="text-missionGreen font-bold">Imp: -${(stepBurn/3500).toFixed(3)} lbs</span>`;
-            }
+    document.getElementById('daily-step-stats').innerHTML = `<span class="text-missionOrange font-bold">Burn: ${stepBurn.toLocaleString()} kcal</span> | <span class="text-missionGreen font-bold">Imp: -${(stepBurn/3500).toFixed(3)} lbs</span>`;
+}
+
+// Live-update the Exercise Command Center walking totals from current entry + history
+const allEntries = appState.entries.filter(e => e.date !== document.getElementById('inpDate').value);
+const historicalStepBurn = allEntries.reduce((a, b) => a + ((b.steps || 0) * 0.06), 0);
+const liveTotalStepBurn = historicalStepBurn + stepBurn;
+if(document.getElementById('total-walk-burn')) {
+    document.getElementById('total-walk-burn').innerText = Math.round(liveTotalStepBurn).toLocaleString() + " KCAL";
+    document.getElementById('total-walk-wl').innerText = "-" + (liveTotalStepBurn / 3500).toFixed(2) + " LBS";
+}
 
             let totalOut = bmr + stepBurn + wStats.burn;
             
@@ -2134,7 +2154,9 @@
             document.getElementById('stat-total-steps').innerText = totalSteps.toLocaleString(); 
             document.getElementById('stat-avg-steps').innerText = dayCount > 0 ? Math.round(totalSteps/dayCount).toLocaleString() : "0";
             document.getElementById('stat-step-cals').innerText = totalStepBurn.toLocaleString() + " KCAL BURNED";
-            document.getElementById('stat-step-wl').innerText = "-" + (totalStepBurn/3500).toFixed(2) + " LBS IMPACT";
+document.getElementById('stat-step-wl').innerText = "-" + (totalStepBurn/3500).toFixed(2) + " LBS IMPACT";
+document.getElementById('total-walk-burn').innerText = Math.round(totalStepBurn).toLocaleString() + " KCAL";
+document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).toFixed(2) + " LBS";
 
             document.getElementById('stat-total-km').innerText = (totalSteps/1250).toFixed(2) + " km"; 
             document.getElementById('stat-equivalent-walk').innerHTML = `AVG: <span id="stat-avg-km">${dayCount > 0 ? ((totalSteps/1250)/dayCount).toFixed(2) : "0"}</span> km / DAY <br> <span class="text-missionTeal mt-1 block">(${((totalSteps/1250)/42.195).toFixed(1)} Marathons)</span>`;
