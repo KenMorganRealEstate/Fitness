@@ -2338,7 +2338,7 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
                 const unlocked = activeStreak >= u.d;
                 const d = document.createElement('div'); 
                 d.className = `flex items-center gap-3 p-3 border rounded-sm transition-all ${unlocked ? 'border-missionPurple bg-missionPurple/10' : 'border-gray-800 bg-black opacity-50'}`;
-                d.innerHTML = `<div class="${unlocked ? 'text-missionPurple' : 'text-gray-600'}"><i data-lucide="${u.i}" class="w-5 h-5"></i></div><div class="flex-grow"><div class="text-[10px] font-bold ${unlocked?'text-white':'text-gray-500'}">${u.t}</div><div class="text-[9px] ${unlocked?'text-missionPurple':'text-gray-600'}">REQ: ${u.d} DAYS SOBER</div></div><div class="${unlocked?'text-missionPurple':'text-gray-700'} text-xs font-bold">${unlocked?'REPAIRED':'DAMAGED'}</div>`;
+                d.innerHTML = `<div class="${unlocked ? 'text-missionPurple' : 'text-gray-600'}"><i data-lucide="${u.i}" class="w-5 h-5"></i></div><div class="flex-grow"><div class="text-[10px] font-bold ${unlocked?'text-white':'text-gray-500'}">${u.t}</div><div class="text-[9px] ${unlocked?'text-missionPurple':'text-gray-600'}">REQ: ${u.d} DAYS SOBER</div></div><div class="${unlocked?'text-missionPurple':'text-gray-500'} text-xs font-bold">${unlocked?'REPAIRED':'DAMAGED'}</div>`;
                 bioContainer.appendChild(d);
             });
             lucide.createIcons();
