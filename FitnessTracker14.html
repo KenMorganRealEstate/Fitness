@@ -1841,7 +1841,7 @@
             const loc = document.getElementById('inpBreachLoc').value; 
             const tammy = document.getElementById('inpBreachTammy').value;
             let totalCost = drinks * (loc === 'bar' ? 10 : 3) * (tammy === 'tammy' ? 2 : 1);
-            let cals = drinks * 120; 
+            let cals = drinks * 150; 
             let pauseHrs = drinks * 1.5; 
             let stepsPen = Math.round(cals / 0.06);
             document.getElementById('breach-cost').innerText = `-$${totalCost}`; 
@@ -1996,7 +1996,7 @@ if(document.getElementById('total-walk-burn')) {
             /* Automatic Alcohol Calorie Incorporation */
             const isSober = appState.currentEntry.alcohol !== false;
             const drinks = !isSober ? (parseInt(document.getElementById('inpBreachDrinks')?.value || appState.currentEntry.breachDrinks || 0)) : 0;
-            const alcCals = drinks * 120;
+            const alcCals = drinks * 150;
             const totalIn = foodIn + alcCals;
 
             /* Update the UI explicitly so the user sees the hidden math */
@@ -2198,7 +2198,7 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
 
                 /* Factor in alcohol automatically for the reality check net calculation */
                 const drinks = (x?.alcohol === false) ? (x?.breachDrinks || 0) : 0;
-                const xAlcCals = drinks * 120;
+                const xAlcCals = drinks * 150;
                 const dayNet = ((x?.cals || 0) + xAlcCals) - burn;
                 
                 /* Track if day actually had ANY interaction */
