@@ -1898,11 +1898,11 @@
             breakdown.pullupsVol = pullups * pullupLoad;
             breakdown.squatsVol = squats * squatLoad;
 
-            /* Detailed Burn Breakdown */
-            breakdown.burnPushups = pushups * 4.5;
-            breakdown.burnSitups = situps * 2.0;
-            breakdown.burnSquats = squats * 5.0;
-            breakdown.burnPullups = (!back) ? (pullups * 3.83) : 0; 
+            /* CORRECTED: Realistic Per-Rep Caloric Cost */
+            breakdown.burnPushups = pushups * 0.35;
+            breakdown.burnSitups = situps * 0.15;
+            breakdown.burnSquats = squats * 0.45;
+            breakdown.burnPullups = (!back) ? (pullups * 1.0) : 0; 
 
             volume += breakdown.pushupsVol + breakdown.situpsVol + breakdown.pullupsVol + breakdown.squatsVol;
             reps += pushups + squats + pullups + situps;
