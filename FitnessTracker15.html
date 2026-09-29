@@ -2834,22 +2834,65 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
                     }
                     
                     const existingIdx = appState.entries.findIndex(x => x.date === newEntry.date);
-                   if(existingIdx > -1) {
-                      appState.entries[existingIdx] = { ...appState.entries[existingIdx], ...newEntry };
-                  } else {
-                      const baseEntry = { carnivore: false, alcohol: true, steps: 0, cals: 0, water: 0, fasting: 16, protein: 0, fat: 0, carbs: 0, cravingsDefeated: 0, breachDrinks: 0, breachLoc: 'home', breachTammy: 'solo', routineChest: false, routineShoulders: false, routineBack: false, routineBiceps: false };
-                      appState.entries.push({ ...baseEntry, ...newEntry });
-                  }
-                   
-                  appState.entries.sort((a,b)=>new Date(a.date)-new Date(b.date));
-                  saveData(true);
-                  if(document.getElementById('inpDate').value === newEntry.date) {
-                      loadEntryForDate(newEntry.date);
-                  }
-                  refreshUI(); 
-                  renderCalendar();
-                  sysAlert("DAILY LOG MERGED SUCCESSFULLY.");
-              } catch(err) { 
+                    if(existingIdx > -1) {
+                        let old = appState.entries[existingIdx];
+                        
+                        /* Accumulate exercises */
+                        old.pushups = (old.pushups || 0) + (newEntry.pushups || 0);
+                        old.situps = (old.situps || 0) + (newEntry.situps || 0);
+                        old.pullups = (old.pullups || 0) + (newEntry.pullups || 0);
+                        old.squats = (old.squats || 0) + (newEntry.squats || 0);
+                        
+                        /* Accumulate movement and nutrition */
+                        old.steps = (old.steps || 0) + (newEntry.steps || 0);
+                        old.cals = (old.cals || 0) + (newEntry.cals || 0);
+                        old.water = (old.water || 0) + (newEntry.water || 0);
+                        old.protein = (old.protein || 0) + (newEntry.protein || 0);
+                        old.fat = (old.fat || 0) + (newEntry.fat || 0);
+                        old.carbs = (old.carbs || 0) + (newEntry.carbs || 0);
+                        old.cravingsDefeated = (old.cravingsDefeated || 0) + (newEntry.cravingsDefeated || 0);
+                        
+                        /* Update Weight (Prefer new if provided, else keep old) */
+                        if(newEntry.weight) { old.weight = newEntry.weight; }
+                        
+                        /* Append Notes */
+                        if(newEntry.notes) {
+                            old.notes = old.notes ? old.notes + " | " + newEntry.notes : newEntry.notes;
+                        }
+                        
+                        /* Fasting (take the higher number) */
+                        old.fasting = Math.max((old.fasting || 0), (newEntry.fasting || 0));
+
+                        /* Booleans (turn ON if either is ON) */
+                        old.carnivore = old.carnivore || newEntry.carnivore;
+                        old.routineChest = old.routineChest || newEntry.routineChest;
+                        old.routineShoulders = old.routineShoulders || newEntry.routineShoulders;
+                        old.routineBack = old.routineBack || newEntry.routineBack;
+                        old.routineBiceps = old.routineBiceps || newEntry.routineBiceps;
+                        
+                        /* Alcohol logic (true = NO ALC, false = BREACH) */
+                        if (old.alcohol === false || newEntry.alcohol === false) {
+                            old.alcohol = false;
+                            old.breachDrinks = (old.alcohol === false ? (old.breachDrinks || 0) : 0) + 
+                                               (newEntry.alcohol === false ? (newEntry.breachDrinks || 0) : 0);
+                            old.breachLoc = newEntry.breachLoc || old.breachLoc;
+                            old.breachTammy = newEntry.breachTammy || old.breachTammy;
+                        }
+
+                    } else {
+                        const baseEntry = { carnivore: false, alcohol: true, steps: 0, cals: 0, water: 0, fasting: 16, protein: 0, fat: 0, carbs: 0, cravingsDefeated: 0, breachDrinks: 0, breachLoc: 'home', breachTammy: 'solo', routineChest: false, routineShoulders: false, routineBack: false, routineBiceps: false };
+                        appState.entries.push({ ...baseEntry, ...newEntry });
+                    }
+                    
+                    appState.entries.sort((a,b)=>new Date(a.date)-new Date(b.date));
+                    saveData(true);
+                    if(document.getElementById('inpDate').value === newEntry.date) {
+                        loadEntryForDate(newEntry.date);
+                    }
+                    refreshUI(); 
+                    renderCalendar();
+                    sysAlert("DAILY LOG MERGED AND ACCUMULATED SUCCESSFULLY.");
+                } catch(err) { 
                     sysAlert("Error parsing JSON file."); 
                 } 
             }; 
