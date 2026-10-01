@@ -661,21 +661,21 @@
                     </div>
                     
                     <div class="mt-4 border-t border-gray-800 pt-4">
-                        <div class="flex justify-between text-[9px] font-bold uppercase mb-1 tracking-widest">
-                            <span class="text-gray-500 flex items-center gap-1"><i data-lucide="flame" class="w-3 h-3"></i> KETOSIS DEPTH</span>
-                            <span id="keto-status-text" class="text-missionTeal">OPTIMAL</span>
-                        </div>
-                        <div class="w-full bg-gray-900 h-2 rounded-full overflow-hidden flex relative">
-                            <div class="absolute left-[30%] top-0 bottom-0 w-px bg-white/20 z-10" title="30g Limit"></div>
-                            <div id="keto-bar-fill" class="h-full bg-missionTeal transition-all duration-500" style="width: 0%"></div>
-                        </div>
-                        <div class="flex justify-between text-[8px] text-gray-600 mt-1 font-mono">
-                            <span>0g</span>
-                            <span>LIMIT (30g)</span>
-                            <span id="keto-current-carbs" class="text-white">0g CURRENT</span>
-                        </div>
-                        <div id="keto-penalty-msg" class="text-[9px] text-missionTeal font-bold text-center mt-2 animate-pulse">+5% METABOLIC TEF BOOST ACTIVE</div>
-                    </div>
+                        <div class="flex justify-between text-[9px] font-bold uppercase mb-1 tracking-widest">
+                            <span class="text-gray-500 flex items-center gap-1"><i data-lucide="flame" class="w-3 h-3"></i> KETOSIS DEPTH</span>
+                            <span id="keto-status-text" class="text-missionTeal">OPTIMAL</span>
+                        </div>
+                        <div class="w-full bg-gray-900 h-2 rounded-full overflow-hidden flex relative">
+                            <div class="absolute left-[30%] top-0 bottom-0 w-px bg-white/20 z-10" title="30g Limit"></div>
+                            <div id="keto-bar-fill" class="h-full bg-missionTeal transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between text-[8px] text-gray-600 mt-1 font-mono">
+                            <span>0g</span>
+                            <span>LIMIT (30g)</span>
+                            <span id="keto-current-carbs" class="text-white">0g CURRENT</span>
+                        </div>
+                        <div id="keto-penalty-msg" class="text-[9px] text-missionTeal font-bold text-center mt-2 animate-pulse">+5% METABOLIC TEF BOOST ACTIVE</div>
+                    </div>
                 </div>
 
                 <!-- Rewards & Biology -->
@@ -755,7 +755,23 @@
                             <div id="total-tonnage" class="text-5xl md:text-6xl font-black text-white font-mono drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">0 LBS</div>
                             <div id="tonnage-equivalent" class="text-xs text-gray-400 mt-3 italic">Equivalent to lifting 0 African Elephants</div>
                         </div>
-
+<!-- NEW MASSIVE LIFETIME TONNAGE DISPLAY -->
+<div class="bg-black/80 border-2 border-missionTeal p-6 rounded text-center mb-8 relative overflow-hidden shadow-[0_0_20px_rgba(0,255,255,0.1)]">
+    <div class="text-xs md:text-sm font-bold text-missionTeal uppercase tracking-widest mb-2">TOTAL VOLUME LIFTED (LIFETIME TONNAGE)</div>
+    <div id="total-tonnage" class="text-5xl md:text-6xl font-black text-white font-mono drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">0 LBS</div>
+    <div id="tonnage-equivalent" class="text-xs text-gray-400 mt-3 italic">Equivalent to lifting 0 African Elephants</div>
+    
+    <!-- NEW: Muscle Retention Shield -->
+    <div class="mt-4 pt-4 border-t border-missionTeal/30">
+        <div class="text-[10px] text-missionGreen font-bold uppercase tracking-widest mb-1">
+            <i data-lucide="shield" class="w-3 h-3 inline-block mr-1"></i> LEAN MASS PROTECTED (mTOR ACTIVATION)
+        </div>
+        <div id="muscle-retained-display" class="text-2xl font-black text-missionGreen font-mono drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]">
+            0.0 OZ
+        </div>
+        <div id="muscle-retained-lbs" class="text-[10px] text-gray-400 font-mono mt-1">(0.00 LBS)</div>
+    </div>
+</div> 
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
     <div class="bg-black/60 border border-missionOrange/50 p-4 rounded text-center flex flex-col justify-center relative overflow-hidden group">
         <div class="absolute inset-0 bg-missionOrange/5 opacity-0 group-hover:opacity-100 transition"></div>
@@ -932,7 +948,14 @@
                         <canvas id="financeChart"></canvas>
                     </div>
 
-                    <!-- Field Ops Stats -->
+                    
+
+                        
+
+                        
+
+                       
+                        <!-- Field Ops Stats -->
                     <div class="glass-panel p-5 border-l-2 border-blue-500 bg-black/20">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">FIELD OPERATIONS DATA</h3>
@@ -961,6 +984,25 @@
                         <div class="bg-black/40 p-2 border border-gray-800 text-center mb-6">
                             <div class="text-[8px] md:text-[9px] text-gray-500 uppercase">NET CALORIC BALANCE (FILTERED)</div>
                             <div id="stat-total-net-cals" class="text-lg md:text-xl font-mono font-bold text-white">0</div>
+                        </div>
+
+                        <!-- NEW: Autophagy & Deep Fat Burn Tracker -->
+                        <div class="bg-black/60 border-2 border-purple-900 p-4 rounded text-center mb-6 relative overflow-hidden group shadow-[0_0_15px_rgba(168,85,247,0.15)]">
+                            <div class="absolute inset-0 bg-purple-500/5 opacity-0 group-hover:opacity-100 transition"></div>
+                            <div class="text-[10px] md:text-xs text-purple-400 font-bold uppercase tracking-widest mb-1 flex justify-center items-center gap-2">
+                                <i data-lucide="infinity" class="w-4 h-4"></i> DEEP AUTOPHAGY & FAT OXIDATION
+                            </div>
+                            <div id="stat-total-autophagy" class="text-3xl md:text-4xl font-black text-white font-mono drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">0 HRS</div>
+                            <div id="stat-autophagy-equivalent" class="text-[9px] text-gray-400 mt-2 uppercase font-bold tracking-widest">
+                                EQUIVALENT TO 0.0 DAYS OF PURE CELLULAR REGENERATION
+                            </div>
+                            
+                            <!-- NEW: Fasting Fat Lost Stat -->
+                            <div class="border-t border-purple-900/50 mt-3 pt-2 relative z-10">
+                                <div id="stat-fasting-fat-lost" class="text-[10px] md:text-xs font-bold text-missionGreen font-mono uppercase tracking-widest">
+                                    -0.000 LBS BURNED FROM FASTING
+                                </div>
+                            </div>
                         </div>
 
                         <div class="bg-gray-900/30 border border-dashed border-gray-700 p-3 mb-6 text-center">
@@ -1963,7 +2005,13 @@ if(document.getElementById('total-walk-burn')) {
     document.getElementById('total-walk-wl').innerText = "-" + (liveTotalStepBurn / 3500).toFixed(2) + " LBS";
 }
 
-            let totalOut = bmr + stepBurn + wStats.burn;
+            let totalOut = bmr + stepBurn + wStats.burn;                        
+            
+            /* NEW: Fasting Norepinephrine Metabolic Boost */
+            const fastHrs = parseFloat(document.getElementById('inpFasting')?.value) || (tempE.fasting || 0);
+            if (fastHrs > 12) {
+                totalOut += ((fastHrs - 12) * 10);
+            }
             
             const carbs = tempE.carbs || 0;
             let ketosisActive = tempE.carnivore;
@@ -1983,43 +2031,43 @@ if(document.getElementById('total-walk-burn')) {
             }
 
             /* --- KETOSIS VISUALIZER GAUGE LOGIC --- */
-            const statusText = document.getElementById('keto-status-text');
-            const barFill = document.getElementById('keto-bar-fill');
-            const carbsText = document.getElementById('keto-current-carbs');
-            const penaltyMsg = document.getElementById('keto-penalty-msg');
-            
+            const statusText = document.getElementById('keto-status-text');
+            const barFill = document.getElementById('keto-bar-fill');
+            const carbsText = document.getElementById('keto-current-carbs');
+            const penaltyMsg = document.getElementById('keto-penalty-msg');
+            
             /* Cap the bar visually at 100g so it doesn't overflow the UI */
-            let carbPct = Math.min(100, (carbs / 100) * 100);
-            if (barFill) barFill.style.width = carbPct + "%";
-            if (carbsText) carbsText.innerText = carbs + "g CURRENT";
+            let carbPct = Math.min(100, (carbs / 100) * 100);
+            if (barFill) barFill.style.width = carbPct + "%";
+            if (carbsText) carbsText.innerText = carbs + "g CURRENT";
 
-            if (statusText && barFill && penaltyMsg) {
-                if (carbs <= 30 && e.carnivore) {
-                    statusText.innerText = "DEEP KETOSIS";
-                    statusText.className = "text-missionTeal";
-                    barFill.className = "h-full transition-all duration-500 bg-missionTeal shadow-[0_0_10px_rgba(0,255,255,0.5)]";
-                    penaltyMsg.innerText = "+5% METABOLIC TEF BOOST ACTIVE";
-                    penaltyMsg.className = "text-[9px] font-bold text-center mt-2 text-missionTeal animate-pulse";
-                } else if (carbs <= 30 && !e.carnivore) {
-                    statusText.innerText = "LOW CARB";
-                    statusText.className = "text-missionGreen";
-                    barFill.className = "h-full transition-all duration-500 bg-missionGreen";
-                    penaltyMsg.innerText = "FAT ADAPTATION MAINTAINED";
-                    penaltyMsg.className = "text-[9px] font-bold text-center mt-2 text-missionGreen";
-                } else if (carbs > 30 && carbs <= 100) {
-                    statusText.innerText = "KETOSIS BROKEN";
-                    statusText.className = "text-missionOrange";
-                    barFill.className = "h-full transition-all duration-500 bg-missionOrange";
-                    penaltyMsg.innerText = "⚠️ TEF METABOLIC BOOST LOST";
-                    penaltyMsg.className = "text-[9px] font-bold text-center mt-2 text-missionOrange";
-                } else {
-                    statusText.innerText = "FAT BURN HALTED";
-                    statusText.className = "text-red-500 animate-pulse";
-                    barFill.className = "h-full transition-all duration-500 bg-red-500 shadow-[0_0_15px_rgba(255,0,0,0.8)]";
-                    penaltyMsg.innerText = "❌ HIGH CARBS: -5% METABOLIC PENALTY";
-                    penaltyMsg.className = "text-[9px] font-bold text-center mt-2 text-red-500 animate-pulse";
-                }
-            }
+            if (statusText && barFill && penaltyMsg) {
+                if (carbs <= 30 && e.carnivore) {
+                    statusText.innerText = "DEEP KETOSIS";
+                    statusText.className = "text-missionTeal";
+                    barFill.className = "h-full transition-all duration-500 bg-missionTeal shadow-[0_0_10px_rgba(0,255,255,0.5)]";
+                    penaltyMsg.innerText = "+5% METABOLIC TEF BOOST ACTIVE";
+                    penaltyMsg.className = "text-[9px] font-bold text-center mt-2 text-missionTeal animate-pulse";
+                } else if (carbs <= 30 && !e.carnivore) {
+                    statusText.innerText = "LOW CARB";
+                    statusText.className = "text-missionGreen";
+                    barFill.className = "h-full transition-all duration-500 bg-missionGreen";
+                    penaltyMsg.innerText = "FAT ADAPTATION MAINTAINED";
+                    penaltyMsg.className = "text-[9px] font-bold text-center mt-2 text-missionGreen";
+                } else if (carbs > 30 && carbs <= 100) {
+                    statusText.innerText = "KETOSIS BROKEN";
+                    statusText.className = "text-missionOrange";
+                    barFill.className = "h-full transition-all duration-500 bg-missionOrange";
+                    penaltyMsg.innerText = "⚠️ TEF METABOLIC BOOST LOST";
+                    penaltyMsg.className = "text-[9px] font-bold text-center mt-2 text-missionOrange";
+                } else {
+                    statusText.innerText = "FAT BURN HALTED";
+                    statusText.className = "text-red-500 animate-pulse";
+                    barFill.className = "h-full transition-all duration-500 bg-red-500 shadow-[0_0_15px_rgba(255,0,0,0.8)]";
+                    penaltyMsg.innerText = "❌ HIGH CARBS: -5% METABOLIC PENALTY";
+                    penaltyMsg.className = "text-[9px] font-bold text-center mt-2 text-red-500 animate-pulse";
+                }
+            }
 
             /* Automatic Alcohol Calorie Incorporation */
             const isSober = appState.currentEntry.alcohol !== false;
@@ -2086,6 +2134,19 @@ if(document.getElementById('total-walk-burn')) {
 
             document.getElementById('total-tonnage').innerText = totalVolume.toLocaleString() + " LBS";
             document.getElementById('tonnage-equivalent').innerText = "Equivalent to lifting " + (totalVolume / 14000).toFixed(1) + " African Elephants";
+
+            /* NEW: Muscle Retention Math 
+               Exchange Rate: 0.15 oz of muscle saved per 1,000 lbs lifted */
+            const muscleSavedOz = (totalVolume / 1000) * 0.15;
+            const muscleSavedLbs = muscleSavedOz / 16;
+
+            const elMuscleOz = document.getElementById('muscle-retained-display');
+            const elMuscleLbs = document.getElementById('muscle-retained-lbs');
+            
+            if (elMuscleOz && elMuscleLbs) {
+                elMuscleOz.innerText = muscleSavedOz.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1}) + " OZ";
+                elMuscleLbs.innerText = "(" + muscleSavedLbs.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " LBS)";
+            }
 
             /* NEW: Lifetime calorie and fat metrics from lifting */
             document.getElementById('total-lift-burn').innerText = totalLiftBurn.toLocaleString() + " KCAL";
@@ -2221,6 +2282,12 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
                 const wStats = getWorkoutStats(x || {}, lastKnownWeight);
                 
                 let burn = bmr + Math.round((x?.steps||0)*0.06) + wStats.burn;
+                
+                /* NEW: Apply the Fasting Boost to historical data */
+                const hFast = x?.fasting || 0;
+                if (hFast > 12) {
+                    burn += ((hFast - 12) * 10);
+                }
                 const dCarbs = x?.carbs || 0;
                 let isKetosis = x?.carnivore && dCarbs <= 30;
                 if (isKetosis) {
@@ -2249,7 +2316,29 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
                     }
                 }
             }
+/* NEW: Autophagy and Deep Fat Burn Math 
+               Exchange Rate: Only hours strictly after the 12-hour glycogen depletion window count */
+            let totalAutophagyHours = 0;
+            entries.forEach(e => {
+                const fastHrs = e.fasting || 0;
+                if (fastHrs > 12) {
+                    totalAutophagyHours += (fastHrs - 12);
+                }
+            });
 
+            const elAuto = document.getElementById('stat-total-autophagy');
+            const elAutoEq = document.getElementById('stat-autophagy-equivalent');
+            const elFastFat = document.getElementById('stat-fasting-fat-lost');
+            
+            if (elAuto && elAutoEq) {
+                elAuto.innerText = totalAutophagyHours + " HRS";
+                elAutoEq.innerText = "EQUIVALENT TO " + (totalAutophagyHours / 24).toFixed(1) + " DAYS OF PURE CELLULAR REGENERATION";
+                
+                if (elFastFat) {
+                    const fatLostLbs = (totalAutophagyHours * 10) / 3500;
+                    elFastFat.innerText = "-" + fatLostLbs.toFixed(3) + " LBS BURNED FROM FASTING";
+                }
+            }
             const elNetStat = document.getElementById('stat-total-net-cals');
             if(totalNet < 0) { 
                 elNetStat.innerText = totalNet.toLocaleString(); 
