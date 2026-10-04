@@ -2666,7 +2666,7 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
             for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)) {
                 const str = d.toISOString().split('T')[0]; 
                 labels.push(d.toLocaleDateString(undefined, {month:'numeric', day:'numeric'}));
-                goals.push(m.startW - (((d - mStart)/86400000)*perDay));
+                goals.push((m.startW - (((d - mStart)/86400000)*perDay)).toFixed(1));
                 
                 const e = entries.find(x=>x.date===str); 
                 acts.push(e ? e.weight : null);
@@ -2675,17 +2675,54 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
                     projections.push(currW); 
                 } else if (str > lastEntryDateStr && ratePerDay > 0) {
                     const daysFromStart = (d - mStart) / 86400000;
-                    projections.push(m.startW - (ratePerDay * daysFromStart));
+                    projections.push((m.startW - (ratePerDay * daysFromStart)).toFixed(1));
                 } else {
                     projections.push(null);
                 }
             }
             
+            /* Enable easy hovering across the entire vertical axis */
+            chart.options.interaction = {
+                mode: 'index',
+                intersect: false,
+            };
+            chart.options.plugins.tooltip = {
+                enabled: true,
+                mode: 'index',
+                intersect: false
+            };
+            
             chart.data.labels = labels; 
             chart.data.datasets = [
-                { label: 'Goal', data: goals, borderColor: '#FF9F00', borderDash: [5,5], borderWidth: 1, pointRadius: 0 }, 
-                { label: 'Projected', data: projections, borderColor: '#B026FF', borderDash: [3,3], borderWidth: 2, pointRadius: 0 },
-                { label: 'Actual', data: acts, borderColor: '#00FFFF', backgroundColor: 'rgba(0,255,255,0.1)', borderWidth: 2, fill: true, spanGaps: true }
+                { 
+                    label: 'Goal', 
+                    data: goals, 
+                    borderColor: '#FF9F00', 
+                    borderDash: [5,5], 
+                    borderWidth: 1, 
+                    pointRadius: 0,
+                    pointHitRadius: 15
+                }, 
+                { 
+                    label: 'Projected', 
+                    data: projections, 
+                    borderColor: '#B026FF', 
+                    borderDash: [3,3], 
+                    borderWidth: 2, 
+                    pointRadius: 0,
+                    pointHitRadius: 15
+                },
+                { 
+                    label: 'Actual', 
+                    data: acts, 
+                    borderColor: '#00FFFF', 
+                    backgroundColor: 'rgba(0,255,255,0.1)', 
+                    borderWidth: 2, 
+                    fill: true, 
+                    spanGaps: true,
+                    pointRadius: 2,
+                    pointHitRadius: 15
+                }
             ]; 
             chart.update();
         }
