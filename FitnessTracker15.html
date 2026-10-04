@@ -933,7 +933,15 @@
                     </div>
                     
                     <!-- Charts -->
-                    <div class="glass-panel p-3 h-[250px] md:h-[300px] relative mb-8">
+                    <div class="glass-panel p-3 h-[250px] md:h-[300px] relative border-l-4 border-missionTeal mb-8">
+                        <div class="absolute top-0 right-0 flex items-center gap-3 p-2 bg-black/80 border-b border-l border-gray-800 z-10">
+                            <span class="text-[8px] md:text-[9px] font-bold text-missionTeal uppercase tracking-widest">PRIMARY WEIGHT TRAJECTORY</span>
+                            <span class="text-gray-600">|</span>
+                            <span class="text-[10px] md:text-[11px] font-black text-missionGreen uppercase tracking-widest flex items-center gap-1">
+                                <i data-lucide="flame" class="w-3 h-3 text-missionOrange"></i>
+                                <span id="chart-total-lost">0.0 LBS DESTROYED</span>
+                            </span>
+                        </div>
                         <canvas id="weightChart"></canvas>
                     </div>
 
@@ -2592,8 +2600,16 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
                 responsive: true, 
                 maintainAspectRatio: false, 
                 scales: { 
-                    x: { grid: { display: false }, ticks: { color: '#666' } }, 
-                    y: { grid: { color: '#222' }, ticks: { color: '#888' } } 
+                    x: { 
+                        grid: { display: false }, 
+                        ticks: { color: '#666', font: {size: 10} },
+                        title: { display: true, text: 'MISSION TIMELINE (DATE)', color: '#444', font: {size: 10, family: 'monospace', weight: 'bold'} }
+                    }, 
+                    y: { 
+                        grid: { color: '#222' }, 
+                        ticks: { color: '#888', font: {size: 10} },
+                        title: { display: true, text: 'MASS (LBS)', color: '#444', font: {size: 10, family: 'monospace', weight: 'bold'} }
+                    } 
                 }, 
                 plugins: { legend: { display: false } } 
             };
@@ -2663,6 +2679,13 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
             
             let lastEntryDateStr = wEntries.length ? wEntries[wEntries.length-1].date : appState.filter.start;
 
+            /* --- NEW: UPDATE TOTAL LOST BADGE --- */
+            const totalLost = (m.startW - currW).toFixed(1);
+            const badgeEl = document.getElementById('chart-total-lost');
+            if (badgeEl) {
+                badgeEl.innerText = totalLost + " LBS DESTROYED";
+            }
+
             for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)) {
                 const str = d.toISOString().split('T')[0]; 
                 labels.push(d.toLocaleDateString(undefined, {month:'numeric', day:'numeric'}));
@@ -2681,7 +2704,7 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
                 }
             }
             
-            /* Enable easy hovering across the entire vertical axis */
+            /* Enhanced Ghost Analytics Tooltip */
             chart.options.interaction = {
                 mode: 'index',
                 intersect: false,
@@ -2689,7 +2712,29 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
             chart.options.plugins.tooltip = {
                 enabled: true,
                 mode: 'index',
-                intersect: false
+                intersect: false,
+                padding: 12,
+                titleFont: { size: 13, family: 'monospace' },
+                bodyFont: { size: 12, family: 'monospace' },
+                footerFont: { size: 11, family: 'monospace', weight: 'bold' },
+                footerColor: '#00FFFF',
+                callbacks: {
+                    footer: function(tooltipItems) {
+                        const idx = tooltipItems[0].dataIndex;
+                        const dateStr = new Date(start.getTime() + (idx * 86400000)).toISOString().split('T')[0];
+                        const e = entries.find(x => x.date === dateStr);
+                        if (e && e.weight) {
+                            let extra = [];
+                            extra.push('-------------------------');
+                            extra.push(`STEPS: ${(e.steps||0).toLocaleString()}`);
+                            extra.push(`FAST:  ${e.fasting||0} HRS`);
+                            extra.push(`CARBS: ${e.carbs||0}g`);
+                            if ((e.cravingsDefeated||0) > 0) extra.push(`🔥 CRAVINGS CRUSHED: ${e.cravingsDefeated}`);
+                            return extra.join('\n');
+                        }
+                        return '';
+                    }
+                }
             };
             
             chart.data.labels = labels; 
