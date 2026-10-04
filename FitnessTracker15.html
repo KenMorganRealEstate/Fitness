@@ -2641,26 +2641,50 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
             const labels=[];
             const goals=[];
             const acts=[];
+            const projections=[];
+
             const sParts = appState.filter.start.split('-'); 
             const start = new Date(sParts[0], sParts[1]-1, sParts[2]); 
             const eParts = appState.filter.end.split('-'); 
             const end = new Date(eParts[0], eParts[1]-1, eParts[2]);
+            
             const mStartParts = m.start.split('-'); 
             const mEndParts = m.end.split('-'); 
             const mStart = new Date(mStartParts[0], mStartParts[1]-1, mStartParts[2]); 
             const mEnd = new Date(mEndParts[0], mEndParts[1]-1, mEndParts[2]);
-            const perDay = (m.startW - m.goalW)/((mEnd - mStart)/86400000);
             
+            const perDay = (m.startW - m.goalW)/((mEnd - mStart)/86400000);
+
+            const wEntries = entries.filter(e => e.weight);
+            const currW = wEntries.length ? wEntries[wEntries.length-1].weight : m.startW;
+            const today = new Date();
+            const daysElapsed = Math.max(1, Math.floor((today - mStart) / 86400000));
+            const ratePerDay = (m.startW - currW) / daysElapsed;
+            
+            let lastEntryDateStr = wEntries.length ? wEntries[wEntries.length-1].date : appState.filter.start;
+
             for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)) {
                 const str = d.toISOString().split('T')[0]; 
                 labels.push(d.toLocaleDateString(undefined, {month:'numeric', day:'numeric'}));
                 goals.push(m.startW - (((d - mStart)/86400000)*perDay));
+                
                 const e = entries.find(x=>x.date===str); 
                 acts.push(e ? e.weight : null);
+
+                if (str === lastEntryDateStr) {
+                    projections.push(currW); 
+                } else if (str > lastEntryDateStr && ratePerDay > 0) {
+                    const daysFromStart = (d - mStart) / 86400000;
+                    projections.push(m.startW - (ratePerDay * daysFromStart));
+                } else {
+                    projections.push(null);
+                }
             }
+            
             chart.data.labels = labels; 
             chart.data.datasets = [
                 { label: 'Goal', data: goals, borderColor: '#FF9F00', borderDash: [5,5], borderWidth: 1, pointRadius: 0 }, 
+                { label: 'Projected', data: projections, borderColor: '#B026FF', borderDash: [3,3], borderWidth: 2, pointRadius: 0 },
                 { label: 'Actual', data: acts, borderColor: '#00FFFF', backgroundColor: 'rgba(0,255,255,0.1)', borderWidth: 2, fill: true, spanGaps: true }
             ]; 
             chart.update();
