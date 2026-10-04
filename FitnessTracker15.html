@@ -2642,6 +2642,7 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
             const goals=[];
             const acts=[];
             const projections=[];
+            const milestones=[]; 
 
             const sParts = appState.filter.start.split('-'); 
             const start = new Date(sParts[0], sParts[1]-1, sParts[2]); 
@@ -2663,10 +2664,21 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
             
             let lastEntryDateStr = wEntries.length ? wEntries[wEntries.length-1].date : appState.filter.start;
 
+            /* GAMIFICATION: Calculate the immediate "Next Boss" threshold */
+            let nextTarget = m.goalW;
+            const sortedUnlocks = [...UNLOCKS].sort((a,b) => b.w - a.w);
+            for(let i=0; i<sortedUnlocks.length; i++) {
+                if (currW > sortedUnlocks[i].w) {
+                    nextTarget = sortedUnlocks[i].w;
+                    break;
+                }
+            }
+
             for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)) {
                 const str = d.toISOString().split('T')[0]; 
                 labels.push(d.toLocaleDateString(undefined, {month:'numeric', day:'numeric'}));
                 goals.push(m.startW - (((d - mStart)/86400000)*perDay));
+                milestones.push(nextTarget); 
                 
                 const e = entries.find(x=>x.date===str); 
                 acts.push(e ? e.weight : null);
@@ -2680,6 +2692,54 @@ document.getElementById('total-walk-wl').innerText = "-" + (totalStepBurn/3500).
                     projections.push(null);
                 }
             }
+            
+            chart.data.labels = labels; 
+            chart.data.datasets = [
+                { 
+                    label: 'Goal Pace', 
+                    data: goals, 
+                    borderColor: '#FF9F00', 
+                    borderDash: [5,5], 
+                    borderWidth: 1, 
+                    pointRadius: 0 
+                }, 
+                { 
+                    label: 'Projected', 
+                    data: projections, 
+                    borderColor: '#B026FF', 
+                    borderDash: [3,3], 
+                    borderWidth: 2, 
+                    pointRadius: 0 
+                },
+                { 
+                    label: 'Actual', 
+                    data: acts, 
+                    borderColor: '#00FFFF', 
+                    borderWidth: 3,
+                    pointBackgroundColor: '#050505',
+                    pointBorderColor: '#00FFFF',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: {
+                        target: 0, 
+                        above: 'rgba(255, 0, 0, 0.15)', 
+                        below: 'rgba(0, 255, 255, 0.15)' 
+                    },
+                    spanGaps: true 
+                },
+                { 
+                    label: 'Next Target', 
+                    data: milestones, 
+                    borderColor: '#10B981', 
+                    borderWidth: 1, 
+                    borderDash: [2, 4],
+                    pointRadius: 0,
+                    fill: false 
+                }
+            ]; 
+            chart.update();
+        }
             
             chart.data.labels = labels; 
             chart.data.datasets = [
